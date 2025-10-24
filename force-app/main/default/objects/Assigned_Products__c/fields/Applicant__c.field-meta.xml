@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Applicant__c</fullName>
+    <label>Applicant</label>
+    <referenceTo>Applicant</referenceTo>
+    <relationshipLabel>Assigned Products</relationshipLabel>
+    <relationshipName>Assigned_Products</relationshipName>
+    <required>true</required>
+    <type>Lookup</type>
+    <description>Links to the Applicant who is assigned this product</description>
+</CustomField>

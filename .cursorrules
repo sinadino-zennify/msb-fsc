@@ -1,0 +1,312 @@
+# Main Street Bank Salesforce Project - AI Agent Rules
+
+**Version**: 1.0  
+**Last Updated**: 2025-01-16  
+**Single Source of Truth**: This file is the ONLY source for agent instructions
+
+---
+
+## 🎯 Project Objective (Phase 1)
+
+**Goal**: Build LWC-based screens and supporting backend infrastructure to guide Salesforce users through the complete deposit account opening process.
+
+**Outcomes (Phase 1)**:
+- Create intuitive LWC screens for each step of the account opening process
+- Build Apex services to support the LWC workflows and business logic
+- Implement data validation, state management, and workflow navigation
+- Optional: Integrate with external applications for data ingestion
+- Lifecycle: Account Creation → Application Form → Applicant Details → Product Selection → Collateral Entry → Review & Submit → Account Funding
+
+**Why this order**: We need user-friendly interfaces that guide users through the complex deposit account opening process, with robust backend services supporting the workflow.
+
+---
+
+## 🔴 MANDATORY PRE-WORK CHECKLIST
+
+Complete EVERY time before starting ANY task:
+
+1. **READ** `/docs/01-foundation/data-model.md` - **SOURCE OF TRUTH** for object names and relationships
+2. **READ** Field Mapping Sources:
+   - `/docs/01-foundation/field-mappings.csv` - **Field mappings (user-maintained source of truth)**
+   - `/docs/01-foundation/field-mappings.md` - Mapping documentation (agent-maintained, synced from CSV)
+3. **READ** `/PROJECT.md` - Active scope, backlog, and progress ledger
+4. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
+5. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for understanding what has been implemented and lessons learned
+6. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
+7. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
+8. **CONFIRM** All context is loaded before proceeding
+
+### 📋 Additional Context for Specific Work Types:
+
+**For API/DAO work (API-* work items):**
+- **READ** `/docs/03-workflows/` - **CRITICAL** for understanding external app user journey
+  - These documents show step-by-step sequences, input fields, validations, and data flow
+
+**⚠️ CRITICAL**: If you cannot access ANY of these files, STOP and ask the user.
+
+---
+
+## 📋 Correct Object Names (FSC) - NON-NEGOTIABLE
+
+### ✅ Use These Names (Canonical):
+
+| Logical Name | Object Type | API Name | Notes |
+|--------------|-------------|----------|-------|
+| **ApplicationForm** | FSC | `FinServ__FinancialApplication__c` | Loan/deposit application |
+| **Applicant** | FSC | `Applicant` | Individual applicants |
+| **Account** (Business) | Standard | `Account` | Business accounts (RecordType) |
+| **Account** (PersonAccount) | Standard | `Account` | Individual accounts (RecordType) |
+| **FinancialAccount** | FSC | `FinServ__FinancialAccount__c` | Loan/financial account |
+| **FinancialAccountRole** | FSC | `FinServ__FinancialAccountRole__c` | Account roles on financial accounts |
+| **ApplicationFormProduct** | FSC | `ApplicationFormProduct` | Products on applications |
+| **Product2** | Standard | `Product2` | Loan products |
+| **Due_Diligence__c** | Custom | `Due_Diligence__c` | Compliance tracking |
+| **Assigned_Products__c** | Custom | `Assigned_Products__c` | Applicant-Product junction |
+| **Collateral__c** | Custom | `Collateral__c` | Collateral items |
+| **Collateral_Owner__c** | Custom | `Collateral_Owner__c` | Collateral ownership |
+| **Collateral_Association__c** | Custom | `Collateral_Association__c` | Collateral-Account association |
+| **Collateral_Assessment__c** | Custom | `Collateral_Assessment__c` | Collateral valuations |
+| **Task** | Standard | `Task` | Checklist items |
+
+### ❌ NEVER Use These Incorrect Names:
+
+- ~~`Application__c`~~ → Use `ApplicationForm`
+- ~~`Application`~~ (without Form) → Use `ApplicationForm`
+- ~~`Loan__c`~~ → Use `FinServ__FinancialAccount__c` or `FinancialAccount`
+- ~~`Business_Relationship__c`~~ → Use `Account` (Business)
+- ~~`Checklist__c`~~ → Use `Task`
+- ~~`Checklist_Item__c`~~ → Use `Task`
+- ~~Custom `Applicant__c`~~ → It's an FSC object, use `Applicant`
+
+### 🔑 External ID Field Names:
+
+** Integration:**
+
+| Object | Field API Name | Purpose |
+|--------|----------------|---------|
+| ApplicationForm | `DAOApplicationId__c` |  Application ID |
+| Applicant | `DAOApplicantId__c` |  Applicant ID |
+| Account | `DAOBusinessId__c` |  Business ID |
+
+**⚠️ CRITICAL**: Always verify API names in `force-app/main/default/objects/` before coding.
+
+---
+
+## 📝 Standard Operating Procedure
+
+Always follow these steps in order:
+
+1. **PICK** a single backlog item from `/docs/02-requirements/backlog.md`
+2. **READ** the matching story file in `/docs/02-requirements/` if applicable
+3. **VERIFY** object/field names in `/docs/01-foundation/data-model.md` and `force-app/main/default/objects/`
+4. **CHECK** Field mappings and data types in `/docs/01-foundation/field-mappings.csv`
+5. **REVIEW** `docs/05-analysis/` for current implementation status
+6. **IMPLEMENT** with minimal diffs; follow naming already in repo
+7. **TEST** Add/adjust tests; ensure bulkification (200+ records) and CRUD/FLS
+8. **DOCUMENT** If objects/fields changed:
+   - Update `/docs/01-foundation/data-model.md`
+   - Update field mappings: **NEVER modify** `field-mappings.csv` (user-maintained). Update `field-mappings.md` to document CSV changes.
+   - Add session notes to `/docs/04-implementation/session-notes/`
+9. **PACKAGE** Create metadata entries in `package.xml` for each new component
+10. **DEPLOY** Deploy to target org and verify
+11. **FINALIZE** Mark task complete in story file
+
+---
+
+## 📊 Field Mapping Workflow
+
+### User Responsibilities:
+- **Maintain** `/docs/01-foundation/field-mappings.csv` as authoritative source
+- Update CSV when field mappings change or new fields are added
+- Use Comments column in CSV to flag special cases or questions
+
+### Agent Responsibilities:
+- **READ** `field-mappings.csv` for field mappings when implementing code
+- **SYNC** `field-mappings.md` when user updates CSV:
+  - Parse CSV for new/changed mappings
+  - Update relevant sections in MD with context and guidance
+  - Add implementation notes for complex mappings from Comments column
+  - Preserve all existing context sections (privacy, address handling, etc.)
+- **NEVER MODIFY** `field-mappings.csv` - agent edits will be rejected
+
+### File Ownership:
+| File | Owner | Purpose | Agent Can Modify? |
+|------|-------|---------|-------------------|
+| `field-mappings.csv` | **User** | Field mapping source of truth | ❌ NO - Read only |
+| `field-mappings.md` | **Agent** | Mapping documentation & context | ✅ YES - Sync with CSV |
+
+---
+
+## 📄 File Creation Rules (MANDATORY)
+
+### For Documentation Files (.md):
+
+```markdown
+<!-- 
+🔴 AI AGENTS: READ FIRST - /docs/01-foundation/data-model.md for correct object names
+✅ Correct: ApplicationForm, Applicant, Account (Business), FinancialAccount
+❌ Wrong: Application__c, Applicant__c, Loan__c, Business_Relationship__c
+-->
+
+# [Title]
+```
+
+### For Apex Classes (.cls):
+
+```java
+/**
+ * @description [Description]
+ * 
+ * DATA MODEL: Uses ApplicationForm, Applicant, Account, FinancialAccount
+ * See /docs/01-foundation/data-model.md for complete data model
+ * 
+ * @author [Author]
+ * @date YYYY-MM-DD
+ */
+public class ClassName {
+    // ...
+}
+```
+
+### File Types Requiring Headers:
+- ✅ All .md files in `/docs/`
+- ✅ All .cls (Apex classes)
+- ✅ All README files
+- ✅ All implementation/progress documents
+- ✅ All session summaries
+
+**NO EXCEPTIONS**: Creating a file without the appropriate header is incomplete work.
+
+---
+
+## 🧪 Testing Requirements
+
+- All Apex tests must be ≥85% coverage
+- Tests must be bulkified (200+ records)
+- Follow test patterns in existing test classes
+- Minimal test data in setup method
+- Minimal assertions per test
+- No DML in test methods outside of `Test.startTest()` / `Test.stopTest()`
+
+---
+
+## 📦 Deployment Requirements
+
+- Update `package.xml` for ALL new components
+- Deploy to target org: `sf project deploy start --source-dir [path] --target-org msb-sbox`
+- Verify deployment success before marking task complete
+- Update documentation after successful deployment
+- Document any deployment issues in `/docs/development/`
+
+---
+
+## 🎯 Code Quality Standards
+
+- Use `with sharing` for security (unless specific reason not to)
+- Check CRUD/FLS permissions before DML operations
+- Bulkify all DML operations (handle 200+ records)
+- Handle exceptions gracefully with try-catch
+- Add meaningful debug statements for troubleshooting
+- Follow existing code patterns in the repo
+- Use descriptive variable names
+- Add inline comments for complex logic
+
+---
+
+## 🏗️ Enterprise Patterns (fflib-apex-common)
+
+When applicable, follow enterprise patterns:
+
+- **Domain Pattern**: Business logic in Domain classes (extend `fflib_SObjectDomain`)
+- **Selector Pattern**: SOQL queries in Selector classes (extend `fflib_SObjectSelector`)
+- **Service Pattern**: Complex operations in Service classes
+- **Unit of Work**: Use for transaction management and bulkification
+- **Trigger Pattern**: Triggers only delegate to Domain classes (no business logic)
+
+**Note**: Not all classes require fflib patterns. Use judgment based on complexity.
+
+---
+
+## 🔍 Definition of Done
+
+Before marking a task complete:
+
+- [ ] Apex code is bulkified and handles 200+ records
+- [ ] CRUD/FLS enforced where applicable
+- [ ] Tests written/updated with ≥85% coverage on touched classes
+- [ ] Metadata added to `package.xml` for all new components
+- [ ] Deployed successfully to target org
+- [ ] If schema changed:
+  - [ ] Updated `/docs/01-foundation/data-model.md`
+  - [ ] Synced `field-mappings.md` with user's `field-mappings.csv` changes (DO NOT modify CSV)
+- [ ] Session notes added to `/docs/04-implementation/session-notes/` (if significant work)
+- [ ] Updated story file with task completion status
+
+---
+
+## 📊 Available Reports (docs/05-analysis/)
+
+Before starting any task, review these for current state:
+
+- `metadata-audit-reports/` - Metadata inventory and gap analysis
+- Check for implementation tracking and coverage summaries
+
+---
+
+## 🏷️ Work Item Prefixes
+
+Use these prefixes in commits and documentation:
+
+- **LWC-** = Lightning Web Components (UI screens, workflows, user experience)
+- **SVC-** = Apex Services (business logic, validation, workflow management)
+- **FLOW-** = Screen Flow Logic (navigation, state management, user journey)
+- **DM-** = Data Model (objects/fields/ER updates)
+- **MAP-** = Mappings (external→SF field map & rules)
+- **ING-** = Ingestion (parser, mapper, upsert services, tests)
+- **API-** = API Development (REST endpoints, authentication, integration)
+- **SEC-** = Security (FLS/CRUD, PII handling, permissions)
+- **DOC-** = Documentation (ER/mappings/ADRs)
+
+---
+
+## 🚫 Guardrails (Do NOT do these)
+
+- Do NOT create overlapping objects/fields - search `force-app/main/default/objects/` first
+- Do NOT invent answers to open questions - ask the user
+- Do NOT build non-essential automation in Phase 1
+- Do NOT commit PII to logs, debug statements, or sample files
+- Do NOT use incorrect object names (Loan__c, Business_Relationship__c, etc.)
+- Do NOT modify `/docs/01-foundation/field-mappings.csv` - this is user-maintained; only update the .md documentation
+
+---
+
+## 🔒 Invariants (Do NOT break these)
+
+- Use FSC objects where they exist; create customs only for separation of concerns
+- Every FinancialAccount (loan) must link to an Account and identify Applicants via FinancialAccountRole
+- Use External ID fields for idempotent upserts (DAOApplicationId__c, etc.)
+- PII fields (SSN, DOB) must be protected with FLS and encryption
+- ApplicationForm is the master record for applications; Applicant is master-detail to ApplicationForm
+
+---
+
+## 📂 File Hierarchy (Quick Reference)
+
+**Agent Instructions**: `/.cursorrules` (this file - ONLY source of truth)  
+**Getting Started**: `/docs/00-START-HERE.md`  
+**Project Status**: `/PROJECT.md`  
+**Data Model**: `/docs/01-foundation/data-model.md`  
+**Field Mappings**: `/docs/01-foundation/field-mappings.csv` (source) + `.md` (context)  
+**Requirements**: `/docs/02-requirements/`  
+**Workflows**: `/docs/03-workflows/`  
+**Architecture Decisions**: `/docs/04-implementation/architecture-decisions/` (ADRs)  
+**Session Notes**: `/docs/04-implementation/session-notes/`  
+**Object Metadata**: `/force-app/main/default/objects/`  
+**Analysis Reports**: `/docs/05-analysis/`
+
+---
+
+**Last Updated**: 2025-01-16  
+**Review**: Every sprint  
+**Maintainer**: Main Street bank Development Team
+

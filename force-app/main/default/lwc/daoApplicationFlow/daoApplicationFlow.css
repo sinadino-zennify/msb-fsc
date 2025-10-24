@@ -1,0 +1,82 @@
+.dao-application-flow {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.progress-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e5e5e5;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.step.active .step-number {
+    background-color: #0070d2;
+    color: white;
+}
+
+.step.completed .step-number {
+    background-color: #4bca81;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    color: #666;
+    text-align: center;
+}
+
+.step.active .step-label {
+    color: #0070d2;
+    font-weight: bold;
+}
+
+.step.completed .step-label {
+    color: #4bca81;
+}
+
+/* Add connecting lines between steps */
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: calc(50% + 20px);
+    width: calc(100% - 40px);
+    height: 2px;
+    background-color: #e5e5e5;
+    z-index: -1;
+}
+
+.step.completed:not(:last-child)::after {
+    background-color: #4bca81;
+}
+
+.component-container {
+    min-height: 400px;
+    padding: 1rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    background-color: #fafaf9;
+}

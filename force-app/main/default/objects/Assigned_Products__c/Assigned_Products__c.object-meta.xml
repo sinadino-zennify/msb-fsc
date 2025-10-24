@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Assigned Product</label>
+    <pluralLabel>Assigned Products</pluralLabel>
+    <nameField>
+        <displayFormat>AP-{0000}</displayFormat>
+        <label>Assigned Product Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>false</enableActivities>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <sharingModel>ReadWrite</sharingModel>
+    <description>Junction object linking Applicants to ApplicationFormProducts. Maps which applicants are assigned to which products on the application.</description>
+</CustomObject>

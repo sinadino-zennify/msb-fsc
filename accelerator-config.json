@@ -1,0 +1,40 @@
+{
+  "project": {
+    "name": "Main Street Bank",
+    "client_name": "Main Street bank",
+    "org_alias": "msb-sbox",
+    "integration_source": ""
+  },
+  "salesforce": {
+    "api_version": "65.0",
+    "namespace": "",
+    "instance_url": "https://bankmainstreet--znfydev.sandbox.my.salesforce.com"
+  },
+  "custom_objects": {
+    "enabled": [
+      "Assigned_Products__c",
+      "Collateral__c",
+      "Collateral_Owner__c",
+      "Collateral_Association__c",
+      "Collateral_Assessment__c",
+      "Due_Diligence__c"
+    ]
+  },
+  "external_id_fields": {
+    "application": "DAOApplicationId__c",
+    "applicant": "DAOApplicantId__c",
+    "business": "DAOBusinessId__c"
+  },
+  "features": {
+    "collateral_management": true,
+    "assessment_tracking": true,
+    "due_diligence": true,
+    "api_integration": true
+  },
+  "accelerator": {
+    "version": "1.0.0",
+    "created_date": "2025-01-16",
+    "last_updated": "2025-01-16"
+  }
+}
+

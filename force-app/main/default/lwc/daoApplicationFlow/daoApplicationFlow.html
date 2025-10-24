@@ -1,0 +1,62 @@
+<!-- 
+🔴 AI AGENTS: READ FIRST - /docs/01-foundation/data-model.md for correct object names
+✅ Correct: ApplicationForm, Applicant, Account (Business), FinancialAccount
+❌ Wrong: Application__c, Applicant__c, Loan__c, Business_Relationship__c
+-->
+
+<template>
+    <div class="dao-application-flow">
+        <lightning-card title="Deposit Account Opening Application">
+            <div class="slds-p-around_medium">
+                <!-- Progress Indicator -->
+                <div class="progress-indicator slds-m-bottom_large">
+                    <template for:each={steps} for:item="step">
+                        <div key={step.id} class={step.cssClass}>
+                            <span class="step-number">{step.number}</span>
+                            <span class="step-label">{step.label}</span>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Dynamic Component Container -->
+                <div class="component-container">
+                    <template if:true={showApplicantDetails}>
+                        <c-applicant-details 
+                            record-id={applicationId}
+                            on-next={handleNext}
+                            on-back={handleBack}
+                            on-save={handleSave}>
+                        </c-applicant-details>
+                    </template>
+
+                    <template if:true={showProductSelection}>
+                        <c-product-selection 
+                            record-id={applicationId}
+                            on-next={handleNext}
+                            on-back={handleBack}
+                            on-save={handleSave}>
+                        </c-product-selection>
+                    </template>
+
+                    <template if:true={showCollateralEntry}>
+                        <c-collateral-entry 
+                            record-id={applicationId}
+                            on-next={handleNext}
+                            on-back={handleBack}
+                            on-save={handleSave}>
+                        </c-collateral-entry>
+                    </template>
+
+                    <template if:true={showReviewAndSubmit}>
+                        <c-review-and-submit 
+                            record-id={applicationId}
+                            on-submit={handleSubmit}
+                            on-back={handleBack}
+                            on-save={handleSave}>
+                        </c-review-and-submit>
+                    </template>
+                </div>
+            </div>
+        </lightning-card>
+    </div>
+</template>

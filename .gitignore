@@ -1,0 +1,74 @@
+# Salesforce
+.sfdx/
+.sf/
+.localdevserver/
+
+# Salesforce DX
+.sfdx
+.sfdx-cache/
+
+# LWC VSCode autocomplete
+**/lwc/jsconfig.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.cursor/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+
+# Credentials (NEVER commit)
+*.pem
+*.key
+*secret*
+*credentials*
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Test results
+test-results/
+coverage/
+
+# Environment
+.env
+.env.local
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Project specific
+accelerator-config.json.bak
+*.zip
+

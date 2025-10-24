@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Collateral__c</fullName>
+    <label>Collateral</label>
+    <referenceTo>Collateral__c</referenceTo>
+    <relationshipLabel>Collateral Associations</relationshipLabel>
+    <relationshipName>Collateral_Associations</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <required>true</required>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    <description>Master-Detail to Collateral</description>
+</CustomField>

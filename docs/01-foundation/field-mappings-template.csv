@@ -1,0 +1,26 @@
+Row,Salesforce Object,Salesforce Field API Name,Angular App Field Name,Type,JSON Object,Mapped,Notes,Comments
+1,Account,DAOBusinessId__c,dao_business_id,Text,business,Yes,External ID for upsert,
+2,Account,Name,business_name,Text,business,Yes,Legal business name,
+3,Account,Type,business_type,Picklist,business,Yes,Business entity type,
+4,Applicant,DAOApplicantId__c,dao_applicant_id,Text,applicant,Yes,External ID for upsert,
+5,Applicant,FirstName,first_name,Text,applicant,Yes,Applicant first name,
+6,Applicant,LastName,last_name,Text,applicant,Yes,Applicant last name,
+7,Applicant,Email,email,Email,applicant,Yes,Applicant email address,
+8,ApplicationForm,DAOApplicationId__c,dao_application_id,Text,application,Yes,External ID for upsert,
+9,ApplicationForm,Stage,stage,Picklist,application,Yes,Application stage,
+10,ApplicationForm,Status,status,Picklist,application,Yes,Application status,
+
+# Instructions for Users:
+# 1. Fill in your field mappings from {{INTEGRATION_SOURCE}}
+# 2. Column definitions:
+#    - Row: Sequential number for reference
+#    - Salesforce Object: Target Salesforce object (use correct names from data-model.md)
+#    - Salesforce Field API Name: Exact API name with __c suffix for custom fields
+#    - Angular App Field Name: Field name from external application (snake_case)
+#    - Type: Data type (Text, Number, Picklist, Date, Boolean, etc.)
+#    - JSON Object: Which JSON object this field belongs to (applicant/business/application)
+#    - Mapped: Yes/No - is this field currently mapped?
+#    - Notes: Implementation notes or special handling
+#    - Comments: Questions or clarifications needed
+# 3. Save this file and notify AI agents to sync field-mappings.md
+

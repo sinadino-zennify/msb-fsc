@@ -1,0 +1,102 @@
+Angular Tab,Angular App Field Name,Comments,API Field Name (snake_case),Angular App Field Name Type,JSON Object,Salesforce API Object/Field Name,Salesforce API Object Name,Salesforce API Field Name
+Business Owners,OwnershipCertification,,ownership_certification,Boolean,N/A,None,None,None
+Business Details,OwnershipCertification,,ownership_certification,Boolean,N/A,None,None,None
+Profile,AddAuthorizedSigners,,add_authorized_signers,Boolean,N/A,None,None,None
+applicant,ControllingPartyCertification,,controlling_party_certification,Bool,N/A,None,None,None
+Terms and Conditions,SmsOptIn,,sms_opt_in,Boolean,applicant ,Account.SMS_Opt_In__c,Account,SMS_Opt_In__c
+Terms and Conditions,TermsVersion,,terms_version,Boolean,N/A,None,None,None
+Business Owners,OwnedByOtherLegalEntity,,owned_by_other_legal_entity,Boolean,business,FinServ__AccountAccountRelation__c.FinServ__Account__c,FinServ__AccountAccountRelation__c,FinServ__Account__c
+Application Fields,CurrentStep,,current_step,String,application,ApplicationForm.Application_Current_Step__c,ApplicationForm,Application_Current_Step__c
+Profile,InternationalATM,,international_atm,Boolean,application                 ,ApplicationForm.International_ATM__c,ApplicationForm,International_ATM__c
+Business Activities,OtherUses,,other_uses,String,application,ApplicationForm.Other_Uses__c,ApplicationForm,Other_Uses__c
+Application Fields,Stage,,stage,String,application,ApplicationForm.Stage,ApplicationForm,Stage
+Terms and Conditions,AcceptTerms,,accept_terms,Boolean,application,ApplicationForm.Terms_And_Conditions_Accepted__c,ApplicationForm,Terms_And_Conditions_Accepted__c
+Terms and Conditions,AcceptedAt,,accepted_at,DateTime,application,ApplicationForm.Terms_And_Conditions_Accepted_At__c,ApplicationForm,Terms_And_Conditions_Accepted_At__c
+Business Activities,use_payroll_benefits,,use_payroll_benefits,Bool,application,ApplicationForm.Use_Payroll_Benefits__c,ApplicationForm,Use_Payroll_Benefits__c
+Business Activities,use_operating,,use_operating,Bool,application,ApplicationForm.Use_Operating__c,ApplicationForm,Use_Operating__c
+Business Activities,use_savings,,use_savings,Bool,application,ApplicationForm.Use_Savings__c,ApplicationForm,Use_Savings__c
+Profile,WriteOrDepositChecks,,write_or_deposit_checks,Boolean,application,ApplicationForm.Write_Or_Deposit_Checks__c,ApplicationForm,Write_Or_Deposit_Checks__c
+BeneficialOwner,DebitCard,,needs_debit_card,Boolean,applicant,Applicant.Needs_Debit_Card__c,Applicant,Needs_Debit_Card__c
+BeneficialOwner,OwnerDebitCard,,owner_debit_card,Boolean,applicant,Applicant.Debit_Card_Owner__c,Applicant,Debit_Card_Owner__c
+Profile,AuthorizedSigners,,authorized_signers,Signer[],N/A,AccountContactRelation.Authorized_Signer_zen__c,AccountContactRelation,Authorized_Signer__c
+Business Owners,YouAreBeneficialOwner,when entity is set to person but setting the applicant_type will accomplish this,you_are_beneficial_owner,Boolean,applicant,AccountContactRelation.Beneficial_Owner_zen__c,AccountContactRelation,Beneficial_Owner_zen__c
+Business Owners,YouAreBeneficialOwner,when entity is set to business but setting the applicant_type will accomplish this,you_are_beneficial_owner,Boolean,applicant,Finserv__AccountAccountRelation.Beneficial_Owner_zen__c,Finserv__AccountAccountRelation,Beneficial_Owner_zen__c
+Business Owners,PrimaryOwner,,primary_owner,Boolean,applicant,AccountContactRelation.Primary_Owner__c,AccountContactRelation,Primary_Owner__c
+ControllingParty,ControllingParty,,controlling_party,Boolean,applicant,AccountContactRelation.Controlling_Party_zen__c,AccountContactRelation,Controlling_Party_zen__c
+Business Owners,SelfOwnerPercent,,self_owner_percent,Number,applicant,AccountContactRelation.Self_Ownership_Percentage_zen__c,AccountContactRelation,Self_Ownership_Percentage_zen__c
+Beneficial Owner,OwnerPercentage,when entity is set to person,owner_percentage,Number,applicant,AccountContactRelation.Ownership_Percentage_zen__c,AccountContactRelation,Ownership_Percentage_zen__c
+Beneficial Owner,OwnerPercentage,when entity is set to business,owner_percentage,Number,applicant,Finser__AccountAccountRelation__c.Ownership_Percentage_zen__c,Finser__AccountAccountRelation__c,Ownership_Percentage_zen__c
+Signer,Relationship,,relationship,String,applicant,AccountContactRelation.Relationship_to_Business_zen__c,AccountContactRelation,Relationship_to_Business_zen__c
+Business Details,ControllingParty,,controlling_party,String,applicant,AccountContactRelation.Controlling_Party__c,AccountContactRelation,Controlling_Party__c
+Business Details,Role,We can use the role to define AccountContactRelation and Finserv__AccountAccountRelation__c junction objects. Contactnate potential values comma separated list,role,String,applicant,AccountContactRelation.Roles,AccountContactRelation,Roles
+Business Owners,BusinessOwners,,business_owners,BeneficialOwner[],applicant,AccountContactRelation.Roles,AccountContactRelation,Roles
+Documentation,BusinessStory,,business_story,String,business,Account.Business_Story__c,Account,Business_Story__c
+Profile,AboutBusiness,,about_business,String,business,Account.About_Business__c,Account,About_Business__c
+Profile,AnnualRevenue,,annual_revenue,Picklist,business,Account.Approximate_Gross_Annual_Revenue_zen__c,Account,Approximate_Gross_Annual_Revenue_zen__c
+Business Details,City,,billing_mailing_city,String,business,Account.BillingCity,Account,BillingCity
+Business Details,Zip,,billing_mailing_zip,Number,business,Account.BillingPostalCode,Account,BillingPostalCode
+Business Details,State,,billing_mailing_state,String,business,Account.BillingState,Account,BillingState
+Business Details,AddressLine1,,billing_mailing_address_line1,String,business,Account.BillingStreet,Account,BillingStreet
+Business Details,AddressLine2,,billing_mailing_address_line2,String,business,Account.BillingStreetAdditional__c,Account,BillingStreetAdditional__c
+Business Details,SameAsPersonalAddress,,same_as_personal_address,Boolean,business,Account.Business_Address_same_as_Personal_zen__c,Account,Business_Address_same_as_Personal_zen__c
+Business Details,BusinessType,,business_type,String,business,Account.Business_Type__c,Account,Business_Type__c
+Personal Info,ChexSystemsConsent,,chex_systems_consent,Boolean,business,Account.ChexSystems_Consent__c,Account,ChexSystems_Consent__c
+Personal Info,Residency,,residency,String,business,Account.Citizenship_Status__c,Account,Citizenship_Status__c
+Business Owners,ForeignOwnership,,foreign_ownership,Boolean,business,Account.Does_business_have_foreign_ownership_zen__c,Account,Does_business_have_foreign_ownership_zen__c
+Business Overview,ForeignTies,,foreign_ties,String[],business,Account.Does_business_have_foreign_ties_zen__c,Account,Does_business_have_foreign_ties_zen__c
+Business Details,DBA,,dba,String,business,Account.Doing_Business_As_zen__c,Account,Doing_Business_As_zen__c
+Business Activities,other_employed,,other_employed,String,applicant,Account.Employment_Status_zen__pc,Account,Employment_Status_zen__pc
+Business Details,TIN,,tin,Number,business,Account.Federal_Tax_ID_Number_zen__c,Account,Federal_Tax_ID_Number_zen__c
+BeneficialOwner,OwnerFirstName,,owner_first_name,String,applicant,Account.FirstName,Account,FirstName
+Personal Info,FirstName,,first_name,String,applicant,Account.FirstName,Account,FirstName
+Pleased To Meet You,FirstName,,first_name,String,applicant,Account.FirstName,Account,FirstName
+Signer,FirstName,,first_name,String,applicant,Account.FirstName,Account,FirstName
+Business Overview,ForeignCountryNames,,foreign_country_names,String[],business,Account.Foreign_Ties_Country_zen__c,Account,Foreign_Ties_Country_zen__c
+Business Activities,act_gambling,,act_gambling,Bool,business,Account.Internet_Gambling_Or_Related_Transaction__c,Account,Internet_Gambling_Or_Related_Transaction__c
+BeneficialOwner,OwnerLastName,,owner_last_name,String,applicant,Account.LastName,Account,LastName
+Personal Info,LastName,,last_name,String,applicant,Account.LastName,Account,LastName
+Pleased To Meet You,LastName,,last_name,String,applicant,Account.LastName,Account,LastName
+Signer,LastName,,last_name,String,applicant,Account.LastName,Account,LastName
+Documentation,EntityType,,entity_type,String,business,Account.Legal_Entity_Type_cm__c,Account,Legal_Entity_Type_cm__c
+Business Activities,act_marijuana,,act_marijuana,Bool,business,Account.Marijuana_Related_Services__c,Account,Marijuana_Related_Services__c
+Business Activities,act_money_orders_travelers_cards,,act_money_orders_travelers_cards,Bool,business,Account.Money_Orders_Or_Travelers_Cards__c,Account,Money_Orders_Or_Travelers_Cards__c
+Business Activities,act_money_services_fx,,act_money_services_fx,Bool,business,Account.Money_Services__c,Account,Money_Services__c
+Documentation,NaicsCode,,naics_code,String,business,Account.NAICS_Code__c,Account,NAICS_Code__c
+BusinessDetails,BusinessName,,business_name,String,business,Account.Name,Account,Name
+Signer,DebitCard,,debit_card,Bool,applicant,Account.Needs_Debit_Card__c,Account,Needs_Debit_Card__c
+Personal Info,DateOfBirth,,date_of_birth,DateTime,applicant,Account.PersonBirthdate,Account,PersonBirthdate
+BeneficialOwner,OwnerEmail,,owner_email,String,applicant,Account.PersonEmail,Account,PersonEmail
+Pleased To Meet You,Email,,email,String,applicant,Account.PersonEmail,Account,PersonEmail
+Signer,Email,,email,String,applicant,Account.PersonEmail,Account,PersonEmail
+Personal Info,City,,person_mailing_city,String,applicant,Account.PersonMailingCity,Account,PersonMailingCity
+Personal Info,State,,person_mailing_state,String,applicant,Account.PersonMailingCity,Account,PersonMailingState
+Personal Info,Zip,,person_mailing_zip,Number,applicant,Account.PersonMailingPostalCode,Account,PersonMailingPostalCode
+Personal Info,AddressLine1,,person_mailing_address_line1,String,applicant,Account.PersonMailingStreet,Account,PersonMailingStreet
+Personal Info,AddressLine2,,person_mailing_address_line2,String,applicant,Account.PersonMailingStreetAdditional__c,Account,PersonMailingStreetAdditional__c
+Pleased To Meet You,PhoneNumber,,phone_number,Number,applicant,Account.PersonMobilePhone,Account,PersonMobilePhone
+Personal Info,MailingCity,,other_mailing_city,String,applicant,Account.PersonOtherCity,Account,PersonOtherCity
+Personal Info,MailingZip,,other_mailing_zip,Number,applicant,Account.PersonOtherPostalCode,Account,PersonOtherPostalCode
+Personal Info,MailingState,,other_mailing_state,String,applicant,Account.PersonOtherState,Account,PersonOtherState
+Personal Info,MailingAddressLine1,,other_mailing_address_line1,String,applicant,Account.PersonOtherStreet,Account,PersonOtherStreet
+Personal Info,MailingAddressLine2,,other_mailing_address_line2,String,applicant,Account.PersonOtherStreetAdditional__c,Account,PersonOtherStreetAdditional__c
+Business Overview,BusinessPhone,,business_phone,Number,business,Account.Phone,Account,Phone
+Business Activities,act_remittance,,act_remittance,Bool,business,Account.Remittance__c,Account,Remittance__c
+Business Details,MailingCity,,shipping_mailing_city,String,business,Account.ShippingCity,Account,ShippingCity
+Business Details,MailingZip,,shipping_mailing_zip,Number,business,Account.ShippingPostalCode,Account,ShippingPostalCode
+Business Details,MailingState,,shipping_mailing_state,String,business,Account.ShippingState,Account,ShippingState
+Business Details,MailingAddressLine1,,shipping_mailing_address_line1,String,business,Account.ShippingStreet,Account,ShippingStreet
+Business Details,MailingAddressLine2,,shipping_mailing_address_line2,String,business,Account.ShippingStreetAdditional__c,Account,ShippingStreetAdditional__c
+Pleased To Meet You,SmsConsent,,sms_consent,Boolean,applicant,Account.SMS_Consent__c,Account,SMS_Consent__c
+Personal Info,SocialSecurityNumber,,social_security_number,Number,applicant,Account.Social_Security_Number_zen__pc,Account,Social_Security_number_zen__c
+Business Details,SoleOwner,,sole_owner,Boolean,applicant,Account.Sole_Owner__c,Account,Sole_Owner__c
+Business Activities,act_solicit_investments,,act_solicit_investments,Bool,business,Account.Solicit_Investments__c,Account,Solicit_Investments__c
+BusinessDetails,MailingDiff,,mailing_diff,Boolean,applicant,Account.Use_Different_Mailing_Address__c,Account,Use_Different_Mailing_Address__c
+Business Overview,Website,,website,String,business,Account.Website,Account,Website
+Business Overview,BusinessEmail,,business_email,String,business,Account.Business_Email_zen__c,Account,Business_Email_zen__c
+Personal Info,MailingDiff,,mailing_diff,Boolean,applicant,Applicant.Account.Different_Mailing_Address__c,Account,Different_Mailing_Address__c
+Personal Info,applicantExternalId,New - Helps map Salesforce record Id and Angular App record Id,dao_applicant_id,String,applicant,Applicant.DAOApplicantId__c,Applicant,DAOApplicantId__c
+Business Details,businessExternalId,New - Helps map Salesforce record Id and Angular App record Id,dao_business_id,String,business,Account.DAOBusinessId__c,Account,DAOBusinessId__c
+Business Details,applicantionExternalId,New - Helps map Salesforce record Id and Angular App record Id,dao_application_id,String,application,ApplicationForm.DAOApplicationId__c,ApplicationForm,DAOApplicationId__c
+Business Owner,applicant_type,New - contactnate potential values comma separated list,applicant_type,String,applicant,Applicant.Applicant_Type__c,Applicant,Applicant_Type__c
+Business Details,source_of_funds,New - contactnate potential values comma separated list,source_of_funds,String,application,ApplicationForm.Source_Of_Funds__c,ApplicationForm,Source_Of_Funds__c
+Bneficial Owner,entity,New - Determines what Account to create (Business vs PersonAccount) and what junction object ( AccountContactRelations vs FinServ__AccountAccountRelation__c) ,entity,String,applicant,N/A,N/A,N/A

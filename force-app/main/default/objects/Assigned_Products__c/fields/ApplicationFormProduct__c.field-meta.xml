@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ApplicationFormProduct__c</fullName>
+    <label>Application Form Product</label>
+    <referenceTo>ApplicationFormProduct</referenceTo>
+    <relationshipLabel>Assigned Products</relationshipLabel>
+    <relationshipName>Assigned_Products</relationshipName>
+    <required>true</required>
+    <type>Lookup</type>
+    <description>Links to the ApplicationFormProduct (product on application)</description>
+</CustomField>
