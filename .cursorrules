@@ -27,7 +27,7 @@ Complete EVERY time before starting ANY task:
 
 1. **READ** `/docs/01-foundation/data-model.md` - **SOURCE OF TRUTH** for object names and relationships
 2. **READ** `/PROJECT.md` - Active scope and overview
-3. **READ** `/docs/02-requirements/` - Requirements, backlog, and story context
+3. **READ** `/docs/02-requirements/` - Requirements, backlog, story context, and Tasks/Sub-Tasks
 4. **READ** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
 5. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
 6. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for what has been implemented and lessons learned
@@ -103,6 +103,14 @@ Always follow these steps in order:
 10. **FINALIZE** Mark task complete in story file
 
 ---
+
+## ✅ Task Tracking Protocol (MANDATORY)
+
+- **Every story must include** a `Tasks and Sub-Tasks` section with actionable checkboxes.
+- **Before coding:** Review the story’s Tasks/Sub-Tasks. If missing or unclear, add/clarify them in the story file under `docs/02-requirements/`.
+- **During work:** Update Task/Sub-Task checkboxes as progress is made. Keep them in sync with actual work.
+- **On completion:** Ensure all Tasks/Sub-Tasks are checked or explicitly deferred with a note in the story.
+- **Transparency:** Prefer small updates to the story over vague session notes; session notes should summarize highlights and decisions.
 
  
 

@@ -71,7 +71,9 @@
 
 ## 📌 Completed
 
-_Track completed items here_
+| ID | Title | Completed Date | Summary |
+|----|-------|----------------|---------|
+|    |       |                |         |
 
 ---
 

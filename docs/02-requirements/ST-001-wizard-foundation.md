@@ -46,6 +46,53 @@
 
 ---
 
+## 🛠️ Tasks and Sub-Tasks
+
+- [ ] Define Custom Metadata Type `Wizard_Step__mdt`
+  - [ ] Create CMDT object metadata with required fields (`WizardApiName__c`, `Order__c`, `ComponentBundle__c`, `StepLabel__c`, `ValidatorClasses__c`, `Skippable__c`, `HelpText__c`)
+  - [ ] Add sample records for `DAO_Business_InBranch` (Applicant, Product, Review)
+  - [ ] Add CMDT to `package.xml` (or ensure wildcard covers CMDT) and deploy
+  - [ ] Verify via SOQL that records are retrievable and ordered by `Order__c`
+
+- [ ] Implement Apex: `WizardConfigService`
+  - [ ] Create `WizardStepDTO` and `getSteps(wizardApiName)` with `@AuraEnabled(cacheable=true)`
+  - [ ] SOQL orders by `Order__c`; maps fields to DTO; returns list
+  - [ ] Unit tests for ordering, labeling defaulting, and null/blank inputs
+
+- [ ] Implement Apex: `WizardValidationService` + example validator
+  - [ ] Define `WizardValidator` interface and `ValidationResponse`
+  - [ ] Implement `validateStep(...)` to iterate semicolon-separated class names
+  - [ ] Implement `OfacNameScreeningValidator` stub (example)
+  - [ ] Unit tests including negative cases (class not found / wrong type)
+
+- [ ] Scaffold LWCs (container, router, steps)
+  - [ ] `daoWizardContainer` with progress indicator, event handlers, `lwc:ref` access to child
+  - [ ] `daoWizardStepRouter` with explicit conditional branches per `ComponentBundle__c` and `@api validate()` pass-through
+  - [ ] Minimal step shells: `applicantDetails`, `productSelection`, `reviewAndSubmit` with `validate()` and `payloadchange`
+
+- [ ] Implement navigation & validation wiring
+  - [ ] Previous/Next handlers, Save & Exit event
+  - [ ] Client-side validation by invoking child `validate()`
+  - [ ] Server-side validation using CMDT-provided `ValidatorClasses__c`
+
+- [ ] Sequence and progress UI
+  - [ ] Use `WizardConfigService.getSteps` results to set order and labels
+  - [ ] Progress indicator reflects current and upcoming steps
+
+- [ ] App Builder wiring
+  - [ ] Expose container to App Page; set `wizardApiName`
+  - [ ] Verify rendering and step transitions in org
+
+- [ ] Documentation & notes
+  - [ ] Update `docs/04-implementation/session-notes/` with progress and lessons
+  - [ ] Ensure `/examples/` remain in sync with implemented pattern
+
+- [ ] Deployment & verification
+  - [ ] Update `package.xml` as needed
+  - [ ] Deploy to `msb-sbox` and validate in UI
+
+---
+
 ## 🔧 Technical Implementation
 
 ### Objects Involved
