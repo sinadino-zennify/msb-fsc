@@ -1,0 +1,13 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "Main Street Bank (msb)",
+  "namespace": "",
+  "sourceApiVersion": "65.0",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "plugins": {}
+}

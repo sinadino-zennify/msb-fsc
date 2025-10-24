@@ -26,21 +26,14 @@
 Complete EVERY time before starting ANY task:
 
 1. **READ** `/docs/01-foundation/data-model.md` - **SOURCE OF TRUTH** for object names and relationships
-2. **READ** Field Mapping Sources:
-   - `/docs/01-foundation/field-mappings.csv` - **Field mappings (user-maintained source of truth)**
-   - `/docs/01-foundation/field-mappings.md` - Mapping documentation (agent-maintained, synced from CSV)
-3. **READ** `/PROJECT.md` - Active scope, backlog, and progress ledger
-4. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
-5. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for understanding what has been implemented and lessons learned
-6. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
-7. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
-8. **CONFIRM** All context is loaded before proceeding
-
-### 📋 Additional Context for Specific Work Types:
-
-**For API/DAO work (API-* work items):**
-- **READ** `/docs/03-workflows/` - **CRITICAL** for understanding external app user journey
-  - These documents show step-by-step sequences, input fields, validations, and data flow
+2. **READ** `/PROJECT.md` - Active scope and overview
+3. **READ** `/docs/02-requirements/` - Requirements, backlog, and story context
+4. **READ** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
+5. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
+6. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for what has been implemented and lessons learned
+7. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
+8. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
+9. **CONFIRM** All context is loaded before proceeding
 
 **⚠️ CRITICAL**: If you cannot access ANY of these files, STOP and ask the user.
 
@@ -99,43 +92,19 @@ Always follow these steps in order:
 1. **PICK** a single backlog item from `/docs/02-requirements/backlog.md`
 2. **READ** the matching story file in `/docs/02-requirements/` if applicable
 3. **VERIFY** object/field names in `/docs/01-foundation/data-model.md` and `force-app/main/default/objects/`
-4. **CHECK** Field mappings and data types in `/docs/01-foundation/field-mappings.csv`
-5. **REVIEW** `docs/05-analysis/` for current implementation status
-6. **IMPLEMENT** with minimal diffs; follow naming already in repo
-7. **TEST** Add/adjust tests; ensure bulkification (200+ records) and CRUD/FLS
-8. **DOCUMENT** If objects/fields changed:
+4. **REVIEW** `docs/05-analysis/` for current implementation status
+5. **IMPLEMENT** with minimal diffs; follow naming already in repo
+6. **TEST** Add/adjust tests; ensure bulkification (200+ records) and CRUD/FLS
+7. **DOCUMENT** If objects/fields changed:
    - Update `/docs/01-foundation/data-model.md`
-   - Update field mappings: **NEVER modify** `field-mappings.csv` (user-maintained). Update `field-mappings.md` to document CSV changes.
    - Add session notes to `/docs/04-implementation/session-notes/`
-9. **PACKAGE** Create metadata entries in `package.xml` for each new component
-10. **DEPLOY** Deploy to target org and verify
-11. **FINALIZE** Mark task complete in story file
+8. **PACKAGE** Create metadata entries in `package.xml` for each new component
+9. **DEPLOY** Deploy to target org and verify
+10. **FINALIZE** Mark task complete in story file
 
 ---
 
-## 📊 Field Mapping Workflow
-
-### User Responsibilities:
-- **Maintain** `/docs/01-foundation/field-mappings.csv` as authoritative source
-- Update CSV when field mappings change or new fields are added
-- Use Comments column in CSV to flag special cases or questions
-
-### Agent Responsibilities:
-- **READ** `field-mappings.csv` for field mappings when implementing code
-- **SYNC** `field-mappings.md` when user updates CSV:
-  - Parse CSV for new/changed mappings
-  - Update relevant sections in MD with context and guidance
-  - Add implementation notes for complex mappings from Comments column
-  - Preserve all existing context sections (privacy, address handling, etc.)
-- **NEVER MODIFY** `field-mappings.csv` - agent edits will be rejected
-
-### File Ownership:
-| File | Owner | Purpose | Agent Can Modify? |
-|------|-------|---------|-------------------|
-| `field-mappings.csv` | **User** | Field mapping source of truth | ❌ NO - Read only |
-| `field-mappings.md` | **Agent** | Mapping documentation & context | ✅ YES - Sync with CSV |
-
----
+ 
 
 ## 📄 File Creation Rules (MANDATORY)
 
@@ -238,8 +207,7 @@ Before marking a task complete:
 - [ ] Deployed successfully to target org
 - [ ] If schema changed:
   - [ ] Updated `/docs/01-foundation/data-model.md`
-  - [ ] Synced `field-mappings.md` with user's `field-mappings.csv` changes (DO NOT modify CSV)
-- [ ] Session notes added to `/docs/04-implementation/session-notes/` (if significant work)
+  - [ ] Session notes added to `/docs/04-implementation/session-notes/` (if significant work)
 - [ ] Updated story file with task completion status
 
 ---
@@ -257,15 +225,13 @@ Before starting any task, review these for current state:
 
 Use these prefixes in commits and documentation:
 
-- **LWC-** = Lightning Web Components (UI screens, workflows, user experience)
-- **SVC-** = Apex Services (business logic, validation, workflow management)
-- **FLOW-** = Screen Flow Logic (navigation, state management, user journey)
+- **LWC-** = Lightning Web Components (UI screens, user experience)
+- **SVC-** = Apex Services (business logic, validation, orchestration)
 - **DM-** = Data Model (objects/fields/ER updates)
-- **MAP-** = Mappings (external→SF field map & rules)
 - **ING-** = Ingestion (parser, mapper, upsert services, tests)
 - **API-** = API Development (REST endpoints, authentication, integration)
 - **SEC-** = Security (FLS/CRUD, PII handling, permissions)
-- **DOC-** = Documentation (ER/mappings/ADRs)
+- **DOC-** = Documentation (ER/ADRs)
 
 ---
 
@@ -276,7 +242,6 @@ Use these prefixes in commits and documentation:
 - Do NOT build non-essential automation in Phase 1
 - Do NOT commit PII to logs, debug statements, or sample files
 - Do NOT use incorrect object names (Loan__c, Business_Relationship__c, etc.)
-- Do NOT modify `/docs/01-foundation/field-mappings.csv` - this is user-maintained; only update the .md documentation
 
 ---
 
@@ -296,9 +261,7 @@ Use these prefixes in commits and documentation:
 **Getting Started**: `/docs/00-START-HERE.md`  
 **Project Status**: `/PROJECT.md`  
 **Data Model**: `/docs/01-foundation/data-model.md`  
-**Field Mappings**: `/docs/01-foundation/field-mappings.csv` (source) + `.md` (context)  
 **Requirements**: `/docs/02-requirements/`  
-**Workflows**: `/docs/03-workflows/`  
 **Architecture Decisions**: `/docs/04-implementation/architecture-decisions/` (ADRs)  
 **Session Notes**: `/docs/04-implementation/session-notes/`  
 **Object Metadata**: `/force-app/main/default/objects/`  

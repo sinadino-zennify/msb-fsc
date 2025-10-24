@@ -14,7 +14,7 @@ Architecture Decision Records document important architectural decisions made du
 
 | ID | Title | Status | Date | Summary |
 |----|-------|--------|------|---------|
-| ADR-0001 | [Example] Phase 1 Data Foundation | Accepted | 2025-01-16 | Prioritize data model before automation |
+| ADR-0001 | LWC Architecture for DAO (Main Street Bank) | Accepted | 2025-01-16 | Adopt container-child multi-step LWC architecture with orchestrator and standardized events |
 
 _Add your ADRs here_
 
