@@ -16,14 +16,14 @@
 - Renders one step at a time through `daoWizardStepRouter`, which chooses the child LWC by `ComponentBundle__c` from CMDT.
 - On Next:
   - Call step’s client validate (`reportValidity()` + custom rules via a small public API on each step).
-  - Call server validators configured in CMDT via `WizardValidationService.validateStep(...)` (semicolon‑separated class names).
+  - Persist via Apex upsert for the active step; surface any DML/CRUD/FLS errors to the UI.
   - If last step and valid → submit to Apex orchestration; else advance.
 - Rationale: LWC cannot instantiate arbitrary components from strings; router uses explicit template branches (can be code‑generated later).
 
 ---
 
 
-Notes: Validators align with Phase‑1 integrations (KYC/KYB/OFAC via FIS Code Connect; COCC booking via MuleSoft; doc gen/e‑sign later). Use the validator hook for those calls.
+Notes: Iteration 1 keeps validation client‑side only and performs upsert on Next to catch DML/CRUD/FLS issues early. Server‑side business validators (KYC/KYB/OFAC, etc.) will be reintroduced in a later story behind a pluggable seam.
 
 ---
 

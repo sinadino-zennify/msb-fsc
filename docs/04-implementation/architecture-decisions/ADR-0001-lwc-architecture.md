@@ -100,6 +100,12 @@ This pattern cleanly separates orchestration concerns from step-specific concern
 
 ---
 
+## Iteration Notes (2025-10-26)
+
+- For Iteration 1 (ST-001), we are keeping validation client-side only.
+- On Next, the container will persist the active step via an Apex upsert and surface any DML/CRUD/FLS errors to the UI.
+- Server-side business validators (e.g., OFAC/KYC/KYB hooks) are deferred to a later story and will be reintroduced behind a pluggable validator seam.
+
 ## Compliance
 
 Does this decision affect:

@@ -7,7 +7,7 @@
 # ST-001: Wizard Foundation (CMDT + Container/Router + Navigation)
 
 **Story ID**: ST-001  
-**Work Item**: LWC-001, SVC-001, SVC-002, DM-001  
+**Work Item**: LWC-001, SVC-001, DM-001  
 **Status**: Not Started  
 **Created**: 2025-10-24  
 **Last Updated**: 2025-10-24
@@ -32,15 +32,15 @@
   - Router: `daoWizardStepRouter`
   - Progress shows step labels from CMDT (`StepLabel__c` or DeveloperName)
 - [ ] Navigation implemented: Previous, Next, Save & Exit
-  - Next triggers client-side validate from step + optional server-side validators from CMDT
+  - Next triggers client-side validate from step only (no server-side validators in Iteration 1)
   - Save & Exit emits an event with current step
+- [ ] On Next, persist data via Apex upsert for the active step and surface any DML/CRUD/FLS errors to the UI
 - [ ] Conditional rendering of child LWCs works via router
   - Router chooses child by `ComponentBundle__c` and exposes `validate()`
 - [ ] Step sequence honors CMDT `Order__c`
 - [ ] Supporting Apex implemented
   - `WizardConfigService.getSteps(wizardApiName)` (cacheable) returns ordered DTOs
-  - `WizardValidationService.validateStep(...)` runs pluggable validators (semicolon-separated class names)
-  - Example validator `OfacNameScreeningValidator` implemented as stub
+  - `WizardPersistenceService.upsertStep(applicationId, stepDeveloperName, payload)` persists step data with CRUD/FLS checks
 - [ ] Unit tests ≥85% coverage on Apex
 - [ ] Deployed to `msb-sbox` and verified in App Builder
 
@@ -59,11 +59,10 @@
   - [ ] SOQL orders by `Order__c`; maps fields to DTO; returns list
   - [ ] Unit tests for ordering, labeling defaulting, and null/blank inputs
 
-- [ ] Implement Apex: `WizardValidationService` + example validator
-  - [ ] Define `WizardValidator` interface and `ValidationResponse`
-  - [ ] Implement `validateStep(...)` to iterate semicolon-separated class names
-  - [ ] Implement `OfacNameScreeningValidator` stub (example)
-  - [ ] Unit tests including negative cases (class not found / wrong type)
+- [ ] Implement Apex: `WizardPersistenceService`
+  - [ ] Implement `upsertStep(applicationId, stepDeveloperName, payload)`
+  - [ ] Enforce CRUD/FLS and return structured DML errors (code/message/fieldApiName)
+  - [ ] Unit tests for success and failure paths (CRUD/FLS failure, DML exceptions)
 
 - [ ] Scaffold LWCs (container, router, steps)
   - [ ] `daoWizardContainer` with progress indicator, event handlers, `lwc:ref` access to child
@@ -73,7 +72,7 @@
 - [ ] Implement navigation & validation wiring
   - [ ] Previous/Next handlers, Save & Exit event
   - [ ] Client-side validation by invoking child `validate()`
-  - [ ] Server-side validation using CMDT-provided `ValidatorClasses__c`
+  - [ ] Persist on Next via `WizardPersistenceService.upsertStep(...)` and surface DML/CRUD/FLS errors
 
 - [ ] Sequence and progress UI
   - [ ] Use `WizardConfigService.getSteps` results to set order and labels
