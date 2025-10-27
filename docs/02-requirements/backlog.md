@@ -8,7 +8,7 @@
 ## 🎯 Active Sprint
 
 ### In Progress
-- [ ] ST-001 — Wizard Foundation (CMDT + Container/Router + Navigation)
+_No active stories_
 
 ### Up Next
 - [ ] ST-002 — Persist Draft/Submit
@@ -26,7 +26,7 @@ _Track new stories here or link to story files in `docs/02-requirements/`_
 
 | ID | Title | Completed Date | Summary |
 |----|-------|----------------|---------|
-|    |       |                |         |
+| ST-001 | Wizard Foundation (CMDT + Container/Router + Navigation) | 2025-10-27 | CMDT orchestration, container/router pattern, client-side validation, upsert-on-Next persistence. All components deployed to msb-sbox. |
 
 ---
 

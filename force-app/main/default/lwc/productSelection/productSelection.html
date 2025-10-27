@@ -1,11 +1,23 @@
 <template>
-    <div class="component-placeholder">
-        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Component: {componentName}</h2>
-        <p>This component will be implemented in the next phase.</p>
+    <div class="product-selection">
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Product Selection</h2>
         
-        <div class="slds-m-top_large">
-            <lightning-button label="Back" onclick={handleBack} variant="neutral"></lightning-button>
-            <lightning-button label="Next" onclick={handleNext} variant="brand"></lightning-button>
-        </div>
+        <template if:true={stepConfig.helpText}>
+            <div class="slds-m-bottom_medium">
+                <p class="slds-text-body_regular">{stepConfig.helpText}</p>
+            </div>
+        </template>
+        
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12">
+                <lightning-combobox
+                    label="Product"
+                    value={productCode}
+                    options={productOptions}
+                    onchange={handleProductChange}
+                    placeholder="Select a product">
+                </lightning-combobox>
+            </lightning-layout-item>
+        </lightning-layout>
     </div>
 </template>

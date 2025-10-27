@@ -1,0 +1,88 @@
+<template>
+    <lightning-card title="Deposit Account Opening" icon-name="standard:opportunity">
+        <div class="slds-p-horizontal_medium">
+            <!-- Progress Indicator -->
+            <template if:true={steps}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-progress-indicator 
+                        current-step={currentStepDeveloperName}
+                        type="path"
+                        variant="base">
+                        <template for:each={progressSteps} for:item="step">
+                            <lightning-progress-step 
+                                key={step.developerName}
+                                label={step.stepLabel}
+                                value={step.developerName}>
+                            </lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                </div>
+
+            </template>
+
+            <!-- Error Display -->
+            <template if:true={error}>
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>Failed to load wizard configuration</h2>
+                        <p>{error.body.message}</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step Content -->
+            <template if:true={currentStep}>
+                <div class="slds-m-bottom_medium">
+                    <c-dao-wizard-step-router 
+                        lwc:ref="stepRouter"
+                        record-id={recordId}
+                        wizard-api-name={wizardApiName}
+                        step-config={currentStep}
+                        value={currentStepPayload}
+                        onpayloadchange={handlePayloadChange}>
+                    </c-dao-wizard-step-router>
+                </div>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-is-relative slds-m-vertical_medium" style="height: 100px;">
+                    <lightning-spinner 
+                        alternative-text="Saving..."
+                        size="medium">
+                    </lightning-spinner>
+                </div>
+            </template>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div slot="footer">
+            <div class="slds-grid slds-grid_align-spread">
+                <div class="slds-col">
+                    <lightning-button 
+                        label="Previous"
+                        onclick={handlePrevious}
+                        disabled={isFirst}
+                        variant="neutral">
+                    </lightning-button>
+                </div>
+                <div class="slds-col slds-text-align_center">
+                    <lightning-button 
+                        label="Save & Exit"
+                        onclick={handleSaveAndExit}
+                        variant="neutral">
+                    </lightning-button>
+                </div>
+                <div class="slds-col slds-text-align_right">
+                    <lightning-button 
+                        label={nextButtonLabel}
+                        onclick={handleNext}
+                        variant="brand"
+                        disabled={isLoading}>
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

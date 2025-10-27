@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <!-- Expose as a Record Action (Quick Action) -->
+        <target>lightning__RecordAction</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordAction">
+            <!-- "Action" = headless quick action (no required input fields) -->
+            <actionType>Action</actionType>
+            <objects>
+                <object>Account</object>
+                <object>Contact</object>
+                <object>Lead</object>
+                <!-- Add other objects you want this action available on -->
+            </objects>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

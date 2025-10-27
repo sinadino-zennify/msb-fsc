@@ -1,14 +1,52 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, api } from 'lwc';
 
-export default class ComponentPlaceholder extends LightningElement {
+export default class ReviewAndSubmit extends LightningElement {
     @api recordId;
-    @track componentName = 'Component Placeholder';
+    @api wizardApiName;
+    @api stepConfig;
+    @api value;
 
-    handleNext() {
-        this.dispatchEvent(new CustomEvent('next'));
+    confirmed = false;
+
+    connectedCallback() {
+        if (this.value) {
+            this.confirmed = this.value.confirmed || false;
+        }
     }
 
-    handleBack() {
-        this.dispatchEvent(new CustomEvent('back'));
+    handleConfirmChange(event) {
+        this.confirmed = event.target.checked;
+        this.emitPayloadChange();
+    }
+
+    emitPayloadChange() {
+        this.dispatchEvent(new CustomEvent('payloadchange', {
+            detail: { 
+                payload: this.payload,
+                isDirty: true
+            }
+        }));
+    }
+
+    get payload() {
+        return {
+            confirmed: this.confirmed
+        };
+    }
+
+    @api validate() {
+        const messages = [];
+        if (!this.confirmed) {
+            messages.push('You must confirm the information before proceeding.');
+        }
+        return {
+            isValid: messages.length === 0,
+            messages: messages
+        };
+    }
+
+    @api reset() {
+        this.confirmed = false;
+        this.emitPayloadChange();
     }
 }

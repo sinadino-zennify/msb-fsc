@@ -28,7 +28,8 @@ Notes: Iteration 1 keeps validation client‑side only and performs upsert on Ne
 ---
 
 ##  Best‑practice guardrails
-- Apex: enforce CRUD/FLS; keep validators stateless; bulkify if validating many; use Named Credentials + MuleSoft; manage endpoints/timeouts in CMDT; tests ≥85%, mock validators; include negative tests (class‑not‑found / wrong‑type).
+- Apex: enforce CRUD/FLS; keep validators stateless; bulkify if validating many; tests ≥85%
+- LWC: ensure fields being displayed on UI have their correspondent fieldApiName in the backend. see `force-app/main/default/objects` for fieldApiName
 - LWC: use `@wire` for cacheable reads, imperative for mutations; keep steps small and pure; emit normalized `payloadchange`; accessibility with progress indicator and error summaries; hygiene via ESLint/Prettier + CI.
 
 ---
@@ -37,7 +38,6 @@ Notes: Iteration 1 keeps validation client‑side only and performs upsert on Ne
 - Step‑level feature flags via `FeatureFlag__c` on `Wizard_Step__mdt`.
 - Role‑based visibility via `RequiredPermission__c`.
 - Generated Router: script to emit `<template if:true>` branches from CMDT.
-- Data prefill from related records (e.g., Opportunity/Account) for in‑branch.
 
 ---
 

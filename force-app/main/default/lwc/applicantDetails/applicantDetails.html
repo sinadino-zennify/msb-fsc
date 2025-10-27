@@ -6,64 +6,114 @@
 
 <template>
     <div class="applicant-details">
-        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Applicant Information</h2>
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Personal Information</h2>
+        
+        <template if:true={stepConfig.helpText}>
+            <div class="slds-m-bottom_medium">
+                <p class="slds-text-body_regular">{stepConfig.helpText}</p>
+            </div>
+        </template>
         
         <lightning-layout multiple-rows>
-            <lightning-layout-item size="12">
+            <!-- Row 1: Name Fields -->
+            <lightning-layout-item size="6" padding="horizontal-small">
                 <lightning-input 
-                    name="firstName" 
                     label="First Name" 
-                    value={applicantData.firstName}
-                    onchange={handleInputChange}>
+                    value={firstName}
+                    onchange={handleFirstNameChange}
+                    required>
                 </lightning-input>
             </lightning-layout-item>
             
-            <lightning-layout-item size="12">
+            <lightning-layout-item size="6" padding="horizontal-small">
                 <lightning-input 
-                    name="lastName" 
                     label="Last Name" 
-                    value={applicantData.lastName}
-                    onchange={handleInputChange}>
+                    value={lastName}
+                    onchange={handleLastNameChange}
+                    required>
                 </lightning-input>
             </lightning-layout-item>
             
-            <lightning-layout-item size="12">
+            <!-- Row 2: Contact Information -->
+            <lightning-layout-item size="6" padding="horizontal-small">
                 <lightning-input 
-                    name="email" 
-                    label="Email" 
                     type="email"
-                    value={applicantData.email}
-                    onchange={handleInputChange}>
+                    label="Email" 
+                    value={email}
+                    onchange={handleEmailChange}
+                    required>
                 </lightning-input>
             </lightning-layout-item>
             
-            <lightning-layout-item size="12">
+            <lightning-layout-item size="6" padding="horizontal-small">
                 <lightning-input 
-                    name="phone" 
-                    label="Phone" 
                     type="tel"
-                    value={applicantData.phone}
-                    onchange={handleInputChange}>
+                    label="Phone" 
+                    value={phone}
+                    onchange={handlePhoneChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            
+            <!-- Row 3: Personal Details -->
+            <lightning-layout-item size="6" padding="horizontal-small">
+                <lightning-input 
+                    type="date"
+                    label="Date of Birth" 
+                    value={dateOfBirth}
+                    onchange={handleDateOfBirthChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="6" padding="horizontal-small">
+                <lightning-input 
+                    label="Social Security Number" 
+                    value={ssn}
+                    onchange={handleSsnChange}
+                    placeholder="XXX-XX-XXXX"
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            
+            <!-- Row 4: Address -->
+            <lightning-layout-item size="12" padding="horizontal-small">
+                <lightning-input 
+                    label="Street Address" 
+                    value={mailingStreet}
+                    onchange={handleMailingStreetChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="4" padding="horizontal-small">
+                <lightning-input 
+                    label="City" 
+                    value={mailingCity}
+                    onchange={handleMailingCityChange}
+                    required>
+                </lightning-input>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="4" padding="horizontal-small">
+                <lightning-combobox
+                    label="State"
+                    value={mailingState}
+                    options={stateOptions}
+                    onchange={handleMailingStateChange}
+                    placeholder="Select state"
+                    required>
+                </lightning-combobox>
+            </lightning-layout-item>
+            
+            <lightning-layout-item size="4" padding="horizontal-small">
+                <lightning-input 
+                    label="ZIP Code" 
+                    value={mailingPostalCode}
+                    onchange={handleMailingPostalCodeChange}
+                    required>
                 </lightning-input>
             </lightning-layout-item>
         </lightning-layout>
-
-        <div class="slds-m-top_large">
-            <lightning-button 
-                label="Back" 
-                onclick={handleBack}
-                variant="neutral">
-            </lightning-button>
-            <lightning-button 
-                label="Save" 
-                onclick={handleSave}
-                variant="brand">
-            </lightning-button>
-            <lightning-button 
-                label="Next" 
-                onclick={handleNext}
-                variant="brand">
-            </lightning-button>
-        </div>
     </div>
 </template>

@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>Wizard_Step__mdt</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Wizard_Step__mdt.*</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
+        <members>WizardConfigService</members>
+        <members>WizardConfigServiceTest</members>
+        <members>WizardPersistenceService</members>
+        <members>WizardPersistenceServiceTest</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>daoWizardContainer</members>
+        <members>daoWizardStepRouter</members>
+        <members>applicantDetails</members>
+        <members>businessDetails</members>
+        <members>productSelection</members>
+        <members>reviewAndSubmit</members>
+        <members>openDaoWizardAction</members>
+        <name>LightningComponentBundle</name>
     </types>
     <version>65.0</version>
 </Package>

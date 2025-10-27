@@ -1,0 +1,64 @@
+<template>
+    <!-- Applicant Details Step -->
+    <template if:true={isApplicantDetails}>
+        <c-applicant-details 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-applicant-details>
+    </template>
+
+    <!-- Business Details Step -->
+    <template if:true={isBusinessDetails}>
+        <c-business-details 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-business-details>
+    </template>
+
+    <!-- Product Selection Step -->
+    <template if:true={isProductSelection}>
+        <c-product-selection 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-product-selection>
+    </template>
+
+    <!-- Review and Submit Step -->
+    <template if:true={isReviewAndSubmit}>
+        <c-review-and-submit 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-review-and-submit>
+    </template>
+
+    <!-- Fallback for unknown component bundle -->
+    <template if:false={isApplicantDetails}>
+        <template if:false={isBusinessDetails}>
+            <template if:false={isProductSelection}>
+                <template if:false={isReviewAndSubmit}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning">
+                        <span class="slds-assistive-text">Warning</span>
+                        <h2>Unknown Step Component</h2>
+                        <p>Component bundle "{stepConfig.componentBundle}" is not recognized.</p>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </template>
+</template>

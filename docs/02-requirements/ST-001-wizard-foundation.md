@@ -8,9 +8,9 @@
 
 **Story ID**: ST-001  
 **Work Item**: LWC-001, SVC-001, DM-001  
-**Status**: Not Started  
+**Status**: Completed  
 **Created**: 2025-10-24  
-**Last Updated**: 2025-10-24
+**Last Updated**: 2025-10-27
 
 ---
 
@@ -48,47 +48,47 @@
 
 ## 🛠️ Tasks and Sub-Tasks
 
-- [ ] Define Custom Metadata Type `Wizard_Step__mdt`
-  - [ ] Create CMDT object metadata with required fields (`WizardApiName__c`, `Order__c`, `ComponentBundle__c`, `StepLabel__c`, `ValidatorClasses__c`, `Skippable__c`, `HelpText__c`)
-  - [ ] Add sample records for `DAO_Business_InBranch` (Applicant, Product, Review)
-  - [ ] Add CMDT to `package.xml` (or ensure wildcard covers CMDT) and deploy
-  - [ ] Verify via SOQL that records are retrievable and ordered by `Order__c`
+1. [x] Define Custom Metadata Type `Wizard_Step__mdt`
+   - [x] 1.1 Create CMDT object metadata with required fields (`WizardApiName__c`, `Order__c`, `ComponentBundle__c`, `StepLabel__c`, `ValidatorClasses__c`, `Skippable__c`, `HelpText__c`)
+   - [x] 1.2 Add sample records for `DAO_Business_InBranch` (Applicant, Product, Review)
+   - [x] 1.3 Add CMDT to `package.xml` (or ensure wildcard covers CMDT) and deploy
+   - [x] 1.4 Verify via SOQL that records are retrievable and ordered by `Order__c`
 
-- [ ] Implement Apex: `WizardConfigService`
-  - [ ] Create `WizardStepDTO` and `getSteps(wizardApiName)` with `@AuraEnabled(cacheable=true)`
-  - [ ] SOQL orders by `Order__c`; maps fields to DTO; returns list
-  - [ ] Unit tests for ordering, labeling defaulting, and null/blank inputs
+2. [x] Implement Apex: `WizardConfigService`
+   - [x] 2.1 Create `WizardStepDTO` and `getSteps(wizardApiName)` with `@AuraEnabled(cacheable=true)`
+   - [x] 2.2 SOQL orders by `Order__c`; maps fields to DTO; returns list
+   - [x] 2.3 Unit tests for ordering, labeling defaulting, and null/blank inputs
 
-- [ ] Implement Apex: `WizardPersistenceService`
-  - [ ] Implement `upsertStep(applicationId, stepDeveloperName, payload)`
-  - [ ] Enforce CRUD/FLS and return structured DML errors (code/message/fieldApiName)
-  - [ ] Unit tests for success and failure paths (CRUD/FLS failure, DML exceptions)
+3. [x] Implement Apex: `WizardPersistenceService`
+   - [x] 3.1 Implement `upsertStep(applicationId, stepDeveloperName, payload)`
+   - [x] 3.2 Enforce CRUD/FLS and return structured DML errors (code/message/fieldApiName)
+   - [x] 3.3 Unit tests for success and failure paths (CRUD/FLS failure, DML exceptions)
 
-- [ ] Scaffold LWCs (container, router, steps)
-  - [ ] `daoWizardContainer` with progress indicator, event handlers, `lwc:ref` access to child
-  - [ ] `daoWizardStepRouter` with explicit conditional branches per `ComponentBundle__c` and `@api validate()` pass-through
-  - [ ] Minimal step shells: `applicantDetails`, `productSelection`, `reviewAndSubmit` with `validate()` and `payloadchange`
+4. [x] Scaffold LWCs (container, router, steps)
+   - [x] 4.1 `daoWizardContainer` with progress indicator, event handlers, `lwc:ref` access to child
+   - [x] 4.2 `daoWizardStepRouter` with explicit conditional branches per `ComponentBundle__c` and `@api validate()` pass-through
+   - [x] 4.3 Minimal step shells: `applicantDetails`, `productSelection`, `reviewAndSubmit` with `validate()` and `payloadchange`
 
-- [ ] Implement navigation & validation wiring
-  - [ ] Previous/Next handlers, Save & Exit event
-  - [ ] Client-side validation by invoking child `validate()`
-  - [ ] Persist on Next via `WizardPersistenceService.upsertStep(...)` and surface DML/CRUD/FLS errors
+5. [x] Implement navigation & validation wiring
+   - [x] 5.1 Previous/Next handlers, Save & Exit event
+   - [x] 5.2 Client-side validation by invoking child `validate()`
+   - [x] 5.3 Persist on Next via `WizardPersistenceService.upsertStep(...)` and surface DML/CRUD/FLS errors
 
-- [ ] Sequence and progress UI
-  - [ ] Use `WizardConfigService.getSteps` results to set order and labels
-  - [ ] Progress indicator reflects current and upcoming steps
+6. [x] Sequence and progress UI
+   - [x] 6.1 Use `WizardConfigService.getSteps` results to set order and labels
+   - [x] 6.2 Progress indicator reflects current and upcoming steps
 
-- [ ] App Builder wiring
-  - [ ] Expose container to App Page; set `wizardApiName`
-  - [ ] Verify rendering and step transitions in org
+7. [x] App Builder wiring
+   - [x] 7.1 Expose container to App Page; set `wizardApiName`
+   - [x] 7.2 Verify rendering and step transitions in org
 
-- [ ] Documentation & notes
-  - [ ] Update `docs/04-implementation/session-notes/` with progress and lessons
-  - [ ] Ensure `/examples/` remain in sync with implemented pattern
+8. [x] Documentation & notes
+   - [x] 8.1 Update `docs/04-implementation/session-notes/` with progress and lessons
+   - [x] 8.2 Ensure `/examples/` remain in sync with implemented pattern
 
-- [ ] Deployment & verification
-  - [ ] Update `package.xml` as needed
-  - [ ] Deploy to `msb-sbox` and validate in UI
+9. [x] Deployment & verification
+   - [x] 9.1 Update `package.xml` as needed
+   - [x] 9.2 Deploy to `msb-sbox` and validate in UI
 
 ---
 
@@ -120,6 +120,7 @@
 
 ### Notes
 - Use `@AuraEnabled(cacheable=true)` for `getSteps` (supports `@wire` in LWC)
+- LWC will be hosted in a Tab, and it will take a recordId as a parameter. The tab can be hosted both on the Opportunity or ApplicationForm record page.
 - Prefer imperative Apex for validate/mutation calls
 - Router branches are explicit `<template if:true>` blocks; can be code-generated later
 
