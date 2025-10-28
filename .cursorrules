@@ -45,7 +45,7 @@ Complete EVERY time before starting ANY task:
 
 | Logical Name | Object Type | API Name | Notes |
 |--------------|-------------|----------|-------|
-| **ApplicationForm** | FSC | `FinServ__FinancialApplication__c` | Loan/deposit application |
+| **ApplicationForm** | FSC | `ApplicationForm` | Loan/deposit application |
 | **Applicant** | FSC | `Applicant` | Individual applicants |
 | **Account** (Business) | Standard | `Account` | Business accounts (RecordType) |
 | **Account** (PersonAccount) | Standard | `Account` | Individual accounts (RecordType) |

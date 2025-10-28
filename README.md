@@ -154,6 +154,8 @@ Pre-configured external ID fields for upsert operations:
 
 ## 🤖 AI-Optimized Development
 
+> Agents: open `/.cursorrules` before any work. This file is hidden; ensure your IDE search includes hidden files.
+
 This accelerator is designed for AI-assisted development with:
 
 - **`.cursorrules`** - Comprehensive AI agent instructions

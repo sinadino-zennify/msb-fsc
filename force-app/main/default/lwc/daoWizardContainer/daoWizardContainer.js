@@ -15,12 +15,21 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     isLoading = false;
     error;
     applicationFormId; // Store the ApplicationForm ID after creation
+    
+    connectedCallback() {
+        // Log initial recordId passed by the host record page (Opportunity or ApplicationForm)
+        // Useful to verify the container receives the context record id
+        // eslint-disable-next-line no-console
+        console.log('daoWizardContainer connected. Initial recordId:', this.recordId);
+    }
 
     @wire(CurrentPageReference)
     capturePageState(pageRef) {
         if (pageRef?.state) {
             // Support both hosting contexts (record page or app page via state)
             this.recordId = this.recordId || pageRef.state.c__recordId || pageRef.state.recordId || null;
+            // eslint-disable-next-line no-console
+            console.log('daoWizardContainer page state resolved recordId:', this.recordId, 'state:', JSON.stringify(pageRef.state));
         }
     }
 

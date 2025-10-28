@@ -115,6 +115,8 @@ See [Common Tasks](#-common-tasks) below for typical workflows.
 
 ## 🧠 Working with AI Agents
 
+> Agents: open `/.cursorrules` before any work. This file is hidden; ensure your IDE search includes hidden files. Agents must explicitly open this file at the start of each session.
+
 This project is optimized for AI-assisted development. The `.cursorrules` file contains comprehensive instructions for agents.
 
 **Key principle**: The CSV file (`field-mappings.csv`) is **USER-MAINTAINED**. Agents read it but never modify it.
