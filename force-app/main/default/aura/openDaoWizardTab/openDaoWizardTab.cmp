@@ -1,0 +1,4 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.openTab}"/>
+    <lightning:workspaceAPI aura:id="workspace"/>
+</aura:component>
