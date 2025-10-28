@@ -1,0 +1,28 @@
+/* Wizard Container Styling */
+.slds-p-horizontal_medium {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Step Content Container - grows to fill space */
+.slds-m-bottom_medium {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Smooth transitions between steps */
+c-dao-wizard-step-router {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Loading state */
+.slds-is-relative {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

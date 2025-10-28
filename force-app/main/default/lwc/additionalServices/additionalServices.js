@@ -8,8 +8,8 @@ export default class AdditionalServices extends LightningElement {
 
     @track selectedServices = new Set();
 
-    // Dummy additional services data
-    serviceOptions = [
+    // Base service options
+    baseServiceOptions = [
         { label: 'Online Banking', value: 'online_banking', description: 'Access your accounts 24/7 online' },
         { label: 'Mobile Banking', value: 'mobile_banking', description: 'Banking on-the-go with our mobile app' },
         { label: 'Bill Pay Service', value: 'bill_pay', description: 'Pay bills directly from your account' },
@@ -23,6 +23,14 @@ export default class AdditionalServices extends LightningElement {
         { label: 'Account Reconciliation', value: 'account_reconciliation', description: 'Automated account reconciliation' },
         { label: 'Treasury Management', value: 'treasury_management', description: 'Comprehensive treasury solutions' }
     ];
+
+    // Computed service options with checked state
+    get serviceOptions() {
+        return this.baseServiceOptions.map(service => ({
+            ...service,
+            checked: this.selectedServices.has(service.value)
+        }));
+    }
 
     connectedCallback() {
         // Initialize selected services from existing value
@@ -75,6 +83,10 @@ export default class AdditionalServices extends LightningElement {
 
     get selectedServiceCount() {
         return this.selectedServices.size;
+    }
+
+    get servicePlural() {
+        return this.selectedServices.size === 1 ? 'service' : 'services';
     }
 
     isServiceSelected(serviceValue) {

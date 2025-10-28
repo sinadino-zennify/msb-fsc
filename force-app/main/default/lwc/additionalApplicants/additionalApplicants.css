@@ -1,0 +1,152 @@
+/* Modern Card Styling */
+.applicant-card {
+    height: 100%;
+    min-height: 240px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.applicant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Header Enhancements */
+.applicant-card .slds-card__header {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f4f6f9 0%, #ffffff 100%);
+    border-bottom: 1px solid #e5e5e5;
+    flex-shrink: 0;
+    min-height: 100px;
+}
+
+.applicant-card .slds-card__header .slds-media__body {
+    min-width: 0;
+}
+
+.applicant-card .slds-avatar {
+    background: linear-gradient(135deg, #1589ee 0%, #0b5cab 100%);
+}
+
+/* Badge Container */
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+/* Badge Styling */
+.role-badge {
+    font-weight: 600;
+    text-transform: capitalize;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+    font-size: 0.75rem;
+    line-height: 1.25;
+}
+
+.ownership-badge {
+    flex-shrink: 0;
+}
+
+/* Contact Info Section */
+.contact-info {
+    padding: 0.5rem 0;
+}
+
+.info-item {
+    padding: 0.25rem 0;
+}
+
+.info-icon {
+    color: #706e6b;
+    flex-shrink: 0;
+}
+
+/* Card Body */
+.applicant-card .slds-card__body {
+    padding: 1rem;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Card Footer */
+.applicant-card .slds-card__footer {
+    padding: 0.75rem 1rem;
+    background-color: #fafaf9;
+    border-top: 1px solid #e5e5e5;
+    flex-shrink: 0;
+}
+
+/* Empty State */
+.empty-state {
+    background-color: #fafaf9;
+    border: 2px dashed #dddbda;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+/* Grid Responsive Adjustments */
+.applicants-grid {
+    margin-bottom: 1.5rem;
+}
+
+/* Ensure cards have equal height and width in grid */
+.applicants-grid > .slds-col {
+    display: flex;
+    margin-bottom: 1rem;
+    min-width: 280px;
+}
+
+/* Force equal widths at different breakpoints */
+@media (min-width: 48em) {
+    .applicants-grid > .slds-col.slds-medium-size_1-of-2 {
+        flex: 0 0 calc(50% - 0.5rem);
+        max-width: calc(50% - 0.5rem);
+        min-width: 320px;
+    }
+}
+
+@media (min-width: 64em) {
+    .applicants-grid > .slds-col.slds-large-size_1-of-3 {
+        flex: 0 0 calc(33.333% - 0.5rem);
+        max-width: calc(33.333% - 0.5rem);
+        min-width: 280px;
+    }
+}
+
+/* Button Icon Hover Effects */
+.slds-card__footer lightning-button-icon:hover {
+    transform: scale(1.1);
+    transition: transform 0.15s ease-in-out;
+}
+
+/* Accessibility: Focus States */
+.applicant-card:focus-within {
+    outline: 2px solid #1589ee;
+    outline-offset: 2px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 48em) {
+    .applicant-card .slds-card__header {
+        padding: 0.75rem;
+    }
+    
+    .applicant-card .slds-card__body {
+        padding: 0.75rem;
+    }
+    
+    .applicant-card .slds-card__footer {
+        padding: 0.5rem 0.75rem;
+    }
+}

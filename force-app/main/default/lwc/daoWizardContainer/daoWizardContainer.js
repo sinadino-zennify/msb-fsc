@@ -15,6 +15,7 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     isLoading = false;
     error;
     applicationFormId; // Store the ApplicationForm ID after creation
+    devMode = false;
     
     connectedCallback() {
         // Log initial recordId passed by the host record page (Opportunity or ApplicationForm)
@@ -28,6 +29,7 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         if (pageRef?.state) {
             // Support both hosting contexts (record page or app page via state)
             this.recordId = this.recordId || pageRef.state.c__recordId || pageRef.state.recordId || null;
+            this.devMode = this.devMode || pageRef.state.c__dev === '1' || pageRef.state.dev === '1';
             // eslint-disable-next-line no-console
             console.log('daoWizardContainer page state resolved recordId:', this.recordId, 'state:', JSON.stringify(pageRef.state));
         }
@@ -101,6 +103,14 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         return this.currentStep ? this.payloadByStep.get(this.currentStep.developerName) : null;
     }
 
+    get currentStepValue() {
+        // For the Review step, provide all payloads so it can render a summary
+        if (this.currentStep && this.currentStep.componentBundle === 'reviewAndSubmit') {
+            return Object.fromEntries(this.payloadByStep);
+        }
+        return this.currentStepPayload;
+    }
+
     handlePayloadChange(event) {
         const { payload } = event.detail;
         if (this.currentStep) {
@@ -117,23 +127,33 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             const stepComponent = this.template.querySelector('c-dao-wizard-step-router');
             const validationResult = stepComponent ? stepComponent.validate() : { isValid: true, messages: [] };
 
-            if (!validationResult.isValid) {
+            if (!validationResult.isValid && !this.devMode) {
                 this.showToast('Validation Error', validationResult.messages.join(', '), 'error');
                 return;
             }
 
             // Persist step data
-            const payload = this.payloadByStep.get(this.currentStep.developerName) || {};
-            const persistenceResult = await upsertStep({
-                applicationId: this.applicationFormId || this.recordId, // Use ApplicationForm ID if available
-                stepDeveloperName: this.currentStep.developerName,
-                payload: payload
-            });
+            let payload = this.payloadByStep.get(this.currentStep.developerName) || {};
+            if (this.devMode && (!payload || Object.keys(payload).length === 0)) {
+                payload = { __devBypass: true };
+            }
+            let persistenceResult = { success: true, messages: [], savedIds: null };
+            try {
+                persistenceResult = await upsertStep({
+                    applicationId: this.applicationFormId || this.recordId,
+                    stepDeveloperName: this.currentStep.developerName,
+                    payload: payload
+                });
+            } catch (e) {
+                if (!this.devMode) throw e;
+            }
 
             if (!persistenceResult.success) {
-                const errorMessages = persistenceResult.messages.map(msg => msg.message).join(', ');
-                this.showToast('Save Error', errorMessages, 'error');
-                return;
+                if (!this.devMode) {
+                    const errorMessages = persistenceResult.messages.map(msg => msg.message).join(', ');
+                    this.showToast('Save Error', errorMessages, 'error');
+                    return;
+                }
             }
 
             // Capture ApplicationForm ID if this is the first step

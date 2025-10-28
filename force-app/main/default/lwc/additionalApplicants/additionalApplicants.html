@@ -10,52 +10,71 @@
 
         <!-- Applicants List -->
         <template if:true={hasApplicants}>
-            <div class="slds-m-bottom_medium">
+            <div class="applicants-grid slds-grid slds-wrap slds-gutters_small">
                 <template for:each={applicants} for:item="applicant" for:index="index">
-                    <div key={applicant.id} class="slds-card slds-m-bottom_small">
-                        <div class="slds-card__header slds-grid">
-                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                <div class="slds-media__figure">
-                                    <lightning-icon icon-name="standard:contact" size="small"></lightning-icon>
+                    <div key={applicant.id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                        <article class="slds-card applicant-card">
+                            <div class="slds-card__header slds-grid">
+                                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                    <div class="slds-media__figure">
+                                        <span class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                                            <lightning-icon icon-name="standard:contact" size="medium"></lightning-icon>
+                                        </span>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <h2 class="slds-card__header-title">
+                                            <span class="slds-text-heading_small slds-truncate">{applicant.firstName} {applicant.lastName}</span>
+                                        </h2>
+                                        <div class="slds-m-top_xxx-small badge-container">
+                                            <span class="slds-badge slds-badge_lightest role-badge">{applicant.role}</span>
+                                            <template if:true={applicant.ownershipPercentage}>
+                                                <span class="slds-badge slds-theme_success slds-m-left_xx-small ownership-badge">
+                                                    <lightning-icon icon-name="utility:percent" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
+                                                    {applicant.ownershipPercentage}%
+                                                </span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </header>
+                            </div>
+                            <div class="slds-card__body slds-card__body_inner">
+                                <div class="contact-info">
+                                    <div class="info-item slds-m-bottom_small">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <lightning-icon icon-name="utility:email" size="x-small" class="slds-m-right_x-small info-icon"></lightning-icon>
+                                            <span class="slds-text-body_small slds-truncate" title={applicant.email}>{applicant.email}</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="slds-grid slds-grid_vertical-align-center">
+                                            <lightning-icon icon-name="utility:phone_portrait" size="x-small" class="slds-m-right_x-small info-icon"></lightning-icon>
+                                            <span class="slds-text-body_small slds-truncate" title={applicant.phone}>{applicant.phone}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="slds-media__body">
-                                    <h2 class="slds-card__header-title">
-                                        <span class="slds-text-heading_small">{applicant.firstName} {applicant.lastName}</span>
-                                    </h2>
-                                    <p class="slds-text-body_small slds-text-color_weak">{applicant.role}</p>
-                                </div>
-                            </header>
-                            <div class="slds-no-flex">
-                                <lightning-button-group>
-                                    <lightning-button 
-                                        variant="neutral" 
-                                        label="Edit" 
+                            </div>
+                            <footer class="slds-card__footer">
+                                <div class="slds-grid slds-grid_align-spread">
+                                    <lightning-button-icon
                                         icon-name="utility:edit"
+                                        variant="border-filled"
+                                        alternative-text="Edit"
+                                        title="Edit Applicant"
                                         data-index={index}
-                                        onclick={handleEditApplicant}>
-                                    </lightning-button>
-                                    <lightning-button 
-                                        variant="destructive" 
-                                        label="Delete" 
+                                        onclick={handleEditApplicant}
+                                        class="slds-m-right_xx-small">
+                                    </lightning-button-icon>
+                                    <lightning-button-icon
                                         icon-name="utility:delete"
+                                        variant="border-filled"
+                                        alternative-text="Delete"
+                                        title="Delete Applicant"
                                         data-index={index}
                                         onclick={handleDeleteApplicant}>
-                                    </lightning-button>
-                                </lightning-button-group>
-                            </div>
-                        </div>
-                        <div class="slds-card__body slds-card__body_inner">
-                            <dl class="slds-list_horizontal slds-wrap">
-                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Email">Email:</dt>
-                                <dd class="slds-item_detail slds-truncate" title={applicant.email}>{applicant.email}</dd>
-                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Phone">Phone:</dt>
-                                <dd class="slds-item_detail slds-truncate" title={applicant.phone}>{applicant.phone}</dd>
-                                <template if:true={applicant.ownershipPercentage}>
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Ownership">Ownership:</dt>
-                                    <dd class="slds-item_detail slds-truncate">{applicant.ownershipPercentage}%</dd>
-                                </template>
-                            </dl>
-                        </div>
+                                    </lightning-button-icon>
+                                </div>
+                            </footer>
+                        </article>
                     </div>
                 </template>
             </div>
@@ -63,22 +82,16 @@
 
         <!-- Empty State -->
         <template if:false={hasApplicants}>
-            <div class="slds-illustration slds-illustration_large">
-                <div class="slds-m-bottom_medium">
-                    <div class="slds-align_absolute-center slds-p-around_large">
-                        <lightning-icon icon-name="utility:groups" size="large" variant="inverse" 
-                                      class="slds-icon-text-light slds-m-bottom_small"></lightning-icon>
-                        <h3 class="slds-text-heading_medium slds-m-bottom_small">No Additional Applicants</h3>
-                        <p class="slds-text-body_regular slds-text-color_weak">
-                            Add beneficial owners, authorized signers, or other parties associated with this account.
-                        </p>
-                    </div>
+            <div class="slds-illustration slds-illustration_small empty-state">
+                <div class="slds-text-align_center slds-p-vertical_large">
+                    <h3 class="slds-text-heading_medium slds-m-bottom_x-small">No Additional Applicants</h3>
+                    <p class="slds-text-body_regular slds-text-color_weak">Get started by adding your first applicant.</p>
                 </div>
             </div>
         </template>
 
         <!-- Add Button -->
-        <div class="slds-text-align_center slds-m-top_medium">
+        <div class="slds-text-align_center slds-m-top_large">
             <lightning-button 
                 variant="brand" 
                 label="Add Additional Applicant" 
@@ -225,11 +238,6 @@
                     </div>
                     
                     <footer class="slds-modal__footer">
-                        <lightning-button 
-                            variant="neutral" 
-                            label="Cancel" 
-                            onclick={handleCloseModal}>
-                        </lightning-button>
                         <lightning-button 
                             variant="brand" 
                             label={saveButtonLabel} 

@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title="Deposit Account Opening" icon-name="standard:opportunity">
+    <lightning-card>
         <div class="slds-p-horizontal_medium">
             <!-- Progress Indicator -->
             <template if:true={steps}>
@@ -39,7 +39,7 @@
                         record-id={recordId}
                         wizard-api-name={wizardApiName}
                         step-config={currentStep}
-                        value={currentStepPayload}
+                        value={currentStepValue}
                         onpayloadchange={handlePayloadChange}>
                     </c-dao-wizard-step-router>
                 </div>
