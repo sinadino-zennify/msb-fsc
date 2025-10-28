@@ -1,11 +1,11 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { CurrentPageReference } from 'lightning/navigation';
+import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { getFocusedTabInfo, setTabLabel, setTabIcon, isConsoleNavigation } from 'lightning/platformWorkspaceApi';
 import getSteps from '@salesforce/apex/WizardConfigService.getSteps';
 import upsertStep from '@salesforce/apex/WizardPersistenceService.upsertStep';
 
-export default class DaoWizardContainer extends LightningElement {
+export default class DaoWizardContainer extends NavigationMixin(LightningElement) {
     @api recordId;
     @api wizardApiName = 'DAO_Business_InBranch';
 
@@ -14,6 +14,7 @@ export default class DaoWizardContainer extends LightningElement {
     payloadByStep = new Map();
     isLoading = false;
     error;
+    applicationFormId; // Store the ApplicationForm ID after creation
 
     @wire(CurrentPageReference)
     capturePageState(pageRef) {
@@ -79,7 +80,7 @@ export default class DaoWizardContainer extends LightningElement {
     }
 
     get nextButtonLabel() {
-        return this.isLast ? 'Complete' : 'Next';
+        return this.isLast ? 'Submit' : 'Next';
     }
 
     get currentStepDeveloperName() {
@@ -115,7 +116,7 @@ export default class DaoWizardContainer extends LightningElement {
             // Persist step data
             const payload = this.payloadByStep.get(this.currentStep.developerName) || {};
             const persistenceResult = await upsertStep({
-                applicationId: this.recordId, // Will be null for prototype testing
+                applicationId: this.applicationFormId || this.recordId, // Use ApplicationForm ID if available
                 stepDeveloperName: this.currentStep.developerName,
                 payload: payload
             });
@@ -126,15 +127,26 @@ export default class DaoWizardContainer extends LightningElement {
                 return;
             }
 
+            // Capture ApplicationForm ID if this is the first step
+            if (persistenceResult.savedIds && persistenceResult.savedIds.applicationForm) {
+                this.applicationFormId = persistenceResult.savedIds.applicationForm;
+                console.log('ApplicationForm created with ID:', this.applicationFormId);
+            }
+
             // Navigate to next step or complete
             if (this.isLast) {
                 this.dispatchEvent(new CustomEvent('completed', {
                     detail: { 
-                        applicationId: this.recordId,
+                        applicationId: this.applicationFormId || this.recordId,
                         finalPayload: Object.fromEntries(this.payloadByStep)
                     }
                 }));
-                this.showToast('Success', 'Wizard completed successfully!', 'success');
+                this.showToast('Success', 'Application submitted successfully!', 'success');
+                
+                // Redirect to ApplicationForm record
+                if (this.applicationFormId) {
+                    this.navigateToRecord(this.applicationFormId);
+                }
             } else {
                 this.currentIndex++;
             }
@@ -156,13 +168,28 @@ export default class DaoWizardContainer extends LightningElement {
         const payload = this.payloadByStep.get(this.currentStep?.developerName) || {};
         this.dispatchEvent(new CustomEvent('saveandexit', {
             detail: {
-                applicationId: this.recordId,
+                applicationId: this.applicationFormId || this.recordId,
                 currentStep: this.currentStep?.developerName,
                 currentPayload: payload,
                 allPayloads: Object.fromEntries(this.payloadByStep)
             }
         }));
         this.showToast('Info', 'Progress saved. You can resume later.', 'info');
+        
+        // Redirect to ApplicationForm record if available
+        if (this.applicationFormId) {
+            this.navigateToRecord(this.applicationFormId);
+        }
+    }
+
+    navigateToRecord(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
     }
 
     showToast(title, message, variant) {

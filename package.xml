@@ -20,7 +20,10 @@
         <members>daoWizardStepRouter</members>
         <members>applicantDetails</members>
         <members>businessDetails</members>
+        <members>additionalApplicants</members>
         <members>productSelection</members>
+        <members>additionalServices</members>
+        <members>documentUpload</members>
         <members>reviewAndSubmit</members>
         <members>openDaoWizardAction</members>
         <name>LightningComponentBundle</name>

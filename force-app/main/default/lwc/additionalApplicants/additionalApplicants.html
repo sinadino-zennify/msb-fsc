@@ -1,0 +1,244 @@
+<template>
+    <div class="additional-applicants">
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Additional Applicants</h2>
+        
+        <template if:true={stepConfig.helpText}>
+            <div class="slds-m-bottom_medium">
+                <p class="slds-text-body_regular">{stepConfig.helpText}</p>
+            </div>
+        </template>
+
+        <!-- Applicants List -->
+        <template if:true={hasApplicants}>
+            <div class="slds-m-bottom_medium">
+                <template for:each={applicants} for:item="applicant" for:index="index">
+                    <div key={applicant.id} class="slds-card slds-m-bottom_small">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:contact" size="small"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <span class="slds-text-heading_small">{applicant.firstName} {applicant.lastName}</span>
+                                    </h2>
+                                    <p class="slds-text-body_small slds-text-color_weak">{applicant.role}</p>
+                                </div>
+                            </header>
+                            <div class="slds-no-flex">
+                                <lightning-button-group>
+                                    <lightning-button 
+                                        variant="neutral" 
+                                        label="Edit" 
+                                        icon-name="utility:edit"
+                                        data-index={index}
+                                        onclick={handleEditApplicant}>
+                                    </lightning-button>
+                                    <lightning-button 
+                                        variant="destructive" 
+                                        label="Delete" 
+                                        icon-name="utility:delete"
+                                        data-index={index}
+                                        onclick={handleDeleteApplicant}>
+                                    </lightning-button>
+                                </lightning-button-group>
+                            </div>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Email">Email:</dt>
+                                <dd class="slds-item_detail slds-truncate" title={applicant.email}>{applicant.email}</dd>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Phone">Phone:</dt>
+                                <dd class="slds-item_detail slds-truncate" title={applicant.phone}>{applicant.phone}</dd>
+                                <template if:true={applicant.ownershipPercentage}>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Ownership">Ownership:</dt>
+                                    <dd class="slds-item_detail slds-truncate">{applicant.ownershipPercentage}%</dd>
+                                </template>
+                            </dl>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Empty State -->
+        <template if:false={hasApplicants}>
+            <div class="slds-illustration slds-illustration_large">
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-align_absolute-center slds-p-around_large">
+                        <lightning-icon icon-name="utility:groups" size="large" variant="inverse" 
+                                      class="slds-icon-text-light slds-m-bottom_small"></lightning-icon>
+                        <h3 class="slds-text-heading_medium slds-m-bottom_small">No Additional Applicants</h3>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            Add beneficial owners, authorized signers, or other parties associated with this account.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Add Button -->
+        <div class="slds-text-align_center slds-m-top_medium">
+            <lightning-button 
+                variant="brand" 
+                label="Add Additional Applicant" 
+                icon-name="utility:add"
+                onclick={handleAddApplicant}
+                class="slds-m-bottom_medium">
+            </lightning-button>
+        </div>
+
+        <!-- Modal -->
+        <template if:true={showModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                                title="Close" onclick={handleCloseModal} aria-label="Close modal">
+                            <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-modal__title slds-hyphenate">{modalTitle}</h2>
+                    </header>
+                    
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-layout multiple-rows>
+                            <!-- Row 1: Name and Role -->
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    label="First Name" 
+                                    value={currentApplicant.firstName}
+                                    onchange={handleFirstNameChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    label="Last Name" 
+                                    value={currentApplicant.lastName}
+                                    onchange={handleLastNameChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+
+                            <!-- Row 2: Role and Ownership -->
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-combobox
+                                    label="Role"
+                                    value={currentApplicant.role}
+                                    options={roleOptions}
+                                    onchange={handleRoleChange}
+                                    placeholder="Select role"
+                                    required>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    type="number"
+                                    label="Ownership Percentage" 
+                                    value={currentApplicant.ownershipPercentage}
+                                    onchange={handleOwnershipPercentageChange}
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    formatter="percent-fixed">
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <!-- Row 3: Contact Information -->
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    type="email"
+                                    label="Email" 
+                                    value={currentApplicant.email}
+                                    onchange={handleEmailChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    type="tel"
+                                    label="Phone" 
+                                    value={currentApplicant.phone}
+                                    onchange={handlePhoneChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <!-- Row 4: Personal Details -->
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    type="date"
+                                    label="Date of Birth" 
+                                    value={currentApplicant.dateOfBirth}
+                                    onchange={handleDateOfBirthChange}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="6" padding="horizontal-small">
+                                <lightning-input 
+                                    label="Social Security Number" 
+                                    value={currentApplicant.ssn}
+                                    onchange={handleSsnChange}
+                                    placeholder="XXX-XX-XXXX">
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <!-- Row 5: Address -->
+                            <lightning-layout-item size="12" padding="horizontal-small">
+                                <lightning-input 
+                                    label="Street Address" 
+                                    value={currentApplicant.mailingStreet}
+                                    onchange={handleMailingStreetChange}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="4" padding="horizontal-small">
+                                <lightning-input 
+                                    label="City" 
+                                    value={currentApplicant.mailingCity}
+                                    onchange={handleMailingCityChange}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="4" padding="horizontal-small">
+                                <lightning-combobox
+                                    label="State"
+                                    value={currentApplicant.mailingState}
+                                    options={stateOptions}
+                                    onchange={handleMailingStateChange}
+                                    placeholder="Select state">
+                                </lightning-combobox>
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item size="4" padding="horizontal-small">
+                                <lightning-input 
+                                    label="ZIP Code" 
+                                    value={currentApplicant.mailingPostalCode}
+                                    onchange={handleMailingPostalCodeChange}>
+                                </lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                        <lightning-button 
+                            variant="neutral" 
+                            label="Cancel" 
+                            onclick={handleCloseModal}>
+                        </lightning-button>
+                        <lightning-button 
+                            variant="brand" 
+                            label={saveButtonLabel} 
+                            onclick={handleSaveApplicant}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

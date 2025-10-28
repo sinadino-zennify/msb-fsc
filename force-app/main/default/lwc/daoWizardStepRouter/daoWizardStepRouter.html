@@ -23,6 +23,18 @@
         </c-business-details>
     </template>
 
+    <!-- Additional Applicants Step -->
+    <template if:true={isAdditionalApplicants}>
+        <c-additional-applicants 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-additional-applicants>
+    </template>
+
     <!-- Product Selection Step -->
     <template if:true={isProductSelection}>
         <c-product-selection 
@@ -33,6 +45,30 @@
             value={value}
             onpayloadchange={handlePayloadChange}>
         </c-product-selection>
+    </template>
+
+    <!-- Additional Services Step -->
+    <template if:true={isAdditionalServices}>
+        <c-additional-services 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-additional-services>
+    </template>
+
+    <!-- Document Upload Step -->
+    <template if:true={isDocumentUpload}>
+        <c-document-upload 
+            data-step-component
+            record-id={recordId}
+            wizard-api-name={wizardApiName}
+            step-config={stepConfig}
+            value={value}
+            onpayloadchange={handlePayloadChange}>
+        </c-document-upload>
     </template>
 
     <!-- Review and Submit Step -->
@@ -50,13 +86,19 @@
     <!-- Fallback for unknown component bundle -->
     <template if:false={isApplicantDetails}>
         <template if:false={isBusinessDetails}>
-            <template if:false={isProductSelection}>
-                <template if:false={isReviewAndSubmit}>
-                    <div class="slds-notify slds-notify_alert slds-alert_warning">
-                        <span class="slds-assistive-text">Warning</span>
-                        <h2>Unknown Step Component</h2>
-                        <p>Component bundle "{stepConfig.componentBundle}" is not recognized.</p>
-                    </div>
+            <template if:false={isAdditionalApplicants}>
+                <template if:false={isProductSelection}>
+                    <template if:false={isAdditionalServices}>
+                        <template if:false={isDocumentUpload}>
+                            <template if:false={isReviewAndSubmit}>
+                                <div class="slds-notify slds-notify_alert slds-alert_warning">
+                                    <span class="slds-assistive-text">Warning</span>
+                                    <h2>Unknown Step Component</h2>
+                                    <p>Component bundle "{stepConfig.componentBundle}" is not recognized.</p>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
                 </template>
             </template>
         </template>

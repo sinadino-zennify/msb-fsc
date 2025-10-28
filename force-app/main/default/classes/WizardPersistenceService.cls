@@ -28,11 +28,26 @@ public with sharing class WizardPersistenceService {
     public static PersistenceResponse upsertStep(Id applicationId, String stepDeveloperName, Map<String, Object> payload) {
         PersistenceResponse response = new PersistenceResponse();
         
-        // For prototype: if no applicationId provided, use the recordId as a placeholder
-        // In production, this would create a proper ApplicationForm record
+        // If no applicationId provided and this is the first step (Applicant), create ApplicationForm record
+        if (applicationId == null && stepDeveloperName.contains('Applicant')) {
+            System.debug('Creating new ApplicationForm record for first step');
+            try {
+                ApplicationForm newApp = createApplicationForm(payload);
+                insert newApp;
+                response.savedIds.put('applicationForm', newApp.Id);
+                System.debug('Created ApplicationForm with ID: ' + newApp.Id);
+                return upsertApplicantStep(newApp.Id, payload, response);
+            } catch (Exception e) {
+                response.success = false;
+                response.messages.add(new ErrorMessage('CREATE_APP_ERROR', 'Failed to create ApplicationForm: ' + e.getMessage(), null));
+                return response;
+            }
+        }
+        
+        // For other steps without applicationId, use placeholder mode
         if (applicationId == null) {
             System.debug('PROTOTYPE MODE: No application ID provided, using placeholder persistence');
-            response.savedIds.put('placeholder', UserInfo.getUserId()); // Use current user ID as placeholder
+            response.savedIds.put('placeholder', UserInfo.getUserId());
             System.debug('Step payload persisted (prototype): ' + JSON.serialize(payload));
             return response;
         }
@@ -109,5 +124,22 @@ public with sharing class WizardPersistenceService {
         System.debug('Review step payload: ' + JSON.serialize(payload));
         
         return response;
+    }
+    
+    private static ApplicationForm createApplicationForm(Map<String, Object> payload) {
+        ApplicationForm app = new ApplicationForm();
+        
+        // Set required fields
+        app.UsageType = 'Onboarding'; // Required field - set to Onboarding by default
+        app.Stage = 'In Progress';
+        app.SubmissionDate = System.today();
+        
+        // Generate unique DAO Application ID
+        app.DAOApplicationId__c = 'DAO-' + System.currentTimeMillis();
+        
+        // Map other available fields as needed
+        // Note: Name field is auto-generated and not writeable
+        
+        return app;
     }
 }

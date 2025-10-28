@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <label>DAO Business In-Branch - Review</label>
+  <label>DAO Business In-Branch - Additional</label>
   <protected>false</protected>
   <values>
     <field>WizardApiName__c</field>
@@ -8,15 +8,15 @@
   </values>
   <values>
     <field>Order__c</field>
-    <value xsi:type="xsd:double">7</value>
+    <value xsi:type="xsd:double">3</value>
   </values>
   <values>
     <field>ComponentBundle__c</field>
-    <value xsi:type="xsd:string">reviewAndSubmit</value>
+    <value xsi:type="xsd:string">additionalApplicants</value>
   </values>
   <values>
     <field>StepLabel__c</field>
-    <value xsi:type="xsd:string">Review</value>
+    <value xsi:type="xsd:string">Additional</value>
   </values>
   <values>
     <field>ValidatorClasses__c</field>
@@ -24,10 +24,10 @@
   </values>
   <values>
     <field>Skippable__c</field>
-    <value xsi:type="xsd:boolean">false</value>
+    <value xsi:type="xsd:boolean">true</value>
   </values>
   <values>
     <field>HelpText__c</field>
-    <value xsi:type="xsd:string">Review and confirm.</value>
+    <value xsi:type="xsd:string">Add beneficial owners, authorized signers, or other parties associated with this account.</value>
   </values>
 </CustomMetadata>

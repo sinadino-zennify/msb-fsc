@@ -14,8 +14,20 @@ export default class DaoWizardStepRouter extends LightningElement {
         return this.stepConfig?.componentBundle === 'businessDetails';
     }
 
+    get isAdditionalApplicants() {
+        return this.stepConfig?.componentBundle === 'additionalApplicants';
+    }
+
     get isProductSelection() {
         return this.stepConfig?.componentBundle === 'productSelection';
+    }
+
+    get isAdditionalServices() {
+        return this.stepConfig?.componentBundle === 'additionalServices';
+    }
+
+    get isDocumentUpload() {
+        return this.stepConfig?.componentBundle === 'documentUpload';
     }
 
     get isReviewAndSubmit() {
