@@ -1,7 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
-import { getFocusedTabInfo, setTabLabel, setTabIcon, isConsoleNavigation } from 'lightning/platformWorkspaceApi';
+import { getFocusedTabInfo, setTabLabel, setTabIcon, isConsoleNavigation, openSubtab, closeTab, refreshTab } from 'lightning/platformWorkspaceApi';
 import getSteps from '@salesforce/apex/WizardConfigService.getSteps';
 import upsertStep from '@salesforce/apex/WizardPersistenceService.upsertStep';
 
@@ -140,7 +140,7 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             let persistenceResult = { success: true, messages: [], savedIds: null };
             try {
                 persistenceResult = await upsertStep({
-                    applicationId: this.applicationFormId || this.recordId,
+                    applicationId: this.applicationFormId, // Don't use recordId - it's the Opportunity, not ApplicationForm
                     stepDeveloperName: this.currentStep.developerName,
                     payload: payload
                 });
@@ -164,6 +164,9 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
 
             // Navigate to next step or complete
             if (this.isLast) {
+                // eslint-disable-next-line no-console
+                console.log('🎯 Wizard completed! applicationFormId:', this.applicationFormId);
+                
                 this.dispatchEvent(new CustomEvent('completed', {
                     detail: { 
                         applicationId: this.applicationFormId || this.recordId,
@@ -174,7 +177,12 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
                 
                 // Redirect to ApplicationForm record
                 if (this.applicationFormId) {
+                    // eslint-disable-next-line no-console
+                    console.log('🚀 Calling navigateToRecord with:', this.applicationFormId);
                     this.navigateToRecord(this.applicationFormId);
+                } else {
+                    // eslint-disable-next-line no-console
+                    console.warn('⚠️ No applicationFormId available for navigation');
                 }
             } else {
                 this.currentIndex++;
@@ -193,32 +201,164 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         }
     }
 
-    handleSaveAndExit() {
-        const payload = this.payloadByStep.get(this.currentStep?.developerName) || {};
-        this.dispatchEvent(new CustomEvent('saveandexit', {
-            detail: {
-                applicationId: this.applicationFormId || this.recordId,
-                currentStep: this.currentStep?.developerName,
-                currentPayload: payload,
-                allPayloads: Object.fromEntries(this.payloadByStep)
-            }
-        }));
-        this.showToast('Info', 'Progress saved. You can resume later.', 'info');
+    async handleSaveAndExit() {
+        // eslint-disable-next-line no-console
+        console.log('💾 Save & Exit triggered. applicationFormId:', this.applicationFormId);
         
-        // Redirect to ApplicationForm record if available
-        if (this.applicationFormId) {
-            this.navigateToRecord(this.applicationFormId);
+        if (!this.currentStep) {
+            this.showToast('Error', 'No current step to save', 'error');
+            return;
+        }
+
+        this.isLoading = true;
+        try {
+            // Save current step data first
+            const payload = this.payloadByStep.get(this.currentStep.developerName) || {};
+            // eslint-disable-next-line no-console
+            console.log('💾 Saving current step data before exit:', this.currentStep.developerName);
+            
+            const persistenceResult = await upsertStep({
+                applicationId: this.applicationFormId, // Don't use recordId - it's the Opportunity, not ApplicationForm
+                stepDeveloperName: this.currentStep.developerName,
+                payload: payload
+            });
+
+            // Capture ApplicationForm ID if this created it
+            if (persistenceResult.savedIds && persistenceResult.savedIds.applicationForm) {
+                this.applicationFormId = persistenceResult.savedIds.applicationForm;
+                // eslint-disable-next-line no-console
+                console.log('💾 ApplicationForm ID captured:', this.applicationFormId);
+            }
+
+            this.dispatchEvent(new CustomEvent('saveandexit', {
+                detail: {
+                    applicationId: this.applicationFormId || this.recordId,
+                    currentStep: this.currentStep.developerName,
+                    currentPayload: payload,
+                    allPayloads: Object.fromEntries(this.payloadByStep)
+                }
+            }));
+            this.showToast('Info', 'Progress saved. You can resume later.', 'info');
+            
+            // Redirect to ApplicationForm record if available
+            if (this.applicationFormId) {
+                // eslint-disable-next-line no-console
+                console.log('🚀 Calling navigateToRecord from Save & Exit with:', this.applicationFormId);
+                this.navigateToRecord(this.applicationFormId);
+            } else {
+                // eslint-disable-next-line no-console
+                console.warn('⚠️ No applicationFormId available for navigation on Save & Exit');
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('❌ Error saving on exit:', error);
+            this.showToast('Error', 'Failed to save progress: ' + (error.body?.message || error.message), 'error');
+        } finally {
+            this.isLoading = false;
         }
     }
 
-    navigateToRecord(recordId) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: recordId,
-                actionName: 'view'
+    async navigateToRecord(recordId) {
+        // eslint-disable-next-line no-console
+        console.log('🔍 navigateToRecord called with recordId:', recordId);
+        
+        try {
+            const inConsole = await isConsoleNavigation();
+            // eslint-disable-next-line no-console
+            console.log('🔍 isConsoleNavigation result:', inConsole);
+            
+            if (inConsole) {
+                const tabInfo = await getFocusedTabInfo();
+                // eslint-disable-next-line no-console
+                console.log('🔍 Current tab info:', JSON.stringify(tabInfo, null, 2));
+                
+                // Strategy: Close current wizard tab and open ApplicationForm as a sibling
+                // This works better than trying to open a subtab under a subtab
+                
+                // First, open the new record tab
+                // eslint-disable-next-line no-console
+                console.log('🔍 Opening ApplicationForm record as subtab under parent');
+                
+                // If wizard is a subtab, get its parent and open ApplicationForm as sibling
+                if (tabInfo.isSubtab && tabInfo.parentTabId) {
+                    // eslint-disable-next-line no-console
+                    console.log('🔍 Wizard is a subtab. Parent:', tabInfo.parentTabId);
+                    
+                    await openSubtab({
+                        parentTabId: tabInfo.parentTabId,
+                        pageReference: {
+                            type: 'standard__recordPage',
+                            attributes: {
+                                recordId: recordId,
+                                actionName: 'view'
+                            }
+                        },
+                        focus: true
+                    });
+                    
+                    // eslint-disable-next-line no-console
+                    console.log('✅ ApplicationForm subtab opened as sibling');
+                    
+                    // Close the wizard tab after a brief delay
+                    setTimeout(async () => {
+                        try {
+                            await closeTab({ tabId: tabInfo.tabId });
+                            // eslint-disable-next-line no-console
+                            console.log('✅ Wizard tab closed');
+                        } catch (closeError) {
+                            // eslint-disable-next-line no-console
+                            console.warn('⚠️ Could not close wizard tab:', closeError);
+                        }
+                    }, 500);
+                } else {
+                    // Wizard is a primary tab, open ApplicationForm as subtab under it
+                    // eslint-disable-next-line no-console
+                    console.log('🔍 Wizard is a primary tab. Opening ApplicationForm as subtab');
+                    
+                    await openSubtab({
+                        parentTabId: tabInfo.tabId,
+                        pageReference: {
+                            type: 'standard__recordPage',
+                            attributes: {
+                                recordId: recordId,
+                                actionName: 'view'
+                            }
+                        },
+                        focus: true
+                    });
+                    // eslint-disable-next-line no-console
+                    console.log('✅ ApplicationForm subtab opened');
+                }
+            } else {
+                // Non-console: use standard navigation
+                // eslint-disable-next-line no-console
+                console.log('🔍 Using standard navigation (non-console)');
+                this[NavigationMixin.Navigate]({
+                    type: 'standard__recordPage',
+                    attributes: {
+                        recordId: recordId,
+                        actionName: 'view'
+                    }
+                });
+                // eslint-disable-next-line no-console
+                console.log('✅ Standard navigation called');
             }
-        });
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('❌ Error navigating to record:', error);
+            // eslint-disable-next-line no-console
+            console.error('❌ Error stack:', error.stack);
+            // Fallback to standard navigation
+            // eslint-disable-next-line no-console
+            console.log('🔄 Falling back to standard navigation');
+            this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: {
+                    recordId: recordId,
+                    actionName: 'view'
+                }
+            });
+        }
     }
 
     showToast(title, message, variant) {

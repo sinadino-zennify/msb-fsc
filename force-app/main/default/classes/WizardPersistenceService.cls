@@ -28,28 +28,21 @@ public with sharing class WizardPersistenceService {
     public static PersistenceResponse upsertStep(Id applicationId, String stepDeveloperName, Map<String, Object> payload) {
         PersistenceResponse response = new PersistenceResponse();
         
-        // If no applicationId provided and this is the first step (Applicant), create ApplicationForm record
-        if (applicationId == null && stepDeveloperName.contains('Applicant')) {
-            System.debug('Creating new ApplicationForm record for first step');
+        // If no applicationId provided, create ApplicationForm record regardless of step
+        if (applicationId == null) {
+            System.debug('No applicationId provided. Creating new ApplicationForm record.');
             try {
                 ApplicationForm newApp = createApplicationForm(payload);
                 insert newApp;
                 response.savedIds.put('applicationForm', newApp.Id);
                 System.debug('Created ApplicationForm with ID: ' + newApp.Id);
-                return upsertApplicantStep(newApp.Id, payload, response);
+                // Update applicationId for subsequent processing
+                applicationId = newApp.Id;
             } catch (Exception e) {
                 response.success = false;
                 response.messages.add(new ErrorMessage('CREATE_APP_ERROR', 'Failed to create ApplicationForm: ' + e.getMessage(), null));
                 return response;
             }
-        }
-        
-        // For other steps without applicationId, use placeholder mode
-        if (applicationId == null) {
-            System.debug('PROTOTYPE MODE: No application ID provided, using placeholder persistence');
-            response.savedIds.put('placeholder', UserInfo.getUserId());
-            System.debug('Step payload persisted (prototype): ' + JSON.serialize(payload));
-            return response;
         }
         
         if (String.isBlank(stepDeveloperName)) {
@@ -68,6 +61,8 @@ public with sharing class WizardPersistenceService {
             // Route to appropriate step handler based on stepDeveloperName
             if (stepDeveloperName.contains('Applicant')) {
                 return upsertApplicantStep(applicationId, payload, response);
+            } else if (stepDeveloperName.contains('Business')) {
+                return upsertBusinessStep(applicationId, payload, response);
             } else if (stepDeveloperName.contains('Product')) {
                 return upsertProductStep(applicationId, payload, response);
             } else if (stepDeveloperName.contains('Review')) {
@@ -112,6 +107,16 @@ public with sharing class WizardPersistenceService {
         
         // Log the payload for debugging
         System.debug('Product step payload: ' + JSON.serialize(payload));
+        
+        return response;
+    }
+    
+    private static PersistenceResponse upsertBusinessStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+        // Simulate successful persistence for business step
+        response.savedIds.put('applicationForm', applicationId);
+        
+        // Log the payload for debugging
+        System.debug('Business step payload: ' + JSON.serialize(payload));
         
         return response;
     }
