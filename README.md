@@ -152,23 +152,49 @@ Pre-configured external ID fields for upsert operations:
 
 ---
 
-## 🤖 AI-Optimized Development
+## 🤖 AI-Optimized Development (IDE-Agnostic)
 
-> Agents: open `/.cursorrules` before any work. This file is hidden; ensure your IDE search includes hidden files.
+This accelerator is designed for **universal AI-assisted development** that works across all IDEs and AI platforms.
 
-This accelerator is designed for AI-assisted development with:
+### Universal Boilerplate Prompt (MANDATORY)
 
-- **`.cursorrules`** - Comprehensive AI agent instructions
-- **CSV-first approach** - User maintains field mappings in CSV
-- **Auto-documentation** - Agents sync MD files from CSV changes
-- **Clear boundaries** - Explicit user vs agent responsibilities
+**Always start every new request with this exact template:**
+
+```markdown
+Use the AI context manifest.
+
+Task: <Your one-sentence goal for this session>
+
+Follow the Output Protocol defined in `docs/ai-context-sequence.md`.
+```
+
+**Examples:**
+```markdown
+Use the AI context manifest.
+
+Task: Implement full persistence logic for the Applicant step in WizardPersistenceService.
+
+Follow the Output Protocol defined in `docs/ai-context-sequence.md`.
+```
 
 ### How It Works
 
-1. **You** update `field-mappings.csv` with your external app fields
-2. **AI Agent** reads the CSV and syncs `field-mappings.md`
-3. **AI Agent** uses mappings to generate code
-4. **Result**: Consistent, documented, maintainable code
+1. **Trigger Phrase**: `Use the AI context manifest` forces any agent (Cursor, Windsurf, Claude, ChatGPT) to read `ai-guidelines.md`.
+2. **Deterministic Loading**: The agent loads exact files listed in `docs/context-manifest.md` in a specific order.
+3. **IDE-Agnostic**: Rules live in the repository, not in IDE-specific settings.
+4. **Consistent Output**: The `Output Protocol` requires agents to:
+   - List files read
+   - Summarize constraints found
+   - Propose design before generating code
+   - Provide test plan and rollback instructions
+
+### Key Files for AI Agents
+
+- **`/ai-guidelines.md`** - Entrypoint for all agents
+- **`/docs/ai-context-sequence.md`** - Ordered read sequence with validation loop
+- **`/docs/context-manifest.md`** - Deterministic file list
+- **`/docs/rules-global.md`** - IDE-agnostic global rules
+- **`/.cursorrules`** - Cursor-specific shim (points to repo docs)
 
 ---
 

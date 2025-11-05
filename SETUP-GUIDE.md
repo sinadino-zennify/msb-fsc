@@ -217,40 +217,82 @@ See `docs/04-implementation/DAO-API-Postman-Setup.md` for detailed instructions.
 
 ---
 
-## 🤖 Working with AI Agents
+## 🤖 Working with AI Agents (IDE-Agnostic)
 
-This accelerator is optimized for AI-assisted development (Cursor, GitHub Copilot, etc.).
+This accelerator is optimized for **universal AI-assisted development** that works across all IDEs and AI platforms (Cursor, Windsurf, Claude, ChatGPT, etc.).
 
-### Key Principles
+### Universal Boilerplate Prompt (MANDATORY)
 
-1. **CSV is Source of Truth**
-   - YOU maintain `field-mappings.csv`
-   - AI reads it but never modifies it
-   - AI syncs `field-mappings.md` when you update CSV
+**Always start every new request with this exact template:**
 
-2. **AI Pre-Work Checklist**
-   - AI must read data model before coding
-   - AI must verify object names
-   - AI must check field mappings
+```markdown
+Use the AI context manifest.
 
-3. **Clear Responsibilities**
-   | Task | Owner | Agent Can Modify? |
-   |------|-------|-------------------|
-   | field-mappings.csv | User | ❌ NO |
-   | field-mappings.md | Agent | ✅ YES |
-   | Code implementation | Agent | ✅ YES |
-   | Testing | Agent | ✅ YES |
+Task: <Your one-sentence goal for this session>
 
-### Using `.cursorrules`
+Follow the Output Protocol defined in `docs/ai-context-sequence.md`.
+```
 
-The `.cursorrules` file tells AI agents:
-- What object names to use (FSC canonical names)
-- How to handle field mappings
-- Testing requirements
-- Code quality standards
-- Deployment procedures
+**Example:**
+```markdown
+Use the AI context manifest.
 
-**After running init script**, `.cursorrules` is customized with your project details.
+Task: Deploy custom objects to the msb-sbox sandbox and verify all External ID fields are created.
+
+Follow the Output Protocol defined in `docs/ai-context-sequence.md`.
+```
+
+### How the System Works
+
+1. **Trigger Phrase**: `Use the AI context manifest` forces the agent to read:
+   - `/ai-guidelines.md` (entrypoint)
+   - `/docs/ai-context-sequence.md` (ordered read sequence)
+   - `/docs/context-manifest.md` (file list)
+
+2. **Mandatory Context Loading**: The agent MUST read (in order):
+   - `docs/00-START-HERE.md`
+   - `docs/01-foundation/` (entire folder)
+   - `docs/02-requirements/` (entire folder)
+   - `docs/03-workflows/` (entire folder)
+   - `docs/04-implementation/` (entire folder)
+   - `PROJECT.md`
+   - `docs/rules-global.md`
+
+3. **Output Protocol**: The agent must:
+   - List files it read
+   - Summarize constraints found
+   - Propose design before generating code
+   - Provide test plan and rollback instructions
+
+### Key Files for AI Agents
+
+- **`/ai-guidelines.md`** - Entrypoint for all agents
+- **`/docs/ai-context-sequence.md`** - Ordered read sequence with validation loop
+- **`/docs/context-manifest.md`** - Deterministic file list
+- **`/docs/rules-global.md`** - IDE-agnostic global rules (object names, SOP, testing, deployment)
+- **`/.cursorrules`** - Cursor-specific shim (points to repo docs)
+
+### Git Workflow (MANDATORY)
+
+All features and bug fixes must be developed on dedicated branches:
+
+```bash
+# Create a feature branch
+git checkout -b feature/your-feature-description
+
+# Make changes, commit often
+git commit -m "feat: Add validation for collateral amount field"
+
+# Create PR using template in .github/pull_request_template.md
+```
+
+**Branch naming:**
+- `feature/[description]` - New features
+- `bugfix/[description]` - Bug fixes
+- `hotfix/[description]` - Urgent production fixes
+- `docs/[description]` - Documentation-only changes
+
+**Never commit directly to `main` branch.**
 
 ---
 
