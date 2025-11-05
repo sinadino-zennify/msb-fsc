@@ -2,6 +2,7 @@
 
 ## READ FIRST (strict order - MANDATORY FOR ALL TASKS)
 
+- `docs/rules/` (entire folder - **CRITICAL**: apex, dev, general, lwc, mobile rules)
 - `docs/00-START-HERE.md`
 - `docs/01-foundation/` (entire folder)
 - `docs/02-requirements/` (entire folder)

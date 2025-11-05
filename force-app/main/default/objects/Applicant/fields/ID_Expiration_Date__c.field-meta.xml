@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ID_Expiration_Date__c</fullName>
+    <label>ID Expiration Date</label>
+    <required>false</required>
+    <type>Date</type>
+    <description>Date the government ID expires. Must be after Issue Date</description>
+</CustomField>

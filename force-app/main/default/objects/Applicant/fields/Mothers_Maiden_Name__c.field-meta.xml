@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mothers_Maiden_Name__c</fullName>
+    <label>Mother's Maiden Name</label>
+    <length>80</length>
+    <required>false</required>
+    <type>EncryptedText</type>
+    <maskChar>asterisk</maskChar>
+    <maskType>all</maskType>
+    <description>Mother's maiden name - used as security question. Encrypted for PII protection</description>
+</CustomField>

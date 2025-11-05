@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Skippable__c</fullName>
+    <fullName>Has_Phonetic_Name__c</fullName>
     <defaultValue>false</defaultValue>
-    <fieldManageability>DeveloperControlled</fieldManageability>
-    <label>Skippable</label>
+    <label>Has Phonetic Name</label>
     <type>Checkbox</type>
+    <description>Indicates if phonetic spelling exists for the applicant's name</description>
 </CustomField>

@@ -1,6 +1,6 @@
 # Main Street Bank - Development Backlog
 
-**Last Updated**: 2025-10-24  
+**Last Updated**: 2025-11-05  
 **Client**: Main Street bank
 
 ---
@@ -8,11 +8,12 @@
 ## 🎯 Active Sprint
 
 ### In Progress
-_No active stories_
+- [ ] **ST-002** — Populate Existing Data from Opportunity ([story file](ST-002-populate-existing-data-from-opportunity.md))
 
 ### Up Next
-- [ ] ST-002 — Persist Draft/Submit
-- [ ] ST-003 — Product Rules & Recommendations
+- [ ] ST-003 — Additional Applicants Typeahead (depends on ST-002)
+- [ ] ST-004 — Persist Draft/Submit
+- [ ] ST-005 — Product Rules & Recommendations
 
 ---
 

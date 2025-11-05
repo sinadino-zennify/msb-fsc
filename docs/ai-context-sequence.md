@@ -6,14 +6,16 @@ Read in this exact order—top to bottom. Summarize each tier before proceeding.
 
 ## Tier 1 — Global & Foundations (MUST READ - ALWAYS)
 
-1. `docs/00-START-HERE.md`
-2. `docs/01-foundation/` (entire folder)
-3. `docs/02-requirements/` (entire folder)
-4. `docs/03-workflows/` (entire folder)
-5. `docs/04-implementation/` (entire folder - includes ADRs, session notes, setup instructions)
-6. `PROJECT.md`
+1. `docs/rules/` (entire folder - **CRITICAL**: apex-rules.md, dev-rules.md, general-rules.md, lwc-rules.md, mobile-rules.md)
+2. `docs/00-START-HERE.md`
+3. `docs/01-foundation/` (entire folder)
+4. `docs/02-requirements/` (entire folder)
+5. `docs/03-workflows/` (entire folder)
+6. `docs/04-implementation/` (entire folder - includes ADRs, session notes, setup instructions)
+7. `PROJECT.md`
 
 **Extract**
+- **Salesforce development rules** (Apex, LWC, mobile, general dev practices)
 - Project objectives & non-negotiables
 - Domain concepts & constraints
 - Naming/structure conventions visible in docs

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_Tax_ID__c</fullName>
+    <label>Business Tax ID (EIN)</label>
+    <length>11</length>
+    <required>false</required>
+    <type>EncryptedText</type>
+    <maskChar>asterisk</maskChar>
+    <maskType>all</maskType>
+    <description>Federal Employer Identification Number (EIN). Encrypted for PII protection. Format: XX-XXXXXXX</description>
+</CustomField>

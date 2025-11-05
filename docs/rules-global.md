@@ -25,23 +25,29 @@
 
 Complete EVERY time before starting ANY task:
 
-1. **READ** `/docs/00-START-HERE.md` - Project orientation and quick start
-2. **READ** `/docs/01-foundation/` (entire folder) - Including:
+1. **READ** `/docs/rules/` (entire folder) - **CRITICAL** Salesforce development rules:
+   - `apex-rules.md` - Apex coding standards, governor limits, security, testing
+   - `dev-rules.md` - Application development, permissions, integrations
+   - `general-rules.md` - General Salesforce development requirements
+   - `lwc-rules.md` - Lightning Web Component architecture and best practices
+   - `mobile-rules.md` - Mobile LWC development requirements
+2. **READ** `/docs/00-START-HERE.md` - Project orientation and quick start
+3. **READ** `/docs/01-foundation/` (entire folder) - Including:
    - `ARCHITECTURE.md` - **CRITICAL** for wizard reusability patterns
    - `data-model.md` - **SOURCE OF TRUTH** for object names and relationships
-3. **READ** `/docs/02-requirements/` (entire folder) - Including:
+4. **READ** `/docs/02-requirements/` (entire folder) - Including:
    - `backlog.md` - Current and planned work items
    - All story files - Story context and Tasks/Sub-Tasks
-4. **READ** `/docs/03-workflows/` (entire folder) - **CRITICAL** for process flows and component boundaries
-5. **READ** `/docs/04-implementation/` (entire folder) - **CRITICAL** including:
+5. **READ** `/docs/03-workflows/` (entire folder) - **CRITICAL** for process flows and component boundaries
+6. **READ** `/docs/04-implementation/` (entire folder) - **CRITICAL** including:
    - `architecture-decisions/` - Why decisions were made (ADRs)
    - `session-notes/` - What has been implemented and lessons learned
    - `setup-instructions/` - Environment and deployment setup
-6. **READ** `/PROJECT.md` - Active scope and overview
-7. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
-8. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
-9. **REVIEW** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
-10. **CONFIRM** All context is loaded before proceeding
+7. **READ** `/PROJECT.md` - Active scope and overview
+8. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
+9. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
+10. **REVIEW** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
+11. **CONFIRM** All context is loaded before proceeding
 
 **⚠️ CRITICAL**: If you cannot access ANY of these files/folders, STOP and ask the user.
 
