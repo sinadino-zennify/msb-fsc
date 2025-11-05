@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Action_Taken_Needed</fullName>
+    <active>true</active>
+    <description>Prevents a user from marking the record as &quot;Closed&quot; if the &quot;Action Taken&quot; picklist is blank.</description>
+    <errorConditionFormula>AND(
+   ISBLANK( TEXT(Action_Taken__c) ),
+   ISPICKVAL( Status__c , &quot;Closed&quot;) 
+)</errorConditionFormula>
+    <errorDisplayField>Action_Taken__c</errorDisplayField>
+    <errorMessage>Please populate Action Taken before setting this record to Closed.</errorMessage>
+</ValidationRule>

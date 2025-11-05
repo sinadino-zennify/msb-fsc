@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecordId_Input_Required</fullName>
+    <active>true</active>
+    <description>Requires that the RecordId Input be added to an Edit page override.</description>
+    <errorConditionFormula>ISPICKVAL(Action__c, &apos;Edit&apos;) &amp;&amp; ISBLANK(RecordId_Input__c)</errorConditionFormula>
+    <errorMessage>RecordId Input is required for Edit page override.</errorMessage>
+</ValidationRule>

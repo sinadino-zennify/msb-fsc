@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinServ__ClosureReason__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Reason for closing the financial account.</description>
+    <label>Closure Reason</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>BANK</fullName>
+                <default>false</default>
+                <label>Bank Closed Account</label>
+            </value>
+            <value>
+                <fullName>CGHO</fullName>
+                <default>false</default>
+                <label>Charge-Off</label>
+            </value>
+            <value>
+                <fullName>CHGD</fullName>
+                <default>false</default>
+                <label>Changed Banks</label>
+            </value>
+            <value>
+                <fullName>CUST</fullName>
+                <default>false</default>
+                <label>Closed per Customer</label>
+            </value>
+            <value>
+                <fullName>DECE</fullName>
+                <default>false</default>
+                <label>Deceased</label>
+            </value>
+            <value>
+                <fullName>EDCR</fullName>
+                <default>false</default>
+                <label>Abandon Property</label>
+            </value>
+            <value>
+                <fullName>FEES</fullName>
+                <default>false</default>
+                <label>Fees</label>
+            </value>
+            <value>
+                <fullName>FRAU</fullName>
+                <default>false</default>
+                <label>Fraud</label>
+            </value>
+            <value>
+                <fullName>ITRN</fullName>
+                <default>false</default>
+                <label>Internal Transfer</label>
+            </value>
+            <value>
+                <fullName>MOVE</fullName>
+                <default>false</default>
+                <label>Relocating/Moving</label>
+            </value>
+            <value>
+                <fullName>NEGB</fullName>
+                <default>false</default>
+                <label>Negative Balance</label>
+            </value>
+            <value>
+                <fullName>OTHR</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>PBNK</fullName>
+                <default>false</default>
+                <label>Prior Bank Closed</label>
+            </value>
+            <value>
+                <fullName>RATE</fullName>
+                <default>false</default>
+                <label>Competition Rate</label>
+            </value>
+            <value>
+                <fullName>UNSA</fullName>
+                <default>false</default>
+                <label>Customer Claims Unsatisfactory</label>
+            </value>
+            <value>
+                <fullName>Account Maintenance Fees</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Account Maintenance Fees</label>
+            </value>
+            <value>
+                <fullName>Account no longer needed</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Account no longer needed</label>
+            </value>
+            <value>
+                <fullName>Moved out of the country</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Moved out of the country</label>
+            </value>
+            <value>
+                <fullName>Not able to maintain account</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Not able to maintain account</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

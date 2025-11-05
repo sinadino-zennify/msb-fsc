@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SendFundsBy_CashiersChck_Req</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ ISPICKVAL( Send_Funds_By__c , &quot;Cashier&apos;s Check&quot;) ,
+ ISBLANK( Cashier_s_Check_Number__c ) 
+)</errorConditionFormula>
+    <errorDisplayField>Cashier_s_Check_Number__c</errorDisplayField>
+    <errorMessage>You have selected &quot;Cashier&apos;s Check&quot; for &quot;Send Funds By&quot; - please provide details in the &quot;Cashier&apos;s Check Number&quot; field  before saving the record.</errorMessage>
+</ValidationRule>

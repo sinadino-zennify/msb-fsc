@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>URL_Merge_Fields__c</fullName>
+    <description>Enter JSON with the following syntax: { &quot;utmParameterName&quot; : &quot;My_Custom_Field__c&quot;, &quot;utmParameter2Name&quot; : &quot;My_Other_Custom_Field__c&quot;}</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>Enter JSON with the following syntax: { &quot;utmParameterName&quot; : &quot;My_Custom_Field__c&quot;, &quot;utmParameter2Name&quot; : &quot;My_Other_Custom_Field__c&quot;}</inlineHelpText>
+    <label>URL Merge Fields</label>
+    <length>32768</length>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

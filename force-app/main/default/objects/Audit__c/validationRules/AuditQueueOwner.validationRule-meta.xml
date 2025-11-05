@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AuditQueueOwner</fullName>
+    <active>true</active>
+    <errorConditionFormula>Flow_Validation_Rule_Bypass_Check__c = FALSE
+&amp;&amp;
+Owner:Queue.QueueName =&apos;Audits&apos; &amp;&amp; NOT(ISNEW()) &amp;&amp; IF(LEFT(PRIORVALUE(OwnerId),3)=&apos;005&apos;,FALSE,TRUE)</errorConditionFormula>
+    <errorMessage>To edit the Audit record please change the Owner to yourself or someone else. It cannot be assigned to the Audit queue.</errorMessage>
+</ValidationRule>

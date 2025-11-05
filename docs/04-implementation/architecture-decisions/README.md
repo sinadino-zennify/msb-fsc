@@ -15,6 +15,8 @@ Architecture Decision Records document important architectural decisions made du
 | ID | Title | Status | Date | Summary |
 |----|-------|--------|------|---------|
 | ADR-0001 | LWC Architecture for DAO (Main Street Bank) | Accepted | 2025-01-16 | Adopt container-child multi-step LWC architecture with orchestrator and standardized events |
+| ADR-0002 | Configuration-Driven Wizard Pattern | Accepted | 2025-11-03 | Implement metadata-driven wizard framework for reusability across multiple DAO projects |
+| ADR-0003 | Step Handler Map Pattern | Accepted | 2025-11-03 | Refactor WizardPersistenceService to use handler map instead of if/else if chain |
 
 _Add your ADRs here_
 

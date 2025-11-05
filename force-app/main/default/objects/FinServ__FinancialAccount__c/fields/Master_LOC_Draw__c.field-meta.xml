@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Master_LOC_Draw__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Indicates whether this Financial Account is related to a draw on a Master Line of Credit</inlineHelpText>
+    <label>Master LOC Draw</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Integration_Created__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>The customer communication was created from the integration and does not need to be sent to the Experience API.</description>
+    <label>Integration Created</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

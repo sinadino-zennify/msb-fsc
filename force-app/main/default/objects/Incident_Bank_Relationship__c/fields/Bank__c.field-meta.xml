@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bank__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Bank</label>
+    <referenceTo>Bank__c</referenceTo>
+    <relationshipLabel>Incident Bank Relationships</relationshipLabel>
+    <relationshipName>Incident_Bank_Relationships</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

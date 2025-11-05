@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GL_Company__c</fullName>
+    <label>GL Company</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1634</fullName>
+                <default>false</default>
+                <label>Main Street Bank</label>
+            </value>
+            <value>
+                <fullName>1700</fullName>
+                <default>false</default>
+                <label>MS Charitable Foundation</label>
+            </value>
+            <value>
+                <fullName>2700</fullName>
+                <default>false</default>
+                <label>1885 Security Corp</label>
+            </value>
+            <value>
+                <fullName>2710</fullName>
+                <default>false</default>
+                <label>Rail Town Security Corp</label>
+            </value>
+            <value>
+                <fullName>2720</fullName>
+                <default>false</default>
+                <label>MSB Security Corp</label>
+            </value>
+            <value>
+                <fullName>2730</fullName>
+                <default>false</default>
+                <label>Marbro-Hudston, Inc</label>
+            </value>
+            <value>
+                <fullName>3800</fullName>
+                <default>false</default>
+                <label>Main Street Bank Elim</label>
+            </value>
+            <value>
+                <fullName>8700</fullName>
+                <default>false</default>
+                <label>Main Street Group Bancshares Inc</label>
+            </value>
+            <value>
+                <fullName>8800</fullName>
+                <default>false</default>
+                <label>Main Street Group Bancshares Inc Elim</label>
+            </value>
+            <value>
+                <fullName>9700</fullName>
+                <default>false</default>
+                <label>Main Street Group Bancshares MHC</label>
+            </value>
+            <value>
+                <fullName>9800</fullName>
+                <default>false</default>
+                <label>Main Street Group Bancshares MHC Elim</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

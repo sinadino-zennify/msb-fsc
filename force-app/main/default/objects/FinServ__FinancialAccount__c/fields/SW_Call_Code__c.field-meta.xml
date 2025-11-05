@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Call_Code__c</fullName>
+    <label>Call Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1a1</fullName>
+                <default>false</default>
+                <label>1a1 - 1-4 family residential construction loans</label>
+            </value>
+            <value>
+                <fullName>1a2</fullName>
+                <default>false</default>
+                <label>1a2 - Other construction loans and all land development and other land loans</label>
+            </value>
+            <value>
+                <fullName>1b</fullName>
+                <default>false</default>
+                <label>1b - Secured by farmland (including farm residential and other improvements)</label>
+            </value>
+            <value>
+                <fullName>1c1</fullName>
+                <default>false</default>
+                <label>1c1 - Revolving, open-end loans secured by 1-4 family residential properties and extended under lines of credit</label>
+            </value>
+            <value>
+                <fullName>1c2a</fullName>
+                <default>false</default>
+                <label>1c2a - Secured by first liens</label>
+            </value>
+            <value>
+                <fullName>1c2b</fullName>
+                <default>false</default>
+                <label>1c2b - Secured by junior liens</label>
+            </value>
+            <value>
+                <fullName>1d</fullName>
+                <default>false</default>
+                <label>1d - Secured by multifamily (5 or more) residential properties</label>
+            </value>
+            <value>
+                <fullName>1e1</fullName>
+                <default>false</default>
+                <label>1e1 - Loans secured by owner-occupied, nonfarm nonresidential properties</label>
+            </value>
+            <value>
+                <fullName>1e2</fullName>
+                <default>false</default>
+                <label>1e2 - Loans secured by other nonfarm nonresidential properties</label>
+            </value>
+            <value>
+                <fullName>4a</fullName>
+                <default>false</default>
+                <label>4a - To US addresses (domicile)</label>
+            </value>
+            <value>
+                <fullName>6</fullName>
+                <default>false</default>
+                <label>6 - Loans to individuals for household, family, and other personal expenditures (i.e. consumer loans) (includes purchased paper)</label>
+            </value>
+            <value>
+                <fullName>6b</fullName>
+                <default>false</default>
+                <label>6b - Other revolving credit plans</label>
+            </value>
+            <value>
+                <fullName>6c</fullName>
+                <default>false</default>
+                <label>6c - Automobile loans</label>
+            </value>
+            <value>
+                <fullName>6d</fullName>
+                <default>false</default>
+                <label>6d - Other consumer loans</label>
+            </value>
+            <value>
+                <fullName>9b</fullName>
+                <default>false</default>
+                <label>9b - Other loans</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Role__c</fullName>
+    <label>Role</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Reported</fullName>
+                <default>false</default>
+                <label>Reported</label>
+            </value>
+            <value>
+                <fullName>Impacted</fullName>
+                <default>false</default>
+                <label>Impacted</label>
+            </value>
+            <value>
+                <fullName>Instigated</fullName>
+                <default>false</default>
+                <label>Instigated</label>
+            </value>
+            <value>
+                <fullName>Witnessed</fullName>
+                <default>false</default>
+                <label>Witnessed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

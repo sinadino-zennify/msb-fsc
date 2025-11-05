@@ -3,41 +3,222 @@
     <fullName>Type__c</fullName>
     <label>Type</label>
     <required>false</required>
+    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
+        <restricted>true</restricted>
         <valueSetDefinition>
-            <sorted>false</sorted>
+            <sorted>true</sorted>
             <value>
-                <fullName>Real Estate</fullName>
+                <fullName>2FAM</fullName>
                 <default>false</default>
-                <label>Real Estate</label>
+                <label>2-4 Units Residential</label>
             </value>
             <value>
-                <fullName>Equipment</fullName>
+                <fullName>5FAM</fullName>
                 <default>false</default>
-                <label>Equipment</label>
+                <label>5+ Units Residential</label>
             </value>
             <value>
-                <fullName>Vehicle</fullName>
-                <default>false</default>
-                <label>Vehicle</label>
-            </value>
-            <value>
-                <fullName>Accounts Receivable</fullName>
+                <fullName>AR</fullName>
                 <default>false</default>
                 <label>Accounts Receivable</label>
             </value>
             <value>
-                <fullName>Inventory</fullName>
+                <fullName>ABA</fullName>
                 <default>false</default>
-                <label>Inventory</label>
+                <label>All Business Assets</label>
             </value>
             <value>
-                <fullName>Other</fullName>
+                <fullName>APBT</fullName>
+                <default>false</default>
+                <label>Apartment Buildings</label>
+            </value>
+            <value>
+                <fullName>AUTN</fullName>
+                <default>false</default>
+                <label>Automobile - New</label>
+            </value>
+            <value>
+                <fullName>AUTU</fullName>
+                <default>false</default>
+                <label>Automobile - Used</label>
+            </value>
+            <value>
+                <fullName>DLRS</fullName>
+                <default>false</default>
+                <label>Automotive Dealership</label>
+            </value>
+            <value>
+                <fullName>BOAT</fullName>
+                <default>false</default>
+                <label>Boat / Motor</label>
+            </value>
+            <value>
+                <fullName>BOWL</fullName>
+                <default>false</default>
+                <label>Bowling Alley</label>
+            </value>
+            <value>
+                <fullName>CDSV</fullName>
+                <default>false</default>
+                <label>CD/Savings Account</label>
+            </value>
+            <value>
+                <fullName>CHUR</fullName>
+                <default>false</default>
+                <label>Church</label>
+            </value>
+            <value>
+                <fullName>CMEQ</fullName>
+                <default>false</default>
+                <label>Commercial Equipment</label>
+            </value>
+            <value>
+                <fullName>COMM</fullName>
+                <default>false</default>
+                <label>Commercial Property (Nonresidential)</label>
+            </value>
+            <value>
+                <fullName>CVEC</fullName>
+                <default>false</default>
+                <label>Commercial Vehicle</label>
+            </value>
+            <value>
+                <fullName>COND</fullName>
+                <default>false</default>
+                <label>Condominium</label>
+            </value>
+            <value>
+                <fullName>CND5</fullName>
+                <default>false</default>
+                <label>Condos 5+ Units</label>
+            </value>
+            <value>
+                <fullName>COOP</fullName>
+                <default>false</default>
+                <label>Co-Ops</label>
+            </value>
+            <value>
+                <fullName>HLTH</fullName>
+                <default>false</default>
+                <label>Health Club</label>
+            </value>
+            <value>
+                <fullName>1FBU</fullName>
+                <default>false</default>
+                <label>Home and Business</label>
+            </value>
+            <value>
+                <fullName>INDU</fullName>
+                <default>false</default>
+                <label>Industrial</label>
+            </value>
+            <value>
+                <fullName>LNDC</fullName>
+                <default>false</default>
+                <label>Land - Commercial Development</label>
+            </value>
+            <value>
+                <fullName>LNDR</fullName>
+                <default>false</default>
+                <label>Land - Residential Development</label>
+            </value>
+            <value>
+                <fullName>MOBN</fullName>
+                <default>false</default>
+                <label>Mobile Home - New</label>
+            </value>
+            <value>
+                <fullName>MOBU</fullName>
+                <default>false</default>
+                <label>Mobile Home - Used</label>
+            </value>
+            <value>
+                <fullName>MC14</fullName>
+                <default>false</default>
+                <label>Multi-Unit Commercial 1-4</label>
+            </value>
+            <value>
+                <fullName>MCO4</fullName>
+                <default>false</default>
+                <label>Multi-Unit Commercial 5+</label>
+            </value>
+            <value>
+                <fullName>OFFC</fullName>
+                <default>false</default>
+                <label>Office Building</label>
+            </value>
+            <value>
+                <fullName>OTHR</fullName>
                 <default>false</default>
                 <label>Other</label>
             </value>
+            <value>
+                <fullName>OTFA</fullName>
+                <default>false</default>
+                <label>Other Fixed Assets</label>
+            </value>
+            <value>
+                <fullName>PUD</fullName>
+                <default>false</default>
+                <label>Planned Unit Development</label>
+            </value>
+            <value>
+                <fullName>REOL</fullName>
+                <default>false</default>
+                <label>Real Estate Owned 1-4 Fam</label>
+            </value>
+            <value>
+                <fullName>REO1</fullName>
+                <default>false</default>
+                <label>Real Estate Owned - Land</label>
+            </value>
+            <value>
+                <fullName>RV</fullName>
+                <default>false</default>
+                <label>Recreational Vehicle</label>
+            </value>
+            <value>
+                <fullName>REST</fullName>
+                <default>false</default>
+                <label>Restaurant</label>
+            </value>
+            <value>
+                <fullName>SCOL</fullName>
+                <default>false</default>
+                <label>School</label>
+            </value>
+            <value>
+                <fullName>SHOP</fullName>
+                <default>false</default>
+                <label>Shopping Center</label>
+            </value>
+            <value>
+                <fullName>1FAM</fullName>
+                <default>false</default>
+                <label>Single Family Residence</label>
+            </value>
+            <value>
+                <fullName>STOK</fullName>
+                <default>false</default>
+                <label>Stocks/Bonds</label>
+            </value>
+            <value>
+                <fullName>TRUC</fullName>
+                <default>false</default>
+                <label>Truck</label>
+            </value>
+            <value>
+                <fullName>VACA</fullName>
+                <default>false</default>
+                <label>Vacation Home</label>
+            </value>
+            <value>
+                <fullName>WARH</fullName>
+                <default>false</default>
+                <label>Warehouse</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
-    <description>Type of collateral (Real Estate, Equipment, Vehicle, etc.)</description>
 </CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Error_Description_Blank</fullName>
+    <active>true</active>
+    <description>If Error Type field is populated Error Description cannot be blank.</description>
+    <errorConditionFormula>No_Errors_Found__c == FALSE
+&amp;&amp;
+Flow_Validation_Rule_Bypass_Check__c = FALSE
+&amp;&amp;
+AND(
+    ISBLANK( Error_Description__c ) ,
+    NOT( ISBLANK( Error_Type__c ) )
+)</errorConditionFormula>
+    <errorDisplayField>Error_Description__c</errorDisplayField>
+    <errorMessage>You have filled out the Error Type, please also provide the Error Description before saving the record.</errorMessage>
+</ValidationRule>

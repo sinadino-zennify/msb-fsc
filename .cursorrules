@@ -25,12 +25,14 @@
 
 Complete EVERY time before starting ANY task:
 
-1. **READ** `/docs/01-foundation/data-model.md` - **SOURCE OF TRUTH** for object names and relationships
-2. **READ** `/PROJECT.md` - Active scope and overview
-3. **READ** `/docs/02-requirements/` - Requirements, backlog, story context, and Tasks/Sub-Tasks
-4. **READ** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
-5. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
-6. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for what has been implemented and lessons learned
+1. **READ** `/docs/01-foundation/ARCHITECTURE.md` - **CRITICAL** for wizard reusability patterns
+2. **READ** `/docs/01-foundation/data-model.md` - **SOURCE OF TRUTH** for object names and relationships
+3. **READ** `/PROJECT.md` - Active scope and overview
+4. **READ** `/docs/02-requirements/backlog.md` - Current and planned work items
+5. **READ** `/docs/02-requirements/` - Story context and Tasks/Sub-Tasks
+6. **READ** `/examples/` - Non-deployable reference patterns (LWC, Apex, CMDT)
+7. **READ** `/docs/04-implementation/architecture-decisions/` - **CRITICAL** for understanding why decisions were made (ADRs)
+8. **READ** `/docs/04-implementation/session-notes/` - **CRITICAL** for what has been implemented and lessons learned
 7. **SCAN** `force-app/main/default/objects/` - Check existing objects/fields (verify API names)
 8. **REVIEW** `docs/05-analysis/` - Check latest analysis reports for current state
 9. **CONFIRM** All context is loaded before proceeding

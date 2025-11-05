@@ -18,6 +18,9 @@ _No active stories_
 
 ## 📋 Backlog
 
+- [ ] **Implement Full Persistence Logic**: The current `WizardPersistenceService` only creates an `ApplicationForm` record. All other step handlers (`upsertApplicantStep`, `upsertBusinessStep`, etc.) are stubs. This story tracks the work to implement the actual DML to create/update `Applicant`, `Account`, and other related records from the wizard payloads.
+- [ ] **Experience Cloud Compatibility**: Make the `daoWizardContainer` LWC compatible with Experience Cloud. This includes: refactoring Workspace API calls to be environment-aware, updating the component's meta.xml file with community targets, ensuring guest user permissions are handled, and verifying styling works with community themes.
+
 _Track new stories here or link to story files in `docs/02-requirements/`_
 
 ---

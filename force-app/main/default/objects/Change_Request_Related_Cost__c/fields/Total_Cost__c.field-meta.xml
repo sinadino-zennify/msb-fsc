@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Cost__c</fullName>
+    <formula>IF( OR(ISPICKVAL(Category__c, &quot;Direct Implementation Cost&quot;),ISPICKVAL(Category__c, &quot;One-Time Future Cost&quot;)), Hard_Cost__c + Labor_Cost__c,
+IF( ISPICKVAL(Category__c,&quot;Recurring Cost&quot;), Annual_Recurring_Hard_Cost__c + Annual_Recurring_Labor_Cost__c, 0))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Cost</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

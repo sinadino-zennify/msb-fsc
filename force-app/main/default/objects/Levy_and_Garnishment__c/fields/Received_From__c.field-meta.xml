@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Received_From__c</fullName>
+    <label>Received From</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Department of Revenue</fullName>
+                <default>false</default>
+                <label>Department of Revenue</label>
+            </value>
+            <value>
+                <fullName>State</fullName>
+                <default>false</default>
+                <label>State</label>
+            </value>
+            <value>
+                <fullName>IRS</fullName>
+                <default>false</default>
+                <label>IRS</label>
+            </value>
+            <value>
+                <fullName>Unemployment</fullName>
+                <default>false</default>
+                <label>Unemployment</label>
+            </value>
+            <value>
+                <fullName>Child Support</fullName>
+                <default>false</default>
+                <label>Child Support</label>
+            </value>
+            <value>
+                <fullName>Lawyer’s Office</fullName>
+                <default>false</default>
+                <label>Lawyer’s Office</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

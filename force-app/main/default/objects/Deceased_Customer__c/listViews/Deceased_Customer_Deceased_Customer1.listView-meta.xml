@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Deceased_Customer_Deceased_Customer1</fullName>
+    <filterScope>Queue</filterScope>
+    <label>Deceased Customer</label>
+    <queue>Deceased_Customer</queue>
+    <sharedTo>
+        <allInternalUsers></allInternalUsers>
+    </sharedTo>
+</ListView>

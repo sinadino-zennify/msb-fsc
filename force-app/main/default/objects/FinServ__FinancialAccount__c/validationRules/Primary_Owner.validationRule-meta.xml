@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Owner</fullName>
+    <active>false</active>
+    <description>Validates that a Cash Management user cannot change the Primary Owner.</description>
+    <errorConditionFormula>ISCHANGED(FinServ__PrimaryOwner__c) &amp;&amp; CONTAINS($UserRole.Name, &apos;Cash Management&apos;)</errorConditionFormula>
+    <errorMessage>Primary Owner is managed by the core integration and cannot be updated.</errorMessage>
+</ValidationRule>

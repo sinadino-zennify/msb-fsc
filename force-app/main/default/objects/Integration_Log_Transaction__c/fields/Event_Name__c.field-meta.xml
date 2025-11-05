@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Event_Name__c</fullName>
+    <label>Event Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>One-Time Passcode</fullName>
+                <default>false</default>
+                <label>One-Time Passcode</label>
+            </value>
+            <value>
+                <fullName>Reset 2FA</fullName>
+                <default>false</default>
+                <label>Reset 2FA</label>
+            </value>
+            <value>
+                <fullName>Account Refresh</fullName>
+                <default>false</default>
+                <label>Account Refresh</label>
+            </value>
+            <value>
+                <fullName>Communication Log Retrieve</fullName>
+                <default>false</default>
+                <label>Communication Log Retrieve</label>
+            </value>
+            <value>
+                <fullName>Communication Log Create</fullName>
+                <default>false</default>
+                <label>Communication Log Create</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

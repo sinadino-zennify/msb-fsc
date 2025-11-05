@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>KPI__c</fullName>
+    <label>KPI</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Retail Deposits</fullName>
+                <default>false</default>
+                <label>Retail Deposits</label>
+            </value>
+            <value>
+                <fullName>Commercial Loans</fullName>
+                <default>false</default>
+                <label>Commercial Loans</label>
+            </value>
+            <value>
+                <fullName>Consumer Loans</fullName>
+                <default>false</default>
+                <label>Consumer Loans</label>
+            </value>
+            <value>
+                <fullName>Mortgage Loans</fullName>
+                <default>false</default>
+                <label>Mortgage Loans</label>
+            </value>
+            <value>
+                <fullName>Core Income</fullName>
+                <default>false</default>
+                <label>Core Income</label>
+            </value>
+            <value>
+                <fullName>Leverage Ratio</fullName>
+                <default>false</default>
+                <label>Leverage Ratio</label>
+            </value>
+            <value>
+                <fullName>Efficiency Ratio</fullName>
+                <default>false</default>
+                <label>Efficiency Ratio</label>
+            </value>
+            <value>
+                <fullName>Google Reviews</fullName>
+                <default>false</default>
+                <label>Google Reviews</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

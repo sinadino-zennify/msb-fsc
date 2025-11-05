@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship__c</fullName>
+    <inlineHelpText>Select the relationship that best captures the Department&apos;s relationship to the Change Request should it be implemented. Implementation Resource should be selected for teams who are both resources and will be directly impacted by the implementation.</inlineHelpText>
+    <label>Relationship</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Primary Department</fullName>
+                <default>false</default>
+                <label>Primary Department</label>
+            </value>
+            <value>
+                <fullName>Implementation Resource</fullName>
+                <default>false</default>
+                <label>Implementation Resource</label>
+            </value>
+            <value>
+                <fullName>Direct Implementation Impact</fullName>
+                <default>false</default>
+                <label>Direct Implementation Impact</label>
+            </value>
+            <value>
+                <fullName>Indirect Implementation Impact</fullName>
+                <default>false</default>
+                <label>Indirect Implementation Impact</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

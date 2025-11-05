@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinServ__All</fullName>
+    <columns>NAME</columns>
+    <columns>FinServ__PrimaryOwner__c</columns>
+    <columns>FinServ__FinancialAccountNumber__c</columns>
+    <columns>FinServ__Balance__c</columns>
+    <columns>FinServ__OpenDate__c</columns>
+    <columns>FinServ__CloseDate__c</columns>
+    <columns>FinServ__RecordTypeName__c</columns>
+    <columns>FinServ__Status__c</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>FinServ__Managed__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

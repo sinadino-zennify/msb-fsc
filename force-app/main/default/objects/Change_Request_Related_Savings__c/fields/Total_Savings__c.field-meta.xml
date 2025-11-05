@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Savings__c</fullName>
+    <formula>IF( AND(ISPICKVAL(Category__c, &quot;Direct Cost Savings&quot;),ISPICKVAL(Frequency__c, &quot;One-Time&quot;)), Hard_Savings__c,
+IF( AND(ISPICKVAL(Category__c, &quot;Direct Cost Savings&quot;),NOT(ISPICKVAL(Frequency__c, &quot;One-Time&quot;))), Annual_Recurring_Hard_Savings__c,
+IF( AND(ISPICKVAL(Category__c, &quot;Time Savings&quot;),ISPICKVAL(Frequency__c, &quot;One-Time&quot;)), Labor_Savings__c,
+IF( AND(ISPICKVAL(Category__c, &quot;Time Savings&quot;),NOT(ISPICKVAL(Frequency__c, &quot;One-Time&quot;))), Annual_Recurring_Labor_Savings__c + Labor_Savings__c, 0))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Savings</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

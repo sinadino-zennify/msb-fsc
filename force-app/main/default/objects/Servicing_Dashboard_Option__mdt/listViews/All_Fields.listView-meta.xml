@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Fields</fullName>
+    <columns>MasterLabel</columns>
+    <columns>Servicing_Dashboard_Section__c</columns>
+    <columns>Option_Title__c</columns>
+    <columns>Option_Description__c</columns>
+    <columns>Option_Icon__c</columns>
+    <columns>Behavior__c</columns>
+    <columns>Flow_API_Name__c</columns>
+    <columns>LWC_Name__c</columns>
+    <columns>Sort_Order__c</columns>
+    <columns>Toast_Title__c</columns>
+    <columns>Toast_Message__c</columns>
+    <columns>Show_On_Dashboard__c</columns>
+    <columns>DeveloperName</columns>
+    <columns>Resume_Flows__c</columns>
+    <columns>URL_Merge_Fields__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Fields</label>
+    <language>en_US</language>
+</ListView>

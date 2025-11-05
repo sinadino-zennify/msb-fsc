@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>No_One_Time_Time_Savings</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND( ISPICKVAL(Frequency__c, &quot;One-Time&quot;), Hours_Saved__c &gt; 0)</errorConditionFormula>
+    <errorMessage>Only recurring time savings can be captured in this analysis. Please update frequency field or discard this metric.</errorMessage>
+</ValidationRule>

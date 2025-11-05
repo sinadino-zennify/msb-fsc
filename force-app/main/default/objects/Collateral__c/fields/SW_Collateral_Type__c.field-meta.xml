@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Collateral_Type__c</fullName>
+    <label>Collateral Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>AllAssets</fullName>
+                <default>false</default>
+                <label>All Business Assets</label>
+            </value>
+            <value>
+                <fullName>Equipment</fullName>
+                <default>false</default>
+                <label>Equipment</label>
+            </value>
+            <value>
+                <fullName>AccountsReceivable</fullName>
+                <default>false</default>
+                <label>Accounts Receivable</label>
+            </value>
+            <value>
+                <fullName>Inventory</fullName>
+                <default>false</default>
+                <label>Inventory</label>
+            </value>
+            <value>
+                <fullName>Fixtures</fullName>
+                <default>false</default>
+                <label>Fixtures</label>
+            </value>
+            <value>
+                <fullName>GeneralIntangibles</fullName>
+                <default>false</default>
+                <label>General Intangibles</label>
+            </value>
+            <value>
+                <fullName>FarmEquipment</fullName>
+                <default>false</default>
+                <label>Farm Equipment</label>
+            </value>
+            <value>
+                <fullName>MotorVehicle</fullName>
+                <default>false</default>
+                <label>Motor Vehicle</label>
+            </value>
+            <value>
+                <fullName>TitledVehicles</fullName>
+                <default>false</default>
+                <label>Other Titled Vehicle</label>
+            </value>
+            <value>
+                <fullName>CommercialRealEstate</fullName>
+                <default>false</default>
+                <label>Commercial Real Estate</label>
+            </value>
+            <value>
+                <fullName>MultiFamily</fullName>
+                <default>false</default>
+                <label>Multi-Family Real Estate</label>
+            </value>
+            <value>
+                <fullName>ResidentialRealEstate</fullName>
+                <default>false</default>
+                <label>Single-Family Real Estate</label>
+            </value>
+            <value>
+                <fullName>RealEstateConstruction</fullName>
+                <default>false</default>
+                <label>Construction Project</label>
+            </value>
+            <value>
+                <fullName>Land</fullName>
+                <default>false</default>
+                <label>Land</label>
+            </value>
+            <value>
+                <fullName>OtherRealEstate</fullName>
+                <default>false</default>
+                <label>Other Real Estate</label>
+            </value>
+            <value>
+                <fullName>ManufacturedHousing</fullName>
+                <default>false</default>
+                <label>Manufactured Housing</label>
+            </value>
+            <value>
+                <fullName>DepositAccounts</fullName>
+                <default>false</default>
+                <label>Deposit Account</label>
+            </value>
+            <value>
+                <fullName>Instruments</fullName>
+                <default>false</default>
+                <label>Financial Instrument</label>
+            </value>
+            <value>
+                <fullName>LifeInsurance</fullName>
+                <default>false</default>
+                <label>Life Insurance</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

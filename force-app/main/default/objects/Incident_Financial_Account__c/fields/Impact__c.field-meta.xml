@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Impact__c</fullName>
+    <label>Impact</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Fraud Loss</fullName>
+                <default>false</default>
+                <label>Fraud Loss</label>
+            </value>
+            <value>
+                <fullName>Fraud Benefit</fullName>
+                <default>false</default>
+                <label>Fraud Benefit</label>
+            </value>
+            <value>
+                <fullName>Operational Impact</fullName>
+                <default>false</default>
+                <label>Operational Impact</label>
+            </value>
+            <value>
+                <fullName>Data Breach</fullName>
+                <default>false</default>
+                <label>Data Breach</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Workflow_Reasons__c</fullName>
+    <label>Workflow Reasons</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>6071</fullName>
+                <default>false</default>
+                <label>Equipment</label>
+            </value>
+            <value>
+                <fullName>6072</fullName>
+                <default>false</default>
+                <label>Real Estate - Investment</label>
+            </value>
+            <value>
+                <fullName>6074</fullName>
+                <default>false</default>
+                <label>Real Estate - Owner Occupied</label>
+            </value>
+            <value>
+                <fullName>7115</fullName>
+                <default>false</default>
+                <label>Small Business</label>
+            </value>
+            <value>
+                <fullName>7236</fullName>
+                <default>false</default>
+                <label>Working Capital</label>
+            </value>
+            <value>
+                <fullName>7240</fullName>
+                <default>false</default>
+                <label>Construction (Rehab or New)</label>
+            </value>
+            <value>
+                <fullName>7716</fullName>
+                <default>false</default>
+                <label>Refinance</label>
+            </value>
+            <value>
+                <fullName>22122</fullName>
+                <default>false</default>
+                <label>Business Acquistion</label>
+            </value>
+            <value>
+                <fullName>22123</fullName>
+                <default>false</default>
+                <label>Sponsor Finance</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>3</visibleLines>
+</CustomField>

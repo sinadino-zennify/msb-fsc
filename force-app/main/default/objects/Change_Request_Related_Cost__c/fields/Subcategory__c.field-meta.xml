@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Subcategory__c</fullName>
+    <label>Subcategory</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Vendor Fee</fullName>
+                <default>false</default>
+                <label>Vendor Fee</label>
+            </value>
+            <value>
+                <fullName>Third-Party Contract</fullName>
+                <default>false</default>
+                <label>Third-Party Contract</label>
+            </value>
+            <value>
+                <fullName>Bank Direct Labor</fullName>
+                <default>false</default>
+                <label>Bank Direct Labor</label>
+            </value>
+            <value>
+                <fullName>Bank Overhead</fullName>
+                <default>false</default>
+                <label>Bank Overhead</label>
+            </value>
+            <value>
+                <fullName>External Due Diligence</fullName>
+                <default>false</default>
+                <label>External Due Diligence</label>
+            </value>
+            <value>
+                <fullName>Software Licensing</fullName>
+                <default>false</default>
+                <label>Software Licensing</label>
+            </value>
+            <value>
+                <fullName>Maintenance Contract</fullName>
+                <default>false</default>
+                <label>Maintenance Contract</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Direct Implementation Cost</controllingFieldValue>
+            <controllingFieldValue>One-Time Future Cost</controllingFieldValue>
+            <valueName>Vendor Fee</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Direct Implementation Cost</controllingFieldValue>
+            <controllingFieldValue>One-Time Future Cost</controllingFieldValue>
+            <valueName>Third-Party Contract</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Direct Implementation Cost</controllingFieldValue>
+            <controllingFieldValue>One-Time Future Cost</controllingFieldValue>
+            <controllingFieldValue>Recurring Cost</controllingFieldValue>
+            <valueName>Bank Direct Labor</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Direct Implementation Cost</controllingFieldValue>
+            <controllingFieldValue>One-Time Future Cost</controllingFieldValue>
+            <controllingFieldValue>Recurring Cost</controllingFieldValue>
+            <valueName>Bank Overhead</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Direct Implementation Cost</controllingFieldValue>
+            <controllingFieldValue>One-Time Future Cost</controllingFieldValue>
+            <valueName>External Due Diligence</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Recurring Cost</controllingFieldValue>
+            <valueName>Software Licensing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Recurring Cost</controllingFieldValue>
+            <valueName>Maintenance Contract</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

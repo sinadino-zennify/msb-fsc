@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Servicing_Dashboard_Section__c</fullName>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Servicing Dashboard Section</label>
+    <referenceTo>Servicing_Dashboard_Section__mdt</referenceTo>
+    <relationshipLabel>Servicing Dashboard Options</relationshipLabel>
+    <relationshipName>Servicing_Dashboard_Options</relationshipName>
+    <required>false</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>

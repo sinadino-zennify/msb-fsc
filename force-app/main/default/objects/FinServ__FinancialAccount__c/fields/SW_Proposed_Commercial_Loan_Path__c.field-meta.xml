@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Proposed_Commercial_Loan_Path__c</fullName>
+    <label>Proposed Commercial Loan Path</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>12013</fullName>
+                <default>false</default>
+                <label>Prospect - Open</label>
+            </value>
+            <value>
+                <fullName>12014</fullName>
+                <default>false</default>
+                <label>Prospect - Application</label>
+            </value>
+            <value>
+                <fullName>12015</fullName>
+                <default>false</default>
+                <label>Prospect - Closed</label>
+            </value>
+            <value>
+                <fullName>12016</fullName>
+                <default>false</default>
+                <label>Lender Review</label>
+            </value>
+            <value>
+                <fullName>12017</fullName>
+                <default>false</default>
+                <label>Underwriting</label>
+            </value>
+            <value>
+                <fullName>12018</fullName>
+                <default>false</default>
+                <label>Withdrawn</label>
+            </value>
+            <value>
+                <fullName>12019</fullName>
+                <default>false</default>
+                <label>Approval Pending</label>
+            </value>
+            <value>
+                <fullName>12020</fullName>
+                <default>false</default>
+                <label>Bank Declined</label>
+            </value>
+            <value>
+                <fullName>12021</fullName>
+                <default>false</default>
+                <label>Approved - Pending Acceptance</label>
+            </value>
+            <value>
+                <fullName>12022</fullName>
+                <default>false</default>
+                <label>Approved - Accepted</label>
+            </value>
+            <value>
+                <fullName>12023</fullName>
+                <default>false</default>
+                <label>Approved - Withdrawn</label>
+            </value>
+            <value>
+                <fullName>35354</fullName>
+                <default>false</default>
+                <label>Clear to Close</label>
+            </value>
+            <value>
+                <fullName>35355</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

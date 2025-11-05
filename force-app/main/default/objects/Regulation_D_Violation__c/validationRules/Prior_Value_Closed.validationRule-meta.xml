@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prior_Value_Closed</fullName>
+    <active>false</active>
+    <description>Prevents User from changing the value of the Status if it was closed.</description>
+    <errorConditionFormula>ISPICKVAL( Status__c , &quot;Closed&quot;)</errorConditionFormula>
+    <errorDisplayField>Status__c</errorDisplayField>
+    <errorMessage>You may not change the Status of this record once it has been marked closed.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Repayment_Source__c</fullName>
+    <label>Repayment Source</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Excess Cash Flow from Operations</fullName>
+                <default>false</default>
+                <label>Excess Cash Flow from Operations</label>
+            </value>
+            <value>
+                <fullName>Conversion of Current Assets</fullName>
+                <default>false</default>
+                <label>Conversion of Current Assets</label>
+            </value>
+            <value>
+                <fullName>NOI of Secured Property</fullName>
+                <default>false</default>
+                <label>NOI of Secured Property</label>
+            </value>
+            <value>
+                <fullName>Sale of Secured Property</fullName>
+                <default>false</default>
+                <label>Sale of Secured Property</label>
+            </value>
+            <value>
+                <fullName>Take Out Financing</fullName>
+                <default>false</default>
+                <label>Take Out Financing</label>
+            </value>
+            <value>
+                <fullName>Other - Include in Comments</fullName>
+                <default>false</default>
+                <label>Other - Include in Comments</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

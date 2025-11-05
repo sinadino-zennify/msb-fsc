@@ -85,6 +85,7 @@ sf org login web --alias msb-sbox
 |------|-------|
 | How agents should work | `/.cursorrules` |
 | Project status | `/PROJECT.md` |
+| Architecture & reusability patterns | `/docs/01-foundation/ARCHITECTURE.md` |
 | Object names & relationships | `/docs/01-foundation/data-model.md` |
 | Field mappings | `/docs/01-foundation/field-mappings.csv` (source) + `.md` (context) |
 | External app workflows | `/docs/03-workflows/` |
@@ -125,6 +126,7 @@ This project is optimized for AI-assisted development. The `.cursorrules` file c
 
 ## 📚 Learn More
 
+- **Architecture Guide**: `/docs/01-foundation/ARCHITECTURE.md`
 - **Data Model**: `/docs/01-foundation/data-model.md`
 - **API Integration**: `/docs/04-implementation/dao-api-quickstart.md`
 - **Architecture Decisions**: `/docs/04-implementation/architecture-decisions/`

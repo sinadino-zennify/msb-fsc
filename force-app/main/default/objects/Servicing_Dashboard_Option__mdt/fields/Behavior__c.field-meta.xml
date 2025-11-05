@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Behavior__c</fullName>
+    <description>Select the &quot;Custom&quot; option to let the code handle what happens when a user clicks the option.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>Select the &quot;Custom&quot; option to let the code handle what happens when a user clicks the option.</inlineHelpText>
+    <label>Behavior</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Custom</fullName>
+                <default>true</default>
+                <label>Custom</label>
+            </value>
+            <value>
+                <fullName>Open Lightning Web Component</fullName>
+                <default>false</default>
+                <label>Open Lightning Web Component</label>
+            </value>
+            <value>
+                <fullName>Open Screen Flow</fullName>
+                <default>false</default>
+                <label>Open Screen Flow</label>
+            </value>
+            <value>
+                <fullName>Launch a URL in a New Tab</fullName>
+                <default>false</default>
+                <label>Launch a URL in a New Tab</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

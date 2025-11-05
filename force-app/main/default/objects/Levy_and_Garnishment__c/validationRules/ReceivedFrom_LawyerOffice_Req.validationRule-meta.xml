@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ReceivedFrom_LawyerOffice_Req</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+ ISPICKVAL( Received_From__c , &quot;Lawyer’s Office&quot;) ,
+ ISBLANK( Lawyers_Office_Details__c ) 
+)</errorConditionFormula>
+    <errorDisplayField>Lawyers_Office_Details__c</errorDisplayField>
+    <errorMessage>You have selected &quot;Lawyer’s Office&quot; for &quot;Received From&quot; - please provide details in the &quot;Lawyer&apos;s Office Details&quot; field  before saving the record.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PMT_Project__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>PMT Project</label>
+    <referenceTo>inov8__PMT_Project__c</referenceTo>
+    <relationshipLabel>Related Change Requests</relationshipLabel>
+    <relationshipName>Change_Request_Related_Projects</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

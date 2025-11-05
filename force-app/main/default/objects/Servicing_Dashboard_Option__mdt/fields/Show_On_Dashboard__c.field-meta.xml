@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Show_On_Dashboard__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>If checked this option will appear on the servicing dashboard, otherwise it&apos;s just used for case creation default values.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Show On Dashboard</label>
+    <type>Checkbox</type>
+</CustomField>

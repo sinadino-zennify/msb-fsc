@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auth__c</fullName>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Auth</label>
+    <referenceTo>Integration_Connect_Auth__mdt</referenceTo>
+    <relationshipLabel>Integration Connect Configs</relationshipLabel>
+    <relationshipName>Integration_Connect_Configs</relationshipName>
+    <required>false</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>

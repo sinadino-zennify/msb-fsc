@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinServ__StatementFrequency__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Statement Frequency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Yearly</fullName>
+                <default>false</default>
+                <label>Yearly</label>
+            </value>
+            <value>
+                <fullName>DAY</fullName>
+                <default>false</default>
+                <label>Daily</label>
+            </value>
+            <value>
+                <fullName>AC31</fullName>
+                <default>false</default>
+                <label>Annual Yearend</label>
+            </value>
+            <value>
+                <fullName>EOM</fullName>
+                <default>false</default>
+                <label>End of Month</label>
+            </value>
+            <value>
+                <fullName>M005</fullName>
+                <default>false</default>
+                <label>5th day of the Month</label>
+            </value>
+            <value>
+                <fullName>M010</fullName>
+                <default>false</default>
+                <label>10th day of the Month</label>
+            </value>
+            <value>
+                <fullName>M015</fullName>
+                <default>false</default>
+                <label>15th day of the Month</label>
+            </value>
+            <value>
+                <fullName>M020</fullName>
+                <default>false</default>
+                <label>20th day of the Month</label>
+            </value>
+            <value>
+                <fullName>M025</fullName>
+                <default>false</default>
+                <label>25th day of the Month</label>
+            </value>
+            <value>
+                <fullName>TRUN</fullName>
+                <default>false</default>
+                <label>LOC Truncated</label>
+            </value>
+            <value>
+                <fullName>Q331</fullName>
+                <default>false</default>
+                <label>Quarterly (Q331)</label>
+            </value>
+            <value>
+                <fullName>X331</fullName>
+                <default>false</default>
+                <label>Quarterly (X331)</label>
+            </value>
+            <value>
+                <fullName>Biweekly</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Biweekly</label>
+            </value>
+            <value>
+                <fullName>Monthly</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Monthly</label>
+            </value>
+            <value>
+                <fullName>Quarterly</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Quarterly</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Index__c</fullName>
+    <label>Index</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>FHLBB 5 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 5 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>WSJ Prime</fullName>
+                <default>false</default>
+                <label>WSJ Prime</label>
+            </value>
+            <value>
+                <fullName>SOFR</fullName>
+                <default>false</default>
+                <label>SOFR</label>
+            </value>
+            <value>
+                <fullName>CME Term SOFR</fullName>
+                <default>false</default>
+                <label>CME Term SOFR</label>
+            </value>
+            <value>
+                <fullName>Swap</fullName>
+                <default>false</default>
+                <label>Swap</label>
+            </value>
+            <value>
+                <fullName>FHLBB 1 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 1 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 2 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 2 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 3 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 3 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 4 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 4 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 7 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 7 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 10 Yr Cl Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 10 Yr Cl Adv</label>
+            </value>
+            <value>
+                <fullName>FHLB - Chicago</fullName>
+                <default>false</default>
+                <label>FHLB - Chicago</label>
+            </value>
+            <value>
+                <fullName>FHLB - Dallas</fullName>
+                <default>false</default>
+                <label>FHLB - Dallas</label>
+            </value>
+            <value>
+                <fullName>FHLB - Des Moines</fullName>
+                <default>false</default>
+                <label>FHLB - Des Moines</label>
+            </value>
+            <value>
+                <fullName>FHLB Daily Average</fullName>
+                <default>false</default>
+                <label>FHLB Daily Average</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

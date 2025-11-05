@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GL</fullName>
+    <fields>Name</fields>
+    <fields>GL_Account_Type__c</fields>
+    <fields>GL_Company__c</fields>
+    <fields>GL_Department__c</fields>
+    <fields>Reconciliation_Owner__c</fields>
+    <fields>Reconciliation_Approver__c</fields>
+    <fields>OwnerId</fields>
+    <label>GL</label>
+</CompactLayout>

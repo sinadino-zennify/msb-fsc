@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinServ__AccountRole</fullName>
+    <active>true</active>
+    <compactLayoutAssignment>FAR_Layout</compactLayoutAssignment>
+    <description>Role occupied by an organizational entity, such as a corporation or LLC</description>
+    <label>Account Role</label>
+    <picklistValues>
+        <picklist>FinServ__Role__c</picklist>
+        <values>
+            <fullName>BENE</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TRUS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>SW_Proposed_Loan_Role_Type__c</picklist>
+        <values>
+            <fullName>Co-Borrower</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guarantor</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Product_Code__c</fullName>
+    <label>Product Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1 - 4 RES. HOME &amp; BUSINESS -0099</fullName>
+                <default>false</default>
+                <label>1 - 4 RES. HOME &amp; BUSINESS -0099</label>
+            </value>
+            <value>
+                <fullName>1 FAM. OVER 80 LTV INSURED -0110</fullName>
+                <default>false</default>
+                <label>1 FAM. OVER 80 LTV INSURED -0110</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY -0010</fullName>
+                <default>false</default>
+                <label>1 FAMILY -0010</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY CONSTRUCT. PERM LOAN -0514</fullName>
+                <default>false</default>
+                <label>1 FAMILY CONSTRUCT. PERM LOAN -0514</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY CONSTRUCTION -0501</fullName>
+                <default>false</default>
+                <label>1 FAMILY CONSTRUCTION -0501</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY N.O.OCC. -2010</fullName>
+                <default>false</default>
+                <label>1 FAMILY N.O.OCC. -2010</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY PURCHASE -0853</fullName>
+                <default>false</default>
+                <label>1 FAMILY PURCHASE -0853</label>
+            </value>
+            <value>
+                <fullName>1 FAMILY REFINANCE -0852</fullName>
+                <default>false</default>
+                <label>1 FAMILY REFINANCE -0852</label>
+            </value>
+            <value>
+                <fullName>1-4 FAMILY JUMBO -0856</fullName>
+                <default>false</default>
+                <label>1-4 FAMILY JUMBO -0856</label>
+            </value>
+            <value>
+                <fullName>1-4 RES &gt; 80 LTV @PMI -0033</fullName>
+                <default>false</default>
+                <label>1-4 RES &gt; 80 LTV @PMI -0033</label>
+            </value>
+            <value>
+                <fullName>1-4 RES. HOME IMPR. SECRURED-0022</fullName>
+                <default>false</default>
+                <label>1-4 RES. HOME IMPR. SECRURED-0022</label>
+            </value>
+            <value>
+                <fullName>1-4 RES. PURCHASE -0030</fullName>
+                <default>false</default>
+                <label>1-4 RES. PURCHASE -0030</label>
+            </value>
+            <value>
+                <fullName>1-4 RES. REFINANCE -0031</fullName>
+                <default>false</default>
+                <label>1-4 RES. REFINANCE -0031</label>
+            </value>
+            <value>
+                <fullName>2-4 FAMILY N.O.OCC. -2020</fullName>
+                <default>false</default>
+                <label>2-4 FAMILY N.O.OCC. -2020</label>
+            </value>
+            <value>
+                <fullName>2-4 FAMILY PURCHASE -0855</fullName>
+                <default>false</default>
+                <label>2-4 FAMILY PURCHASE -0855</label>
+            </value>
+            <value>
+                <fullName>2-4 FAMILY REFINANCE -0854</fullName>
+                <default>false</default>
+                <label>2-4 FAMILY REFINANCE -0854</label>
+            </value>
+            <value>
+                <fullName>20+ Units -0123</fullName>
+                <default>false</default>
+                <label>20+ Units -0123</label>
+            </value>
+            <value>
+                <fullName>5 OR &gt; HOME &amp; BUSINESS -0121</fullName>
+                <default>false</default>
+                <label>5 OR &gt; HOME &amp; BUSINESS -0121</label>
+            </value>
+            <value>
+                <fullName>5-20 UNITS -0120</fullName>
+                <default>false</default>
+                <label>5-20 UNITS -0120</label>
+            </value>
+            <value>
+                <fullName>ACQ OF DEVELOPED BUS.LOTS/SITE-0152</fullName>
+                <default>false</default>
+                <label>ACQ OF DEVELOPED BUS.LOTS/SITE-0152</label>
+            </value>
+            <value>
+                <fullName>COMM - ALL OTHER -0630</fullName>
+                <default>false</default>
+                <label>COMM - ALL OTHER -0630</label>
+            </value>
+            <value>
+                <fullName>COMM - CONSTRUCTION PERM LOAN-0673</fullName>
+                <default>false</default>
+                <label>COMM - CONSTRUCTION PERM LOAN-0673</label>
+            </value>
+            <value>
+                <fullName>COMM - SECURED AUTOMOBILE -0701</fullName>
+                <default>false</default>
+                <label>COMM - SECURED AUTOMOBILE -0701</label>
+            </value>
+            <value>
+                <fullName>COMM - SECURED BY DEPOSIT -0700</fullName>
+                <default>false</default>
+                <label>COMM - SECURED BY DEPOSIT -0700</label>
+            </value>
+            <value>
+                <fullName>COMM-ALL OTHER NON RESID -NOOC-0609</fullName>
+                <default>false</default>
+                <label>COMM-ALL OTHER NON RESID -NOOC-0609</label>
+            </value>
+            <value>
+                <fullName>COMM-ALL OTHER NON RESID -OOC -0608</fullName>
+                <default>false</default>
+                <label>COMM-ALL OTHER NON RESID -OOC -0608</label>
+            </value>
+            <value>
+                <fullName>COMM-CONDO NON-OWNER OCCUPIED -0604</fullName>
+                <default>false</default>
+                <label>COMM-CONDO NON-OWNER OCCUPIED -0604</label>
+            </value>
+            <value>
+                <fullName>COMM-CONDO-OWNER OCCUPIED -0605</fullName>
+                <default>false</default>
+                <label>COMM-CONDO-OWNER OCCUPIED -0605</label>
+            </value>
+            <value>
+                <fullName>COMM-CONST 1-4 FAMILY RESID -0671</fullName>
+                <default>false</default>
+                <label>COMM-CONST 1-4 FAMILY RESID -0671</label>
+            </value>
+            <value>
+                <fullName>COMM-CONST OTHER/LAND DEVEL -0672</fullName>
+                <default>false</default>
+                <label>COMM-CONST OTHER/LAND DEVEL -0672</label>
+            </value>
+            <value>
+                <fullName>COMM-MOTEL/HOTEL -0620</fullName>
+                <default>false</default>
+                <label>COMM-MOTEL/HOTEL -0620</label>
+            </value>
+            <value>
+                <fullName>COMM-OFFICE NON OWNER OCC -0606</fullName>
+                <default>false</default>
+                <label>COMM-OFFICE NON OWNER OCC -0606</label>
+            </value>
+            <value>
+                <fullName>COMM-OFFICE OWNER OCC -0607</fullName>
+                <default>false</default>
+                <label>COMM-OFFICE OWNER OCC -0607</label>
+            </value>
+            <value>
+                <fullName>COMM-OPEN-END SECURED -0645</fullName>
+                <default>false</default>
+                <label>COMM-OPEN-END SECURED -0645</label>
+            </value>
+            <value>
+                <fullName>COMM-OPER FARM PROP/LAND -0624</fullName>
+                <default>false</default>
+                <label>COMM-OPER FARM PROP/LAND -0624</label>
+            </value>
+            <value>
+                <fullName>COMM-SECURED BUSINESS EQUIP -0705</fullName>
+                <default>false</default>
+                <label>COMM-SECURED BUSINESS EQUIP -0705</label>
+            </value>
+            <value>
+                <fullName>COMM-SECURED LETTER OF CREDIT-0708</fullName>
+                <default>false</default>
+                <label>COMM-SECURED LETTER OF CREDIT-0708</label>
+            </value>
+            <value>
+                <fullName>COMM-SECURED LINES OF CREDIT -0703</fullName>
+                <default>false</default>
+                <label>COMM-SECURED LINES OF CREDIT -0703</label>
+            </value>
+            <value>
+                <fullName>COMM-SECURED OTHER -0710</fullName>
+                <default>false</default>
+                <label>COMM-SECURED OTHER -0710</label>
+            </value>
+            <value>
+                <fullName>COMM-SECURED SBA LOAN -0707</fullName>
+                <default>false</default>
+                <label>COMM-SECURED SBA LOAN -0707</label>
+            </value>
+            <value>
+                <fullName>COMM-UNSECURED LINES OF CRED -0753</fullName>
+                <default>false</default>
+                <label>COMM-UNSECURED LINES OF CRED -0753</label>
+            </value>
+            <value>
+                <fullName>COMM-UNSECURED OTHER -0790</fullName>
+                <default>false</default>
+                <label>COMM-UNSECURED OTHER -0790</label>
+            </value>
+            <value>
+                <fullName>COMMERCIAL - CHURCH -0611</fullName>
+                <default>false</default>
+                <label>COMMERCIAL - CHURCH -0611</label>
+            </value>
+            <value>
+                <fullName>COMML LAND &amp; DEVELOPMENT -0151</fullName>
+                <default>false</default>
+                <label>COMML LAND &amp; DEVELOPMENT -0151</label>
+            </value>
+            <value>
+                <fullName>CONDO - OVER 80 LTV INSURED -0202</fullName>
+                <default>false</default>
+                <label>CONDO - OVER 80 LTV INSURED -0202</label>
+            </value>
+            <value>
+                <fullName>CONDO - OVER 80 LTV UNINSUR -0203</fullName>
+                <default>false</default>
+                <label>CONDO - OVER 80 LTV UNINSUR -0203</label>
+            </value>
+            <value>
+                <fullName>CONDO PURCHASE -0857</fullName>
+                <default>false</default>
+                <label>CONDO PURCHASE -0857</label>
+            </value>
+            <value>
+                <fullName>CONDO REFINANCE -0858</fullName>
+                <default>false</default>
+                <label>CONDO REFINANCE -0858</label>
+            </value>
+            <value>
+                <fullName>CONDOMINIUMS (ALL) -0201</fullName>
+                <default>false</default>
+                <label>CONDOMINIUMS (ALL) -0201</label>
+            </value>
+            <value>
+                <fullName>CONSUMER AUTOMOBILES -0803</fullName>
+                <default>false</default>
+                <label>CONSUMER AUTOMOBILES -0803</label>
+            </value>
+            <value>
+                <fullName>CONSUMER BOATS -0805</fullName>
+                <default>false</default>
+                <label>CONSUMER BOATS -0805</label>
+            </value>
+            <value>
+                <fullName>CONSUMER LOANS ON DEPOSITS -0800</fullName>
+                <default>false</default>
+                <label>CONSUMER LOANS ON DEPOSITS -0800</label>
+            </value>
+            <value>
+                <fullName>CONSUMER MISC SECURED -0810</fullName>
+                <default>false</default>
+                <label>CONSUMER MISC SECURED -0810</label>
+            </value>
+            <value>
+                <fullName>CONSUMER MISC UNSECURED -0811</fullName>
+                <default>false</default>
+                <label>CONSUMER MISC UNSECURED -0811</label>
+            </value>
+            <value>
+                <fullName>CONSUMER MOBLE HOMES -0806</fullName>
+                <default>false</default>
+                <label>CONSUMER MOBLE HOMES -0806</label>
+            </value>
+            <value>
+                <fullName>CONSUMER RECREATIONAL VEHICLE-0801</fullName>
+                <default>false</default>
+                <label>CONSUMER RECREATIONAL VEHICLE-0801</label>
+            </value>
+            <value>
+                <fullName>HOME EQUITY -0859</fullName>
+                <default>false</default>
+                <label>HOME EQUITY -0859</label>
+            </value>
+            <value>
+                <fullName>LOANS SEC BY VACANT LAND -0153</fullName>
+                <default>false</default>
+                <label>LOANS SEC BY VACANT LAND -0153</label>
+            </value>
+            <value>
+                <fullName>MORE THAN 20 UNITS -0123</fullName>
+                <default>false</default>
+                <label>MORE THAN 20 UNITS -0123</label>
+            </value>
+            <value>
+                <fullName>MORE THAN 20 UNITS &gt;80 OCCUP-0124</fullName>
+                <default>false</default>
+                <label>MORE THAN 20 UNITS &gt;80 OCCUP-0124</label>
+            </value>
+            <value>
+                <fullName>N.O.O. 5+&gt;HOME &amp; BUINESS -2121</fullName>
+                <default>false</default>
+                <label>N.O.O. 5+&gt;HOME &amp; BUINESS -2121</label>
+            </value>
+            <value>
+                <fullName>NOC 1-4 FAM/BUINESS -2099</fullName>
+                <default>false</default>
+                <label>NOC 1-4 FAM/BUINESS -2099</label>
+            </value>
+            <value>
+                <fullName>RES. LAND ACQ. &amp; DEVELP -0150</fullName>
+                <default>false</default>
+                <label>RES. LAND ACQ. &amp; DEVELP -0150</label>
+            </value>
+            <value>
+                <fullName>SHOPPING CENTERS -0621</fullName>
+                <default>false</default>
+                <label>SHOPPING CENTERS -0621</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Role__c</fullName>
+    <label>Role</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Type__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Reported</fullName>
+                <default>false</default>
+                <label>Reported</label>
+            </value>
+            <value>
+                <fullName>Impacted</fullName>
+                <default>false</default>
+                <label>Impacted</label>
+            </value>
+            <value>
+                <fullName>Witnessed</fullName>
+                <default>false</default>
+                <label>Witnessed</label>
+            </value>
+            <value>
+                <fullName>Instigated</fullName>
+                <default>false</default>
+                <label>Instigated</label>
+            </value>
+            <value>
+                <fullName>Law Enforcement</fullName>
+                <default>false</default>
+                <label>Law Enforcement</label>
+            </value>
+            <value>
+                <fullName>Bank Counsel</fullName>
+                <default>false</default>
+                <label>Bank Counsel</label>
+            </value>
+            <value>
+                <fullName>Customer Counsel</fullName>
+                <default>false</default>
+                <label>Customer Counsel</label>
+            </value>
+            <value>
+                <fullName>Non-Customer Counsel</fullName>
+                <default>false</default>
+                <label>Non-Customer Counsel</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Business Customer Contact</controllingFieldValue>
+            <controllingFieldValue>Non-Customer Contact</controllingFieldValue>
+            <valueName>Reported</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Business Customer Contact</controllingFieldValue>
+            <controllingFieldValue>Non-Customer Contact</controllingFieldValue>
+            <valueName>Witnessed</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Business Customer Contact</controllingFieldValue>
+            <controllingFieldValue>Non-Customer Contact</controllingFieldValue>
+            <valueName>Instigated</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Non-Customer Contact</controllingFieldValue>
+            <valueName>Impacted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Third-Party Contact</controllingFieldValue>
+            <valueName>Law Enforcement</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Third-Party Contact</controllingFieldValue>
+            <valueName>Bank Counsel</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Third-Party Contact</controllingFieldValue>
+            <valueName>Customer Counsel</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Third-Party Contact</controllingFieldValue>
+            <valueName>Non-Customer Counsel</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Button_Border_Color_Hex__c</fullName>
+    <description>Enter the Hex Code #RRGGBB format color including the pound sign. (e.g. &quot;#000000&quot; for black)</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>Enter the Hex Code #RRGGBB format color including the pound sign. (e.g. &quot;#000000&quot; for black)</inlineHelpText>
+    <label>Button Border Color Hex</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

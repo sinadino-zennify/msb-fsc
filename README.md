@@ -185,6 +185,7 @@ This accelerator is designed for AI-assisted development with:
 - **backlog-template.md** - Prioritized work items
 
 ### For Architects
+- **ARCHITECTURE.md** - Wizard reusability patterns and framework design
 - **ADR templates** - Document key decisions
 - **data-model.md** - Complete entity relationships
 

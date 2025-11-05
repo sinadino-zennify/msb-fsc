@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_CRA_Loan_Type__c</fullName>
+    <label>CRA Loan Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>smallBusiness</fullName>
+                <default>false</default>
+                <label>Small Business</label>
+            </value>
+            <value>
+                <fullName>communityDevelopment</fullName>
+                <default>false</default>
+                <label>Community Development</label>
+            </value>
+            <value>
+                <fullName>smallFarm</fullName>
+                <default>false</default>
+                <label>Small Farm</label>
+            </value>
+            <value>
+                <fullName>otherLinesOrLoansSmallBusiness</fullName>
+                <default>false</default>
+                <label>Other Lines or Loans Small Business</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

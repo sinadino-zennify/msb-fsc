@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hourly_Cost__c</fullName>
+    <formula>IF( ISPICKVAL( Employee_Level__c, &quot;Entry-Level&quot;), 55,
+IF( ISPICKVAL( Employee_Level__c, &quot;Mid-Level&quot;), 90,
+IF( ISPICKVAL( Employee_Level__c, &quot;Senior&quot;), 150,
+IF( ISPICKVAL( Employee_Level__c, &quot;Executive&quot;), 350, 0))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Hourly Cost</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

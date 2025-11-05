@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinServ__Role__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Role that describes how the organizational entity or person is involved with the financial account.</description>
+    <label>Role</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>true</sorted>
+            <value>
+                <fullName>ATM</fullName>
+                <default>false</default>
+                <label>ATM Card Holder</label>
+            </value>
+            <value>
+                <fullName>ATTY</fullName>
+                <default>false</default>
+                <label>Attorney</label>
+            </value>
+            <value>
+                <fullName>BENE</fullName>
+                <default>false</default>
+                <label>Beneficiary</label>
+            </value>
+            <value>
+                <fullName>BURY</fullName>
+                <default>false</default>
+                <label>Burial Fund</label>
+            </value>
+            <value>
+                <fullName>CAND</fullName>
+                <default>false</default>
+                <label>Candidate</label>
+            </value>
+            <value>
+                <fullName>COMP</fullName>
+                <default>false</default>
+                <label>Company Org</label>
+            </value>
+            <value>
+                <fullName>CONS</fullName>
+                <default>false</default>
+                <label>Conservator</label>
+            </value>
+            <value>
+                <fullName>CUST</fullName>
+                <default>false</default>
+                <label>Custodian</label>
+            </value>
+            <value>
+                <fullName>DBA</fullName>
+                <default>false</default>
+                <label>DBA</label>
+            </value>
+            <value>
+                <fullName>DECD</fullName>
+                <default>false</default>
+                <label>Deceased</label>
+            </value>
+            <value>
+                <fullName>DCOM</fullName>
+                <default>false</default>
+                <label>DESA Company</label>
+            </value>
+            <value>
+                <fullName>DLND</fullName>
+                <default>false</default>
+                <label>DESA Landlord</label>
+            </value>
+            <value>
+                <fullName>DSAT</fullName>
+                <default>false</default>
+                <label>DESA-Tenant</label>
+            </value>
+            <value>
+                <fullName>ESCW</fullName>
+                <default>false</default>
+                <label>Escrow Agent</label>
+            </value>
+            <value>
+                <fullName>ESRW</fullName>
+                <default>false</default>
+                <label>Escrow For</label>
+            </value>
+            <value>
+                <fullName>EST</fullName>
+                <default>false</default>
+                <label>Estate</label>
+            </value>
+            <value>
+                <fullName>EXEC</fullName>
+                <default>false</default>
+                <label>Executor/trix</label>
+            </value>
+            <value>
+                <fullName>GRNT</fullName>
+                <default>false</default>
+                <label>Grantor</label>
+            </value>
+            <value>
+                <fullName>GUAR</fullName>
+                <default>false</default>
+                <label>Guarantor</label>
+            </value>
+            <value>
+                <fullName>GRDN</fullName>
+                <default>false</default>
+                <label>Guardian</label>
+            </value>
+            <value>
+                <fullName>ILTA</fullName>
+                <default>false</default>
+                <label>IOLTA</label>
+            </value>
+            <value>
+                <fullName>LAND</fullName>
+                <default>false</default>
+                <label>Landlord</label>
+            </value>
+            <value>
+                <fullName>LOFF</fullName>
+                <default>false</default>
+                <label>Lending Officer Role</label>
+            </value>
+            <value>
+                <fullName>LNCO</fullName>
+                <default>false</default>
+                <label>Loan Co-Signer</label>
+            </value>
+            <value>
+                <fullName>LSET</fullName>
+                <default>false</default>
+                <label>Loan Setup</label>
+            </value>
+            <value>
+                <fullName>MAIL</fullName>
+                <default>false</default>
+                <label>Mail Care of</label>
+            </value>
+            <value>
+                <fullName>MINR</fullName>
+                <default>false</default>
+                <label>Minor</label>
+            </value>
+            <value>
+                <fullName>OWN</fullName>
+                <default>false</default>
+                <label>NonTax Owner</label>
+            </value>
+            <value>
+                <fullName>SIGN</fullName>
+                <default>false</default>
+                <label>NonTax Signator</label>
+            </value>
+            <value>
+                <fullName>OEMP</fullName>
+                <default>false</default>
+                <label>Originating Employee</label>
+            </value>
+            <value>
+                <fullName>PREP</fullName>
+                <default>false</default>
+                <label>Personal Rep</label>
+            </value>
+            <value>
+                <fullName>POA</fullName>
+                <default>false</default>
+                <label>Power of Attorney</label>
+            </value>
+            <value>
+                <fullName>ACTO</fullName>
+                <default>false</default>
+                <label>Primary Officer</label>
+            </value>
+            <value>
+                <fullName>Primary Owner</fullName>
+                <default>false</default>
+                <label>Primary Owner</label>
+            </value>
+            <value>
+                <fullName>RFEM</fullName>
+                <default>false</default>
+                <label>Referring Source</label>
+            </value>
+            <value>
+                <fullName>RPPY</fullName>
+                <default>false</default>
+                <label>Representative Payee</label>
+            </value>
+            <value>
+                <fullName>RESP</fullName>
+                <default>false</default>
+                <label>Responsible Individual</label>
+            </value>
+            <value>
+                <fullName>SECD</fullName>
+                <default>false</default>
+                <label>Secondary Officer</label>
+            </value>
+            <value>
+                <fullName>SLPP</fullName>
+                <default>false</default>
+                <label>Sole Proprietor</label>
+            </value>
+            <value>
+                <fullName>STMT</fullName>
+                <default>false</default>
+                <label>Statement</label>
+            </value>
+            <value>
+                <fullName>Tax Owner</fullName>
+                <default>false</default>
+                <label>Tax Owner</label>
+            </value>
+            <value>
+                <fullName>Tax Signator</fullName>
+                <default>false</default>
+                <label>Tax Signator</label>
+            </value>
+            <value>
+                <fullName>TEAM</fullName>
+                <default>false</default>
+                <label>Team</label>
+            </value>
+            <value>
+                <fullName>TNNT</fullName>
+                <default>false</default>
+                <label>Tenant</label>
+            </value>
+            <value>
+                <fullName>TRST</fullName>
+                <default>false</default>
+                <label>Trust</label>
+            </value>
+            <value>
+                <fullName>TRUS</fullName>
+                <default>false</default>
+                <label>Trustee</label>
+            </value>
+            <value>
+                <fullName>UNDR</fullName>
+                <default>false</default>
+                <label>Underwriter</label>
+            </value>
+            <value>
+                <fullName>UTMA</fullName>
+                <default>false</default>
+                <label>UTMA</label>
+            </value>
+            <value>
+                <fullName>VRU</fullName>
+                <default>false</default>
+                <label>VRU Access Role</label>
+            </value>
+            <value>
+                <fullName>WARD</fullName>
+                <default>false</default>
+                <label>Ward</label>
+            </value>
+            <value>
+                <fullName>WWW</fullName>
+                <default>false</default>
+                <label>WWW Access Role</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

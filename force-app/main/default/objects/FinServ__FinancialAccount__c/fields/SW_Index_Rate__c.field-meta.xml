@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Index_Rate__c</fullName>
+    <label>Index Rate</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>WSJ Prime</fullName>
+                <default>false</default>
+                <label>WSJ Prime</label>
+            </value>
+            <value>
+                <fullName>CME Term SOFR</fullName>
+                <default>false</default>
+                <label>CME Term SOFR</label>
+            </value>
+            <value>
+                <fullName>FHLBB 1 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 1 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 2 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 2 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 3 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 3 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 5 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 5 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 7 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 7 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>FHLBB 10 Yr CL Adv</fullName>
+                <default>false</default>
+                <label>FHLBB 10 Yr CL Adv</label>
+            </value>
+            <value>
+                <fullName>Collateral/CD Loans</fullName>
+                <default>false</default>
+                <label>Collateral/CD Loans</label>
+            </value>
+            <value>
+                <fullName>Treasury</fullName>
+                <default>false</default>
+                <label>Treasury</label>
+            </value>
+            <value>
+                <fullName>FHLB Daily Average</fullName>
+                <default>false</default>
+                <label>FHLB Daily Average</label>
+            </value>
+            <value>
+                <fullName>FHLB - Chicago</fullName>
+                <default>false</default>
+                <label>FHLB - Chicago</label>
+            </value>
+            <value>
+                <fullName>FHLB - Dallas</fullName>
+                <default>false</default>
+                <label>FHLB - Dallas</label>
+            </value>
+            <value>
+                <fullName>FHLB - Des Moines</fullName>
+                <default>false</default>
+                <label>FHLB - Des Moines</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

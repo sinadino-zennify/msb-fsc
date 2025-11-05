@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recently_Modified__c</fullName>
+    <description>Used to determine if the record has been modified within the last day. Used on the Financial Account Assign owner flow.</description>
+    <formula>LastModifiedDate + 1 &gt; NOW()+(1/1440)</formula>
+    <label>Recently Modified</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

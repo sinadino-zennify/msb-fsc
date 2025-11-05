@@ -23,6 +23,7 @@ Build LWC-based screens and supporting Apex services for the deposit account ope
 > Agents: open `/.cursorrules` before any work. This file is hidden; ensure your IDE search includes hidden files.
 
 - Agent Rules (source of truth): `/.cursorrules`
+- Architecture Guide: `/docs/01-foundation/ARCHITECTURE.md`
 - Data Model: `/docs/01-foundation/data-model.md`
 - Data Schema: `/force-app/main/default/objects/`
 - Requirements: `/docs/02-requirements/`

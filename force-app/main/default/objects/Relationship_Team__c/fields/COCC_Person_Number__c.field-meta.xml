@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>COCC_Person_Number__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>COCC Number assigned to the TEAM Financial Account Role from COCC</description>
+    <encryptionScheme>None</encryptionScheme>
+    <externalId>false</externalId>
+    <label>COCC Number</label>
+    <length>10</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Payment_Type__c</fullName>
+    <label>Payment Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>fixedPayment</fullName>
+                <default>false</default>
+                <label>Fixed Payment</label>
+            </value>
+            <value>
+                <fullName>fixedPrincipal</fullName>
+                <default>false</default>
+                <label>Fixed Principal</label>
+            </value>
+            <value>
+                <fullName>lineOfCredit</fullName>
+                <default>false</default>
+                <label>Line of Credit</label>
+            </value>
+            <value>
+                <fullName>revolvingLineOfCredit</fullName>
+                <default>false</default>
+                <label>Revolving Line of Credit</label>
+            </value>
+            <value>
+                <fullName>interestOnly</fullName>
+                <default>false</default>
+                <label>Interest Only</label>
+            </value>
+            <value>
+                <fullName>fixedPaymentBalloon</fullName>
+                <default>false</default>
+                <label>Fixed Payment Balloon</label>
+            </value>
+            <value>
+                <fullName>fixedPrincipalBalloon</fullName>
+                <default>false</default>
+                <label>Fixed Principal Balloon</label>
+            </value>
+            <value>
+                <fullName>singlePaymentBalloon</fullName>
+                <default>false</default>
+                <label>Single Payment Balloon</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GL_Department__c</fullName>
+    <label>GL Department</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>0000</fullName>
+                <default>false</default>
+                <label>Corporate</label>
+            </value>
+            <value>
+                <fullName>0001</fullName>
+                <default>false</default>
+                <label>Main Office</label>
+            </value>
+            <value>
+                <fullName>0002</fullName>
+                <default>false</default>
+                <label>Retail Lending</label>
+            </value>
+            <value>
+                <fullName>0003</fullName>
+                <default>false</default>
+                <label>Post Road Branch</label>
+            </value>
+            <value>
+                <fullName>0004</fullName>
+                <default>false</default>
+                <label>Southborough Branch</label>
+            </value>
+            <value>
+                <fullName>0005</fullName>
+                <default>false</default>
+                <label>Northborough Branch</label>
+            </value>
+            <value>
+                <fullName>0006</fullName>
+                <default>false</default>
+                <label>Sudbury Branch</label>
+            </value>
+            <value>
+                <fullName>0007</fullName>
+                <default>false</default>
+                <label>Westborough Branch</label>
+            </value>
+            <value>
+                <fullName>0008</fullName>
+                <default>false</default>
+                <label>Hudson Branch</label>
+            </value>
+            <value>
+                <fullName>0011</fullName>
+                <default>false</default>
+                <label>Ayer Branch</label>
+            </value>
+            <value>
+                <fullName>0012</fullName>
+                <default>false</default>
+                <label>Video Connect</label>
+            </value>
+            <value>
+                <fullName>0013</fullName>
+                <default>false</default>
+                <label>Littleton Branch</label>
+            </value>
+            <value>
+                <fullName>0015</fullName>
+                <default>false</default>
+                <label>Pepperell Branch</label>
+            </value>
+            <value>
+                <fullName>0016</fullName>
+                <default>false</default>
+                <label>Relationship Banking</label>
+            </value>
+            <value>
+                <fullName>0017</fullName>
+                <default>false</default>
+                <label>Lunenburg Branch</label>
+            </value>
+            <value>
+                <fullName>0018</fullName>
+                <default>false</default>
+                <label>Shirley Branch</label>
+            </value>
+            <value>
+                <fullName>0019</fullName>
+                <default>false</default>
+                <label>Groton Branch</label>
+            </value>
+            <value>
+                <fullName>0021</fullName>
+                <default>false</default>
+                <label>Harvard Atm</label>
+            </value>
+            <value>
+                <fullName>0031</fullName>
+                <default>false</default>
+                <label>Granger Bldg</label>
+            </value>
+            <value>
+                <fullName>0032</fullName>
+                <default>false</default>
+                <label>Ayer Bldg</label>
+            </value>
+            <value>
+                <fullName>0033</fullName>
+                <default>false</default>
+                <label>Operations Ctr Bldg (Forest St)</label>
+            </value>
+            <value>
+                <fullName>0034</fullName>
+                <default>false</default>
+                <label>Groton Bldg</label>
+            </value>
+            <value>
+                <fullName>0035</fullName>
+                <default>false</default>
+                <label>Pepperell Bldg</label>
+            </value>
+            <value>
+                <fullName>0044</fullName>
+                <default>false</default>
+                <label>Electronic Banking North</label>
+            </value>
+            <value>
+                <fullName>0047</fullName>
+                <default>false</default>
+                <label>Old Groton Building</label>
+            </value>
+            <value>
+                <fullName>0048</fullName>
+                <default>false</default>
+                <label>Old Ayer Building</label>
+            </value>
+            <value>
+                <fullName>0049</fullName>
+                <default>false</default>
+                <label>Training</label>
+            </value>
+            <value>
+                <fullName>0050</fullName>
+                <default>false</default>
+                <label>Technology</label>
+            </value>
+            <value>
+                <fullName>0051</fullName>
+                <default>false</default>
+                <label>Deposit Operations</label>
+            </value>
+            <value>
+                <fullName>0052</fullName>
+                <default>false</default>
+                <label>Executive Office</label>
+            </value>
+            <value>
+                <fullName>0053</fullName>
+                <default>false</default>
+                <label>Finance</label>
+            </value>
+            <value>
+                <fullName>0054</fullName>
+                <default>false</default>
+                <label>Investments</label>
+            </value>
+            <value>
+                <fullName>0055</fullName>
+                <default>false</default>
+                <label>Marketing</label>
+            </value>
+            <value>
+                <fullName>0056</fullName>
+                <default>false</default>
+                <label>Human Resources</label>
+            </value>
+            <value>
+                <fullName>0057</fullName>
+                <default>false</default>
+                <label>Bank Administration</label>
+            </value>
+            <value>
+                <fullName>0058</fullName>
+                <default>false</default>
+                <label>Facilities</label>
+            </value>
+            <value>
+                <fullName>0060</fullName>
+                <default>false</default>
+                <label>Compliance</label>
+            </value>
+            <value>
+                <fullName>0061</fullName>
+                <default>false</default>
+                <label>Loan Servicing</label>
+            </value>
+            <value>
+                <fullName>0062</fullName>
+                <default>false</default>
+                <label>Commercial Credit</label>
+            </value>
+            <value>
+                <fullName>0063</fullName>
+                <default>false</default>
+                <label>Commercial Lending</label>
+            </value>
+            <value>
+                <fullName>0064</fullName>
+                <default>false</default>
+                <label>Cash Management</label>
+            </value>
+            <value>
+                <fullName>0074</fullName>
+                <default>false</default>
+                <label>Treasury</label>
+            </value>
+            <value>
+                <fullName>0210</fullName>
+                <default>false</default>
+                <label>Utopia Initiatives</label>
+            </value>
+            <value>
+                <fullName>0211</fullName>
+                <default>false</default>
+                <label>Innovation Initiatives</label>
+            </value>
+            <value>
+                <fullName>0222</fullName>
+                <default>false</default>
+                <label>COCC Conversion</label>
+            </value>
+            <value>
+                <fullName>0333</fullName>
+                <default>false</default>
+                <label>Merger Posting</label>
+            </value>
+            <value>
+                <fullName>0420</fullName>
+                <default>false</default>
+                <label>Cannabanking</label>
+            </value>
+            <value>
+                <fullName>0652</fullName>
+                <default>false</default>
+                <label>HR Retirees</label>
+            </value>
+            <value>
+                <fullName>9999</fullName>
+                <default>false</default>
+                <label>COCC Report Control</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

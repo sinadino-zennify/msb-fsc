@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship__c</fullName>
+    <label>Relationship</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Primary Impact</fullName>
+                <default>false</default>
+                <label>Primary Impact</label>
+            </value>
+            <value>
+                <fullName>Secondary Impact</fullName>
+                <default>false</default>
+                <label>Secondary Impact</label>
+            </value>
+            <value>
+                <fullName>Tertiary Impact</fullName>
+                <default>false</default>
+                <label>Tertiary Impact</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

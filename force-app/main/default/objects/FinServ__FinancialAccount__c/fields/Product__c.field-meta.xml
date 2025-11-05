@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Product__c</fullName>
+    <label>Product</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>3 Month CD</fullName>
+                <default>false</default>
+                <label>3 Month CD</label>
+            </value>
+            <value>
+                <fullName>6 Month CD</fullName>
+                <default>false</default>
+                <label>6 Month CD</label>
+            </value>
+            <value>
+                <fullName>7 Month CD</fullName>
+                <default>false</default>
+                <label>7 Month CD</label>
+            </value>
+            <value>
+                <fullName>9 Month CD</fullName>
+                <default>false</default>
+                <label>9 Month CD</label>
+            </value>
+            <value>
+                <fullName>10 Month CD</fullName>
+                <default>false</default>
+                <label>10 Month CD</label>
+            </value>
+            <value>
+                <fullName>11 Month CD</fullName>
+                <default>false</default>
+                <label>11 Month CD</label>
+            </value>
+            <value>
+                <fullName>12 Month CD</fullName>
+                <default>false</default>
+                <label>12 Month CD</label>
+            </value>
+            <value>
+                <fullName>13 Month CD</fullName>
+                <default>false</default>
+                <label>13 Month CD</label>
+            </value>
+            <value>
+                <fullName>14 Month CD</fullName>
+                <default>false</default>
+                <label>14 Month CD</label>
+            </value>
+            <value>
+                <fullName>15 Month CD</fullName>
+                <default>false</default>
+                <label>15 Month CD</label>
+            </value>
+            <value>
+                <fullName>17 Month CD</fullName>
+                <default>false</default>
+                <label>17 Month CD</label>
+            </value>
+            <value>
+                <fullName>18 Month CD</fullName>
+                <default>false</default>
+                <label>18 Month CD</label>
+            </value>
+            <value>
+                <fullName>24 Month CD</fullName>
+                <default>false</default>
+                <label>24 Month CD</label>
+            </value>
+            <value>
+                <fullName>25 Month CD</fullName>
+                <default>false</default>
+                <label>25 Month CD</label>
+            </value>
+            <value>
+                <fullName>35 Month CD</fullName>
+                <default>false</default>
+                <label>35 Month CD</label>
+            </value>
+            <value>
+                <fullName>36 Month CD</fullName>
+                <default>false</default>
+                <label>36 Month CD</label>
+            </value>
+            <value>
+                <fullName>48 Month CD</fullName>
+                <default>false</default>
+                <label>48 Month CD</label>
+            </value>
+            <value>
+                <fullName>60 Month CD</fullName>
+                <default>false</default>
+                <label>60 Month CD</label>
+            </value>
+            <value>
+                <fullName>Ach Manager Exposure</fullName>
+                <default>false</default>
+                <label>Ach Manager Exposure</label>
+            </value>
+            <value>
+                <fullName>Main Street Checking</fullName>
+                <default>false</default>
+                <label>Main Street Checking</label>
+            </value>
+            <value>
+                <fullName>Consumer Index Checking</fullName>
+                <default>false</default>
+                <label>Consumer Index Checking</label>
+            </value>
+            <value>
+                <fullName>BankOn Main Street Checking</fullName>
+                <default>false</default>
+                <label>BankOn Main Street Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street Interest Checking</fullName>
+                <default>false</default>
+                <label>Main Street Interest Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street IOLTA Checking</fullName>
+                <default>false</default>
+                <label>Main Street IOLTA Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street NonProfit Checking</fullName>
+                <default>false</default>
+                <label>Main Street NonProfit Checking</label>
+            </value>
+            <value>
+                <fullName>Nonprofit Analysis Checking</fullName>
+                <default>false</default>
+                <label>Nonprofit Analysis Checking</label>
+            </value>
+            <value>
+                <fullName>Neighborhood Rewards Checking</fullName>
+                <default>false</default>
+                <label>Neighborhood Rewards Checking</label>
+            </value>
+            <value>
+                <fullName>Business Index Checking</fullName>
+                <default>false</default>
+                <label>Business Index Checking</label>
+            </value>
+            <value>
+                <fullName>DESA Master Account</fullName>
+                <default>false</default>
+                <label>DESA Master Account</label>
+            </value>
+            <value>
+                <fullName>Main Street Business Checking</fullName>
+                <default>false</default>
+                <label>Main Street Business Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street Bus Prem Checking</fullName>
+                <default>false</default>
+                <label>Main Street Bus Prem Checking</label>
+            </value>
+            <value>
+                <fullName>Homegrown Payroll Checking</fullName>
+                <default>false</default>
+                <label>Homegrown Payroll Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street Bus Int Checking</fullName>
+                <default>false</default>
+                <label>Main Street Bus Int Checking</label>
+            </value>
+            <value>
+                <fullName>Homegrown Premium Int Checking</fullName>
+                <default>false</default>
+                <label>Homegrown Premium Int Checking</label>
+            </value>
+            <value>
+                <fullName>Main Street Corporate Analysis</fullName>
+                <default>false</default>
+                <label>Main Street Corporate Analysis</label>
+            </value>
+            <value>
+                <fullName>Grass Roots Premium Checking</fullName>
+                <default>false</default>
+                <label>Grass Roots Premium Checking</label>
+            </value>
+            <value>
+                <fullName>Seedling Business Checking</fullName>
+                <default>false</default>
+                <label>Seedling Business Checking</label>
+            </value>
+            <value>
+                <fullName>Homegrown Analysis Account</fullName>
+                <default>false</default>
+                <label>Homegrown Analysis Account</label>
+            </value>
+            <value>
+                <fullName>Commercial Construction</fullName>
+                <default>false</default>
+                <label>Commercial Construction</label>
+            </value>
+            <value>
+                <fullName>Constr Res 1-4</fullName>
+                <default>false</default>
+                <label>Constr Res 1-4</label>
+            </value>
+            <value>
+                <fullName>Town of Ayer</fullName>
+                <default>false</default>
+                <label>Town of Ayer</label>
+            </value>
+            <value>
+                <fullName>Guidance LOC</fullName>
+                <default>false</default>
+                <label>Guidance LOC</label>
+            </value>
+            <value>
+                <fullName>Industrial Revenue Bond</fullName>
+                <default>false</default>
+                <label>Industrial Revenue Bond</label>
+            </value>
+            <value>
+                <fullName>Install Fixed</fullName>
+                <default>false</default>
+                <label>Install Fixed</label>
+            </value>
+            <value>
+                <fullName>Install SBA PPP</fullName>
+                <default>false</default>
+                <label>Install SBA PPP</label>
+            </value>
+            <value>
+                <fullName>Letter of Credit</fullName>
+                <default>false</default>
+                <label>Letter of Credit</label>
+            </value>
+            <value>
+                <fullName>LOC</fullName>
+                <default>false</default>
+                <label>LOC</label>
+            </value>
+            <value>
+                <fullName>MTG Adj</fullName>
+                <default>false</default>
+                <label>MTG Adj</label>
+            </value>
+            <value>
+                <fullName>Mtg Fixed</fullName>
+                <default>false</default>
+                <label>Mtg Fixed</label>
+            </value>
+            <value>
+                <fullName>Commercial Overdraft Protection</fullName>
+                <default>false</default>
+                <label>Commercial Overdraft Protection</label>
+            </value>
+            <value>
+                <fullName>Tax Exempt Bond</fullName>
+                <default>false</default>
+                <label>Tax Exempt Bond</label>
+            </value>
+            <value>
+                <fullName>MEDC</fullName>
+                <default>false</default>
+                <label>MEDC</label>
+            </value>
+            <value>
+                <fullName>LOC Online Adv</fullName>
+                <default>false</default>
+                <label>LOC Online Adv</label>
+            </value>
+            <value>
+                <fullName>18 Month CD Variable</fullName>
+                <default>false</default>
+                <label>18 Month CD Variable</label>
+            </value>
+            <value>
+                <fullName>Collateral</fullName>
+                <default>false</default>
+                <label>Collateral</label>
+            </value>
+            <value>
+                <fullName>Install Auto</fullName>
+                <default>false</default>
+                <label>Install Auto</label>
+            </value>
+            <value>
+                <fullName>Install TLC</fullName>
+                <default>false</default>
+                <label>Install TLC</label>
+            </value>
+            <value>
+                <fullName>Install Unsecured</fullName>
+                <default>false</default>
+                <label>Install Unsecured</label>
+            </value>
+            <value>
+                <fullName>Install Mass Save Heat Pump</fullName>
+                <default>false</default>
+                <label>Install Mass Save Heat Pump</label>
+            </value>
+            <value>
+                <fullName>Install Mass Save Heat Unsecur</fullName>
+                <default>false</default>
+                <label>Install Mass Save Heat Unsecur</label>
+            </value>
+            <value>
+                <fullName>Overdraft Protection</fullName>
+                <default>false</default>
+                <label>Overdraft Protection</label>
+            </value>
+            <value>
+                <fullName>IRA 3 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 3 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 6 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 6 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 7 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 7 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 9 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 9 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 10 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 10 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 11 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 11 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 12 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 12 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 13 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 13 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 14 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 14 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 15 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 15 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 17 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 17 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 18 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 18 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 24 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 24 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 25 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 25 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 30 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 30 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 35 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 35 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 36 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 36 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 48 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 48 Month CD</label>
+            </value>
+            <value>
+                <fullName>IRA 60 Month CD</fullName>
+                <default>false</default>
+                <label>IRA 60 Month CD</label>
+            </value>
+            <value>
+                <fullName>Traditional IRA Plan</fullName>
+                <default>false</default>
+                <label>Traditional IRA Plan</label>
+            </value>
+            <value>
+                <fullName>Beneficiary IRA Plan</fullName>
+                <default>false</default>
+                <label>Beneficiary IRA Plan</label>
+            </value>
+            <value>
+                <fullName>Coverdell ESA</fullName>
+                <default>false</default>
+                <label>Coverdell ESA</label>
+            </value>
+            <value>
+                <fullName>IRA 18 Month Variable CD</fullName>
+                <default>false</default>
+                <label>IRA 18 Month Variable CD</label>
+            </value>
+            <value>
+                <fullName>Adj</fullName>
+                <default>false</default>
+                <label>Adj</label>
+            </value>
+            <value>
+                <fullName>Adj 1st Time</fullName>
+                <default>false</default>
+                <label>Adj 1st Time</label>
+            </value>
+            <value>
+                <fullName>Adj 1st Time Jumbo</fullName>
+                <default>false</default>
+                <label>Adj 1st Time Jumbo</label>
+            </value>
+            <value>
+                <fullName>Adj Credit</fullName>
+                <default>false</default>
+                <label>Adj Credit</label>
+            </value>
+            <value>
+                <fullName>Adj Freddie</fullName>
+                <default>false</default>
+                <label>Adj Freddie</label>
+            </value>
+            <value>
+                <fullName>Adj Jumbo</fullName>
+                <default>false</default>
+                <label>Adj Jumbo</label>
+            </value>
+            <value>
+                <fullName>Bank of Rhode Island</fullName>
+                <default>false</default>
+                <label>Bank of Rhode Island</label>
+            </value>
+            <value>
+                <fullName>BB&amp;T</fullName>
+                <default>false</default>
+                <label>BB&amp;T</label>
+            </value>
+            <value>
+                <fullName>Cambridge Trust</fullName>
+                <default>false</default>
+                <label>Cambridge Trust</label>
+            </value>
+            <value>
+                <fullName>Construction</fullName>
+                <default>false</default>
+                <label>Construction</label>
+            </value>
+            <value>
+                <fullName>Fixed</fullName>
+                <default>false</default>
+                <label>Fixed</label>
+            </value>
+            <value>
+                <fullName>Fixed Escrow First</fullName>
+                <default>false</default>
+                <label>Fixed Escrow First</label>
+            </value>
+            <value>
+                <fullName>Fixed FNMA</fullName>
+                <default>false</default>
+                <label>Fixed FNMA</label>
+            </value>
+            <value>
+                <fullName>Fixed Freddie</fullName>
+                <default>false</default>
+                <label>Fixed Freddie</label>
+            </value>
+            <value>
+                <fullName>Fixed Held for Sale</fullName>
+                <default>false</default>
+                <label>Fixed Held for Sale</label>
+            </value>
+            <value>
+                <fullName>Fixed Jumbo</fullName>
+                <default>false</default>
+                <label>Fixed Jumbo</label>
+            </value>
+            <value>
+                <fullName>Fixed Purchased</fullName>
+                <default>false</default>
+                <label>Fixed Purchased</label>
+            </value>
+            <value>
+                <fullName>Fixed Purchased Jumbo</fullName>
+                <default>false</default>
+                <label>Fixed Purchased Jumbo</label>
+            </value>
+            <value>
+                <fullName>HELOC</fullName>
+                <default>false</default>
+                <label>HELOC</label>
+            </value>
+            <value>
+                <fullName>HELOC Bridge</fullName>
+                <default>false</default>
+                <label>HELOC Bridge</label>
+            </value>
+            <value>
+                <fullName>HELOC Investor</fullName>
+                <default>false</default>
+                <label>HELOC Investor</label>
+            </value>
+            <value>
+                <fullName>HELOC TLC</fullName>
+                <default>false</default>
+                <label>HELOC TLC</label>
+            </value>
+            <value>
+                <fullName>HELOC TLC Jumbo</fullName>
+                <default>false</default>
+                <label>HELOC TLC Jumbo</label>
+            </value>
+            <value>
+                <fullName>Mass Housing</fullName>
+                <default>false</default>
+                <label>Mass Housing</label>
+            </value>
+            <value>
+                <fullName>Install Mass Save Heat Secured</fullName>
+                <default>false</default>
+                <label>Install Mass Save Heat Secured</label>
+            </value>
+            <value>
+                <fullName>Mobile Home Fixed</fullName>
+                <default>false</default>
+                <label>Mobile Home Fixed</label>
+            </value>
+            <value>
+                <fullName>Second</fullName>
+                <default>false</default>
+                <label>Second</label>
+            </value>
+            <value>
+                <fullName>HELOC in Repayment</fullName>
+                <default>false</default>
+                <label>HELOC in Repayment</label>
+            </value>
+            <value>
+                <fullName>CML Masterline</fullName>
+                <default>false</default>
+                <label>CML Masterline</label>
+            </value>
+            <value>
+                <fullName>MTG Masterline</fullName>
+                <default>false</default>
+                <label>MTG Masterline</label>
+            </value>
+            <value>
+                <fullName>Qualified Plan Profit Sharing</fullName>
+                <default>false</default>
+                <label>Qualified Plan Profit Sharing</label>
+            </value>
+            <value>
+                <fullName>Qwickrate 12 Month</fullName>
+                <default>false</default>
+                <label>Qwickrate 12 Month</label>
+            </value>
+            <value>
+                <fullName>ROTH Contributory Plan</fullName>
+                <default>false</default>
+                <label>ROTH Contributory Plan</label>
+            </value>
+            <value>
+                <fullName>ROTH Conversion Plan</fullName>
+                <default>false</default>
+                <label>ROTH Conversion Plan</label>
+            </value>
+            <value>
+                <fullName>SEP Plan</fullName>
+                <default>false</default>
+                <label>SEP Plan</label>
+            </value>
+            <value>
+                <fullName>Main Street Money Market</fullName>
+                <default>false</default>
+                <label>Main Street Money Market</label>
+            </value>
+            <value>
+                <fullName>Main Street Premium MMDA</fullName>
+                <default>false</default>
+                <label>Main Street Premium MMDA</label>
+            </value>
+            <value>
+                <fullName>BankOn Main Street Savings</fullName>
+                <default>false</default>
+                <label>BankOn Main Street Savings</label>
+            </value>
+            <value>
+                <fullName>Consumer Index MMDA</fullName>
+                <default>false</default>
+                <label>Consumer Index MMDA</label>
+            </value>
+            <value>
+                <fullName>EERA Account</fullName>
+                <default>false</default>
+                <label>EERA Account</label>
+            </value>
+            <value>
+                <fullName>Passbook Savings</fullName>
+                <default>false</default>
+                <label>Passbook Savings</label>
+            </value>
+            <value>
+                <fullName>Holiday Account</fullName>
+                <default>false</default>
+                <label>Holiday Account</label>
+            </value>
+            <value>
+                <fullName>Municipal Savings</fullName>
+                <default>false</default>
+                <label>Municipal Savings</label>
+            </value>
+            <value>
+                <fullName>Main Street Savings</fullName>
+                <default>false</default>
+                <label>Main Street Savings</label>
+            </value>
+            <value>
+                <fullName>IRA Money Market</fullName>
+                <default>false</default>
+                <label>IRA Money Market</label>
+            </value>
+            <value>
+                <fullName>DESA Business Sub Account</fullName>
+                <default>false</default>
+                <label>DESA Business Sub Account</label>
+            </value>
+            <value>
+                <fullName>DESA Consumer Sub Account</fullName>
+                <default>false</default>
+                <label>DESA Consumer Sub Account</label>
+            </value>
+            <value>
+                <fullName>Main Street Business Savings</fullName>
+                <default>false</default>
+                <label>Main Street Business Savings</label>
+            </value>
+            <value>
+                <fullName>Holdback Account</fullName>
+                <default>false</default>
+                <label>Holdback Account</label>
+            </value>
+            <value>
+                <fullName>Main Street Business MMDA</fullName>
+                <default>false</default>
+                <label>Main Street Business MMDA</label>
+            </value>
+            <value>
+                <fullName>Main Street Bus Premium MMDA</fullName>
+                <default>false</default>
+                <label>Main Street Bus Premium MMDA</label>
+            </value>
+            <value>
+                <fullName>Homegrown Business MMDA</fullName>
+                <default>false</default>
+                <label>Homegrown Business MMDA</label>
+            </value>
+            <value>
+                <fullName>Business Index MMDA</fullName>
+                <default>false</default>
+                <label>Business Index MMDA</label>
+            </value>
+            <value>
+                <fullName>Mass Save HEAT &gt; 25K</fullName>
+                <default>false</default>
+                <label>Mass Save HEAT &gt; 25K</label>
+            </value>
+            <value>
+                <fullName>Svc Released LIP</fullName>
+                <default>false</default>
+                <label>Svc Released LIP</label>
+            </value>
+            <value>
+                <fullName>Holiday Club Savings</fullName>
+                <default>false</default>
+                <label>Holiday Club Savings</label>
+            </value>
+            <value>
+                <fullName>DNU Qwickrate 12 Month</fullName>
+                <default>false</default>
+                <label>DNU Qwickrate 12 Month</label>
+            </value>
+            <value>
+                <fullName>Internal Accounts</fullName>
+                <default>false</default>
+                <label>Internal Accounts</label>
+            </value>
+            <value>
+                <fullName>ZEscrow Holding</fullName>
+                <default>false</default>
+                <label>ZEscrow Holding</label>
+            </value>
+            <value>
+                <fullName>Online Only 12Month CD Special</fullName>
+                <default>false</default>
+                <label>Online Only 12Month CD Special</label>
+            </value>
+            <value>
+                <fullName>Mass Save HEAT More Than 25K</fullName>
+                <default>false</default>
+                <label>Mass Save HEAT More Than 25K</label>
+            </value>
+            <value>
+                <fullName>30 Month CD</fullName>
+                <default>false</default>
+                <label>30 Month CD</label>
+            </value>
+            <value>
+                <fullName>Installment</fullName>
+                <default>false</default>
+                <label>Installment</label>
+            </value>
+            <value>
+                <fullName>Safe Deposit Box</fullName>
+                <default>false</default>
+                <label>Safe Deposit Box</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_CRA_Loan_Purpose_Type__c</fullName>
+    <label>CRA Loan Purpose Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>affordableHousing</fullName>
+                <default>false</default>
+                <label>Affordable Housing</label>
+            </value>
+            <value>
+                <fullName>lmiCommunityServices</fullName>
+                <default>false</default>
+                <label>LMI Community Services</label>
+            </value>
+            <value>
+                <fullName>promoteEconomicDevelopment</fullName>
+                <default>false</default>
+                <label>Promote Economic Development</label>
+            </value>
+            <value>
+                <fullName>lmiRevitalizationStabilization</fullName>
+                <default>false</default>
+                <label>LMI Revitalization Stabilization</label>
+            </value>
+            <value>
+                <fullName>lmiCommunityServicesPromoteEconomicDevelopment</fullName>
+                <default>false</default>
+                <label>LMI Community Services &amp; Promote Economic Development</label>
+            </value>
+            <value>
+                <fullName>lmiRevitalizationStabilizationAffordableHousing</fullName>
+                <default>false</default>
+                <label>LMI Revitalization Stabilization &amp; Affordable Housing</label>
+            </value>
+            <value>
+                <fullName>lmiRevitalizationStabilizationCommunityServices</fullName>
+                <default>false</default>
+                <label>LMI Revitalization Stabilization &amp; Community Services</label>
+            </value>
+            <value>
+                <fullName>lmiRevitalizationStabilizationEconomicDevelopment</fullName>
+                <default>false</default>
+                <label>LMI Revitalization Stabilization &amp; Promote Economic Development</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

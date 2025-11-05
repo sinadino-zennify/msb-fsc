@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Team__c</fullName>
+    <label>Relationship Team</label>
+    <referenceTo>Relationship_Team__c</referenceTo>
+    <relationshipLabel>Relationship Team Roles</relationshipLabel>
+    <relationshipName>Relationship_Team_Roles</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

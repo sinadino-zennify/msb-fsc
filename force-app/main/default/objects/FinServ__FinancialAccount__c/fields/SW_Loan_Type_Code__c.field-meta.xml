@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Loan_Type_Code__c</fullName>
+    <label>Loan Type Code</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CM01 - Constr Industrial Rev Bond</fullName>
+                <default>false</default>
+                <label>CM01 - Constr Industrial Rev Bond</label>
+            </value>
+            <value>
+                <fullName>CM02 - Construction</fullName>
+                <default>false</default>
+                <label>CM02 - Construction</label>
+            </value>
+            <value>
+                <fullName>CM04 - Constr Res 1-4</fullName>
+                <default>false</default>
+                <label>CM04 - Constr Res 1-4</label>
+            </value>
+            <value>
+                <fullName>CM09 - Industrial Revenue Bond</fullName>
+                <default>false</default>
+                <label>CM09 - Industrial Revenue Bond</label>
+            </value>
+            <value>
+                <fullName>CM11 - Install Fixed</fullName>
+                <default>false</default>
+                <label>CM11 - Install Fixed</label>
+            </value>
+            <value>
+                <fullName>CM13 - Letter of Credit</fullName>
+                <default>false</default>
+                <label>CM13 - Letter of Credit</label>
+            </value>
+            <value>
+                <fullName>CM14 - LOC</fullName>
+                <default>false</default>
+                <label>CM14 - LOC</label>
+            </value>
+            <value>
+                <fullName>CM16 - MTG Adj</fullName>
+                <default>false</default>
+                <label>CM16 - MTG Adj</label>
+            </value>
+            <value>
+                <fullName>CM17 - Mtg Fixed</fullName>
+                <default>false</default>
+                <label>CM17 - Mtg Fixed</label>
+            </value>
+            <value>
+                <fullName>CM18 - Overdraft Protection</fullName>
+                <default>false</default>
+                <label>CM18 - Overdraft Protection</label>
+            </value>
+            <value>
+                <fullName>CM19 - Tax Exempt Bond</fullName>
+                <default>false</default>
+                <label>CM19 - Tax Exempt Bond</label>
+            </value>
+            <value>
+                <fullName>CM20 - MEDC</fullName>
+                <default>false</default>
+                <label>CM20 - MEDC</label>
+            </value>
+            <value>
+                <fullName>CM22 - LOC Online Adv</fullName>
+                <default>false</default>
+                <label>CM22 - LOC Online Adv</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

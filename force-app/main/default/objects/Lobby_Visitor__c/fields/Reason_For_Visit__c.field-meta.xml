@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_For_Visit__c</fullName>
+    <label>Reason For Visit</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open an Account</fullName>
+                <default>false</default>
+                <label>Open an Account</label>
+            </value>
+            <value>
+                <fullName>Service an Existing Account</fullName>
+                <default>false</default>
+                <label>Service an Existing Account</label>
+            </value>
+            <value>
+                <fullName>Apply for a Loan</fullName>
+                <default>false</default>
+                <label>Apply for a Loan</label>
+            </value>
+            <value>
+                <fullName>Apply for a Mortgage</fullName>
+                <default>false</default>
+                <label>Apply for a Mortgage</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

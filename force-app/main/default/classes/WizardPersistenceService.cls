@@ -1,4 +1,68 @@
 public with sharing class WizardPersistenceService {
+
+    // Functional interface for our step handlers
+    private interface IStepHandler {
+        PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response);
+    }
+
+    /**
+     * Handler map to route stepDeveloperName to the correct logic.
+     * 
+     * IMPORTANT: When adding a new step to any wizard:
+     * 1. Create a private method for the step's logic (e.g., upsertCollateralStep)
+     * 2. Create a new inner class implementing IStepHandler that calls your method
+     * 3. Register the step's exact DeveloperName in this map with its handler instance
+     * 
+     * Example:
+     *   'DAO_Business_InBranch_Collateral' => new CollateralStepHandler()
+     */
+    private static final Map<String, IStepHandler> stepHandlers = new Map<String, IStepHandler>{
+        'DAO_Business_InBranch_Applicant' => new ApplicantStepHandler(),
+        'DAO_Business_InBranch_Business' => new BusinessStepHandler(),
+        'DAO_Business_InBranch_Product' => new ProductStepHandler(),
+        'DAO_Business_InBranch_Additional' => new AdditionalStepHandler(),
+        'DAO_Business_InBranch_Services' => new ServicesStepHandler(),
+        'DAO_Business_InBranch_Documents' => new DocumentsStepHandler(),
+        'DAO_Business_InBranch_Review' => new ReviewStepHandler()
+        // Add new step handlers here
+    };
+
+    // Inner classes implementing the handler logic
+    private class ApplicantStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertApplicantStep(applicationId, payload, response);
+        }
+    }
+    private class BusinessStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertBusinessStep(applicationId, payload, response);
+        }
+    }
+    private class ProductStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertProductStep(applicationId, payload, response);
+        }
+    }
+    private class AdditionalStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertAdditionalStep(applicationId, payload, response);
+        }
+    }
+    private class ServicesStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertServicesStep(applicationId, payload, response);
+        }
+    }
+    private class DocumentsStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertDocumentsStep(applicationId, payload, response);
+        }
+    }
+    private class ReviewStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertReviewStep(applicationId, payload, response);
+        }
+    }
     
     public class PersistenceResponse {
         @AuraEnabled public Boolean success { get; set; }
@@ -58,18 +122,14 @@ public with sharing class WizardPersistenceService {
         }
         
         try {
-            // Route to appropriate step handler based on stepDeveloperName
-            if (stepDeveloperName.contains('Applicant')) {
-                return upsertApplicantStep(applicationId, payload, response);
-            } else if (stepDeveloperName.contains('Business')) {
-                return upsertBusinessStep(applicationId, payload, response);
-            } else if (stepDeveloperName.contains('Product')) {
-                return upsertProductStep(applicationId, payload, response);
-            } else if (stepDeveloperName.contains('Review')) {
-                return upsertReviewStep(applicationId, payload, response);
+            // Use a handler map to route to the correct step logic
+            IStepHandler handler = stepHandlers.get(stepDeveloperName);
+
+            if (handler != null) {
+                return handler.handle(applicationId, payload, response);
             } else {
                 response.success = false;
-                response.messages.add(new ErrorMessage('UNKNOWN_STEP', 'Unknown step: ' + stepDeveloperName, null));
+                response.messages.add(new ErrorMessage('UNKNOWN_STEP', 'No handler registered for step: ' + stepDeveloperName, null));
                 return response;
             }
         } catch (DmlException e) {
@@ -117,6 +177,36 @@ public with sharing class WizardPersistenceService {
         
         // Log the payload for debugging
         System.debug('Business step payload: ' + JSON.serialize(payload));
+        
+        return response;
+    }
+    
+    private static PersistenceResponse upsertAdditionalStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+        // Simulate successful persistence for additional applicants step
+        response.savedIds.put('applicationForm', applicationId);
+        
+        // Log the payload for debugging
+        System.debug('Additional step payload: ' + JSON.serialize(payload));
+        
+        return response;
+    }
+    
+    private static PersistenceResponse upsertServicesStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+        // Simulate successful persistence for services step
+        response.savedIds.put('applicationForm', applicationId);
+        
+        // Log the payload for debugging
+        System.debug('Services step payload: ' + JSON.serialize(payload));
+        
+        return response;
+    }
+    
+    private static PersistenceResponse upsertDocumentsStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+        // Simulate successful persistence for documents step
+        response.savedIds.put('applicationForm', applicationId);
+        
+        // Log the payload for debugging
+        System.debug('Documents step payload: ' + JSON.serialize(payload));
         
         return response;
     }

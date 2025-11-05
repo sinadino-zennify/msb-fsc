@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecordTypeId_Not_Supported</fullName>
+    <active>true</active>
+    <description>RecordTypeId Input is only supported for the New page override.</description>
+    <errorConditionFormula>NOT(ISPICKVAL(Action__c, &apos;New&apos;)) &amp;&amp; NOT(ISBLANK( RecordTypeId_Input__c))</errorConditionFormula>
+    <errorMessage>RecordTypeId Input is only supported for the New page override.</errorMessage>
+</ValidationRule>

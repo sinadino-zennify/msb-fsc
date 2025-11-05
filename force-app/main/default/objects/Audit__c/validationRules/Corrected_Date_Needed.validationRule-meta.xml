@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Corrected_Date_Needed</fullName>
+    <active>true</active>
+    <description>If Correction Details field is populated Correction Date cannot be blank.</description>
+    <errorConditionFormula>No_Errors_Found__c == FALSE
+&amp;&amp;
+Flow_Validation_Rule_Bypass_Check__c = FALSE
+&amp;&amp;
+AND( 
+   ISBLANK( Corrected_Date__c ) , 
+   NOT( ISBLANK( Corrected_Detail__c ) ) 
+)</errorConditionFormula>
+    <errorDisplayField>Corrected_Date__c</errorDisplayField>
+    <errorMessage>You have filled out the Corrected Detail, please also provide the Corrected Date before saving the record.</errorMessage>
+</ValidationRule>

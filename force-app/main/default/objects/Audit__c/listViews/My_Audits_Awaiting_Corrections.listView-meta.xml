@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Audits_Awaiting_Corrections</fullName>
+    <columns>Audit_Status__c</columns>
+    <columns>NAME</columns>
+    <columns>Account_Number__c</columns>
+    <columns>Financial_Account__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>OWNER.ALIAS</columns>
+    <columns>Date_Opened__c</columns>
+    <columns>Error_Description__c</columns>
+    <columns>Error_Type__c</columns>
+    <columns>Date_of_Error__c</columns>
+    <columns>Corrected_Date__c</columns>
+    <columns>Corrected_Detail__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Audit_Status__c</field>
+        <operation>equals</operation>
+        <value>Awaiting Corrections</value>
+    </filters>
+    <filters>
+        <field>Running_User_is_Personal_Banker_CSR__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>My Audits - Awaiting Corrections</label>
+</ListView>

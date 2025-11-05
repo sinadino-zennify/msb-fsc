@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_for_Contact__c</fullName>
+    <label>Reason for Contact</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Account Maintenance</fullName>
+                <default>false</default>
+                <label>Account Maintenance</label>
+            </value>
+            <value>
+                <fullName>Authorization</fullName>
+                <default>false</default>
+                <label>Authorization</label>
+            </value>
+            <value>
+                <fullName>Balance Inquiry</fullName>
+                <default>false</default>
+                <label>Balance Inquiry</label>
+            </value>
+            <value>
+                <fullName>Charge Dispute</fullName>
+                <default>false</default>
+                <label>Charge Dispute</label>
+            </value>
+            <value>
+                <fullName>Close Account Request</fullName>
+                <default>false</default>
+                <label>Close Account Request</label>
+            </value>
+            <value>
+                <fullName>Compromised Card</fullName>
+                <default>false</default>
+                <label>Compromised Card</label>
+            </value>
+            <value>
+                <fullName>Fees/Finance Charges Inquiry</fullName>
+                <default>false</default>
+                <label>Fees/Finance Charges Inquiry</label>
+            </value>
+            <value>
+                <fullName>General Account Questions</fullName>
+                <default>false</default>
+                <label>General Account Questions</label>
+            </value>
+            <value>
+                <fullName>Payment Inquiry</fullName>
+                <default>false</default>
+                <label>Payment Inquiry</label>
+            </value>
+            <value>
+                <fullName>Payment/Transfer</fullName>
+                <default>false</default>
+                <label>Payment/Transfer</label>
+            </value>
+            <value>
+                <fullName>Report Lost/Stolen</fullName>
+                <default>false</default>
+                <label>Report Lost/Stolen</label>
+            </value>
+            <value>
+                <fullName>Statement/Billing Inquiry</fullName>
+                <default>false</default>
+                <label>Statement/Billing Inquiry</label>
+            </value>
+            <value>
+                <fullName>Technical</fullName>
+                <default>false</default>
+                <label>Technical</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
