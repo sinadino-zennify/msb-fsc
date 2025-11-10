@@ -1,0 +1,44 @@
+Step,sObject,UI Label,Field API Name,Is Already in Salesforce,Is Already being Persisted,Notes
+Personal Information,Applicant,First Name,FirstName,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,Last Name,LastName,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,Email,Email,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,Phone,Phone,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,Date of Birth,BirthDate,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,Social Security Number,Tax_ID__c,UNKNOWN,FALSE,Need to verify if custom field exists on Applicant
+Personal Information,Applicant,Street Address,MailingStreet,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,City,MailingCity,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,State,MailingState,TRUE,FALSE,Standard Applicant field - stub persistence
+Personal Information,Applicant,ZIP Code,MailingPostalCode,TRUE,FALSE,Standard Applicant field - stub persistence
+Business Information,Account,Business Name,Name,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Business Type,Type,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Federal Tax ID (EIN),FinServ__TaxID__c,TRUE,FALSE,FSC field - stub persistence
+Business Information,Account,Industry Type,Industry,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Business Phone,Phone,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Business Email,Email__c,UNKNOWN,FALSE,Need to verify if custom field exists on Account
+Business Information,Account,Business Website,Website,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Year Established,YearStarted,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Number of Employees,NumberOfEmployees,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Business Description,Description,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,Business Street Address,BillingStreet,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,City,BillingCity,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,State,BillingState,TRUE,FALSE,Standard Account field - stub persistence
+Business Information,Account,ZIP Code,BillingPostalCode,TRUE,FALSE,Standard Account field - stub persistence
+Additional Applicants,Applicant,First Name,FirstName,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,Last Name,LastName,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,Role,Role__c,UNKNOWN,FALSE,Need to verify if custom field exists on Applicant
+Additional Applicants,Applicant,Ownership Percentage,Ownership_Percentage__c,UNKNOWN,FALSE,Need to verify if custom field exists on Applicant
+Additional Applicants,Applicant,Email,Email,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,Phone,Phone,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,Date of Birth,BirthDate,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,Social Security Number,Tax_ID__c,UNKNOWN,FALSE,Need to verify if custom field exists on Applicant
+Additional Applicants,Applicant,Street Address,MailingStreet,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,City,MailingCity,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,State,MailingState,TRUE,FALSE,Standard Applicant field - stub persistence
+Additional Applicants,Applicant,ZIP Code,MailingPostalCode,TRUE,FALSE,Standard Applicant field - stub persistence
+Product Selection,ApplicationFormProduct,Product,ProductCode,TRUE,FALSE,Standard ApplicationFormProduct field - stub persistence
+Additional Services,N/A,Service Checkboxes,N/A,FALSE,FALSE,Services are hardcoded in LWC - no Salesforce object mapping yet
+Document Upload,ContentVersion,Document Name,Title,TRUE,FALSE,Standard ContentVersion field - using lightning-file-upload
+Document Upload,ContentVersion,Document Type,FileType,TRUE,FALSE,Standard ContentVersion field - using lightning-file-upload
+Document Upload,ContentVersion,Description,Description,TRUE,FALSE,Standard ContentVersion field - using lightning-file-upload
+Document Upload,ContentVersion,File Name,PathOnClient,TRUE,FALSE,Standard ContentVersion field - using lightning-file-upload
+Review and Submit,N/A,Confirmation Checkbox,N/A,FALSE,FALSE,UI-only field for user confirmation

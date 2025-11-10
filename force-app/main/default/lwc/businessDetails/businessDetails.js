@@ -6,38 +6,61 @@ export default class BusinessDetails extends LightningElement {
     @api stepConfig;
     @api value;
 
-    // Business Information Fields
+    // Business Profile Fields
     businessName;
     businessType;
-    taxId;
-    businessPhone;
-    businessEmail;
-    businessWebsite;
+    yearEstablished;
+    numberOfEmployees;
     industryType;
+    businessWebsite;
     businessDescription;
-    businessStreet;
+
+    // Contact Information Fields
+    businessEmail;
+    businessWorkPhone;
+    businessHomePhone;
+    businessMobilePhone;
+
+    // Business Address Fields
+    businessStreetLine1;
+    businessStreetLine2;
     businessCity;
     businessState;
     businessPostalCode;
-    yearEstablished;
-    numberOfEmployees;
+    businessCountry;
+
+    // Tax Information Fields
+    taxId;
+    taxIdType;
 
     connectedCallback() {
         if (this.value) {
+            // Business Profile
             this.businessName = this.value.businessName;
             this.businessType = this.value.businessType;
-            this.taxId = this.value.taxId;
-            this.businessPhone = this.value.businessPhone;
-            this.businessEmail = this.value.businessEmail;
-            this.businessWebsite = this.value.businessWebsite;
+            this.yearEstablished = this.value.yearEstablished;
+            this.numberOfEmployees = this.value.numberOfEmployees;
             this.industryType = this.value.industryType;
+            this.businessWebsite = this.value.businessWebsite;
             this.businessDescription = this.value.businessDescription;
-            this.businessStreet = this.value.businessStreet;
+            
+            // Contact Information
+            this.businessEmail = this.value.businessEmail;
+            this.businessWorkPhone = this.value.businessWorkPhone;
+            this.businessHomePhone = this.value.businessHomePhone;
+            this.businessMobilePhone = this.value.businessMobilePhone;
+            
+            // Business Address
+            this.businessStreetLine1 = this.value.businessStreetLine1;
+            this.businessStreetLine2 = this.value.businessStreetLine2;
             this.businessCity = this.value.businessCity;
             this.businessState = this.value.businessState;
             this.businessPostalCode = this.value.businessPostalCode;
-            this.yearEstablished = this.value.yearEstablished;
-            this.numberOfEmployees = this.value.numberOfEmployees;
+            this.businessCountry = this.value.businessCountry;
+            
+            // Tax Information
+            this.taxId = this.value.taxId;
+            this.taxIdType = this.value.taxIdType;
         }
     }
 
@@ -57,8 +80,23 @@ export default class BusinessDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    handleBusinessPhoneChange(event) {
-        this.businessPhone = event.target.value;
+    handleBusinessWorkPhoneChange(event) {
+        this.businessWorkPhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleBusinessHomePhoneChange(event) {
+        this.businessHomePhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleBusinessMobilePhoneChange(event) {
+        this.businessMobilePhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleTaxIdTypeChange(event) {
+        this.taxIdType = event.target.value;
         this.emitPayloadChange();
     }
 
@@ -82,8 +120,18 @@ export default class BusinessDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    handleBusinessStreetChange(event) {
-        this.businessStreet = event.target.value;
+    handleBusinessStreetLine1Change(event) {
+        this.businessStreetLine1 = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleBusinessStreetLine2Change(event) {
+        this.businessStreetLine2 = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleBusinessCountryChange(event) {
+        this.businessCountry = event.target.value;
         this.emitPayloadChange();
     }
 
@@ -123,20 +171,32 @@ export default class BusinessDetails extends LightningElement {
 
     get payload() {
         return {
+            // Business Profile
             businessName: this.businessName,
             businessType: this.businessType,
-            taxId: this.taxId,
-            businessPhone: this.businessPhone,
-            businessEmail: this.businessEmail,
-            businessWebsite: this.businessWebsite,
+            yearEstablished: this.yearEstablished,
+            numberOfEmployees: this.numberOfEmployees,
             industryType: this.industryType,
+            businessWebsite: this.businessWebsite,
             businessDescription: this.businessDescription,
-            businessStreet: this.businessStreet,
+            
+            // Contact Information
+            businessEmail: this.businessEmail,
+            businessWorkPhone: this.businessWorkPhone,
+            businessHomePhone: this.businessHomePhone,
+            businessMobilePhone: this.businessMobilePhone,
+            
+            // Business Address
+            businessStreetLine1: this.businessStreetLine1,
+            businessStreetLine2: this.businessStreetLine2,
             businessCity: this.businessCity,
             businessState: this.businessState,
             businessPostalCode: this.businessPostalCode,
-            yearEstablished: this.yearEstablished,
-            numberOfEmployees: this.numberOfEmployees
+            businessCountry: this.businessCountry,
+            
+            // Tax Information
+            taxId: this.taxId,
+            taxIdType: this.taxIdType
         };
     }
 
@@ -234,6 +294,22 @@ export default class BusinessDetails extends LightningElement {
         ];
     }
 
+    get taxIdTypeOptions() {
+        return [
+            { label: 'Federal Employer Tax ID (EIN)', value: 'Federal Employer Tax ID (EIN)' },
+            { label: 'Foreign Tax ID', value: 'Foreign Tax ID' }
+        ];
+    }
+
+    get countryOptions() {
+        return [
+            { label: 'USA', value: 'USA' },
+            { label: 'Canada', value: 'Canada' },
+            { label: 'Mexico', value: 'Mexico' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
+
     @api validate() {
         const messages = [];
         if (!this.businessName) {
@@ -245,8 +321,11 @@ export default class BusinessDetails extends LightningElement {
         if (!this.taxId) {
             messages.push('Tax ID is required.');
         }
-        if (!this.businessPhone) {
-            messages.push('Business Phone is required.');
+        if (!this.businessWorkPhone) {
+            messages.push('Business Phone (Primary) is required.');
+        }
+        if (!this.taxIdType) {
+            messages.push('Tax ID Type is required.');
         }
         if (!this.businessEmail) {
             messages.push('Business Email is required.');
@@ -254,8 +333,8 @@ export default class BusinessDetails extends LightningElement {
         if (!this.industryType) {
             messages.push('Industry Type is required.');
         }
-        if (!this.businessStreet) {
-            messages.push('Business Address is required.');
+        if (!this.businessStreetLine1) {
+            messages.push('Business Street Address Line 1 is required.');
         }
         if (!this.businessCity) {
             messages.push('Business City is required.');
@@ -279,20 +358,33 @@ export default class BusinessDetails extends LightningElement {
     }
 
     @api reset() {
+        // Business Profile
         this.businessName = null;
         this.businessType = null;
-        this.taxId = null;
-        this.businessPhone = null;
-        this.businessEmail = null;
-        this.businessWebsite = null;
+        this.yearEstablished = null;
+        this.numberOfEmployees = null;
         this.industryType = null;
+        this.businessWebsite = null;
         this.businessDescription = null;
-        this.businessStreet = null;
+        
+        // Contact Information
+        this.businessEmail = null;
+        this.businessWorkPhone = null;
+        this.businessHomePhone = null;
+        this.businessMobilePhone = null;
+        
+        // Business Address
+        this.businessStreetLine1 = null;
+        this.businessStreetLine2 = null;
         this.businessCity = null;
         this.businessState = null;
         this.businessPostalCode = null;
-        this.yearEstablished = null;
-        this.numberOfEmployees = null;
+        this.businessCountry = null;
+        
+        // Tax Information
+        this.taxId = null;
+        this.taxIdType = null;
+        
         this.emitPayloadChange();
     }
 }

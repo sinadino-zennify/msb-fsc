@@ -161,4 +161,4 @@
 ---
 
 **Assigned To**: [Developer Name]  
-**Related Stories**: [ST-002 (e.g., Persist Draft/Submit), ST-003 (e.g., Product Rules)]
+**Related Stories**: ST-002 (Persist Application Data), ST-003 (Pre-populate Wizard Data)

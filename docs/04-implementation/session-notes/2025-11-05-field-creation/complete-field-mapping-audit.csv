@@ -1,0 +1,79 @@
+Wizard Step,Screen/Section,UI Field Label,sObject,Applicant Field API,Account Field API,Field Status,Field Type,Is in LWC,Is in Salesforce,Is Being Persisted,Notes
+Personal Information,Person - Identity,Salutation,Applicant,Salutation,Salutation,Standard,Picklist,FALSE,TRUE,FALSE,Values: Mr. Mrs. Ms. Dr. Prof. - NOT in current LWC
+Personal Information,Person - Identity,First Name,Applicant,FirstName,FirstName,Standard,Text,TRUE,TRUE,FALSE,Required - IN LWC - stub persistence
+Personal Information,Person - Identity,Middle Name,Applicant,MiddleName,MiddleName,Standard,Text,FALSE,TRUE,FALSE,Optional - NOT in current LWC
+Personal Information,Person - Identity,Last Name,Applicant,LastName,LastName,Standard,Text,TRUE,TRUE,FALSE,Required - IN LWC - stub persistence
+Personal Information,Person - Identity,Suffix,Applicant,Suffix,Suffix,Standard,Picklist,FALSE,TRUE,FALSE,Values: Jr. Sr. II III IV - NOT in current LWC
+Personal Information,Person - Identity,Phonetic Name (Checkbox),Applicant,Has_Phonetic_Name__c,Has_Phonetic_Name__c,Custom,Checkbox,FALSE,UNKNOWN,FALSE,Indicates if phonetic spelling exists - NOT in current LWC
+Personal Information,Person - Identity,Phonetic Name,Applicant,Phonetic_Name__c,Phonetic_Name__c,Custom,Text(120),FALSE,UNKNOWN,FALSE,Displays when checkbox is true - NOT in current LWC
+Personal Information,Person - Identity,Birth Date,Applicant,BirthDate,PersonBirthdate,Standard,Date,TRUE,TRUE,FALSE,Required for CIP/KYC - IN LWC - stub persistence
+Personal Information,Person - Identity,Nickname,Applicant,Nickname__c,Nickname__c,Custom,Text(80),FALSE,UNKNOWN,FALSE,Optional - NOT in current LWC
+Personal Information,Person - Identity,Occupation,Applicant,Occupation__c,FinServ__Occupation__pc,Custom/FSC,Picklist,FALSE,UNKNOWN,FALSE,FSC field - NOT in current LWC
+Personal Information,Person - Identity,Mother's Maiden Name,Applicant,Mothers_Maiden_Name__c,Mothers_Maiden_Name__c,Custom,Text(80) Encrypted,FALSE,UNKNOWN,FALSE,Security question - encrypted - NOT in current LWC
+Personal Information,Person - Identity,Person Type,Applicant,Type,Person_Type__c,Standard,Picklist,FALSE,TRUE,FALSE,Values: Person Organization - NOT in current LWC
+Personal Information,Person - Identity,Tax ID (SSN/ITIN),Applicant,Tax_ID__c,FinServ__TaxID__pc,Custom/FSC,Text(11) Encrypted,TRUE,UNKNOWN,FALSE,Masked display (XXX-XX-1234) - IN LWC as SSN - stub persistence
+Personal Information,Person - Identity,Tax ID Type,Applicant,Tax_ID_Type__c,Tax_ID_Type__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Values: SSN ITIN Foreign Tax ID - NOT in current LWC
+Personal Information,Person - Identity,Scan ID & Signature,Applicant,N/A,Attachment/Files,N/A,Files,FALSE,N/A,FALSE,Triggers file upload component - NOT in current LWC
+Personal Information,Person - Address & Contact,Address Line 1,Applicant,Mailing_Street_Line_1__c,PersonMailingStreet,Custom,Text(255),TRUE,UNKNOWN,FALSE,Required - IN LWC as Street Address - stub persistence
+Personal Information,Person - Address & Contact,Address Line 2,Applicant,Mailing_Street_Line_2__c,PersonMailingStreet,Custom,Text(255),FALSE,UNKNOWN,FALSE,Optional - NOT in current LWC
+Personal Information,Person - Address & Contact,Country,Applicant,Mailing_Country__c,PersonMailingCountry,Custom,Picklist,FALSE,UNKNOWN,FALSE,Default: USA - NOT in current LWC
+Personal Information,Person - Address & Contact,ZIP Code,Applicant,Mailing_Postal_Code__c,PersonMailingPostalCode,Custom,Text(10),TRUE,UNKNOWN,FALSE,Format: #####-#### - IN LWC - stub persistence
+Personal Information,Person - Address & Contact,City,Applicant,Mailing_City__c,PersonMailingCity,Custom,Text(80),TRUE,UNKNOWN,FALSE,Auto-populate from ZIP - IN LWC - stub persistence
+Personal Information,Person - Address & Contact,State,Applicant,Mailing_State__c,PersonMailingState,Custom,Picklist,TRUE,UNKNOWN,FALSE,US States + Territories - IN LWC - stub persistence
+Personal Information,Person - Address & Contact,Phone - Home,Applicant,Home_Phone__c,PersonHomePhone,Custom,Phone,FALSE,UNKNOWN,FALSE,NOT in current LWC
+Personal Information,Person - Address & Contact,Phone - Work,Applicant,Work_Phone__c,Phone,Custom,Phone,FALSE,UNKNOWN,FALSE,Primary phone - NOT in current LWC
+Personal Information,Person - Address & Contact,Phone - Mobile,Applicant,Mobile_Phone__c,PersonMobilePhone,Custom,Phone,TRUE,UNKNOWN,FALSE,IN LWC as Phone - stub persistence
+Personal Information,Person - Address & Contact,Email,Applicant,Email,PersonEmail,Standard,Email,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Personal Information,Person - Government ID,ID Type,Applicant,Government_ID_Type__c,Government_ID_Type__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Driver's License Passport State ID Military ID - NOT in current LWC
+Personal Information,Person - Government ID,ID Number,Applicant,Government_ID_Number__c,Government_ID_Number__c,Custom,Text(50) Encrypted,FALSE,UNKNOWN,FALSE,Encrypted - NOT in current LWC
+Personal Information,Person - Government ID,Issued By - Country,Applicant,ID_Issuing_Country__c,ID_Issuing_Country__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Default: USA - NOT in current LWC
+Personal Information,Person - Government ID,Issued By - State,Applicant,ID_Issuing_State__c,ID_Issuing_State__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Conditional on Country=USA - NOT in current LWC
+Personal Information,Person - Government ID,Issue Date,Applicant,ID_Issue_Date__c,ID_Issue_Date__c,Custom,Date,FALSE,UNKNOWN,FALSE,Not future date - NOT in current LWC
+Personal Information,Person - Government ID,Expiration Date,Applicant,ID_Expiration_Date__c,ID_Expiration_Date__c,Custom,Date,FALSE,UNKNOWN,FALSE,After Issue Date - NOT in current LWC
+Business Information,Organization - Business Profile,Organization Name,Account,BusinessEntityName,Name,Standard,Text(255),TRUE,TRUE,FALSE,Required with search - IN LWC as Business Name - stub persistence
+Business Information,Organization - Business Profile,Organization Type,Account,BusinessEntityType,FinServ__CompanyType__c,Standard/FSC,Picklist,TRUE,TRUE,FALSE,LLC Corp Partnership etc. - IN LWC as Business Type - stub persistence
+Business Information,Organization - Business Profile,Address Line 1,Account,Business_Street_Line_1__c,BillingStreet,Custom,Text(255),TRUE,TRUE,FALSE,Required - IN LWC as Business Street Address - stub persistence
+Business Information,Organization - Business Profile,Address Line 2,Account,Business_Street_Line_2__c,BillingStreet,Custom,Text(255),FALSE,UNKNOWN,FALSE,Optional - NOT in current LWC
+Business Information,Organization - Business Profile,Country,Account,Business_Country__c,BillingCountry,Custom,Picklist,FALSE,TRUE,FALSE,Default: USA - NOT in current LWC
+Business Information,Organization - Business Profile,ZIP Code,Account,Business_Postal_Code__c,BillingPostalCode,Custom,Text(10),TRUE,TRUE,FALSE,Format: #####-#### - IN LWC - stub persistence
+Business Information,Organization - Business Profile,City,Account,Business_City__c,BillingCity,Custom,Text(80),TRUE,TRUE,FALSE,Auto-populate from ZIP - IN LWC - stub persistence
+Business Information,Organization - Business Profile,State,Account,Business_State__c,BillingState,Custom,Picklist,TRUE,TRUE,FALSE,US States - IN LWC - stub persistence
+Business Information,Organization - Business Profile,Phone - Home,Account,Business_Home_Phone__c,Phone,Custom,Phone,FALSE,TRUE,FALSE,NOT in current LWC
+Business Information,Organization - Business Profile,Phone - Work,Account,Business_Work_Phone__c,Phone,Custom,Phone,TRUE,TRUE,FALSE,Primary phone - IN LWC as Business Phone - stub persistence
+Business Information,Organization - Business Profile,Phone - Mobile,Account,Business_Mobile_Phone__c,Phone,Custom,Phone,FALSE,TRUE,FALSE,NOT in current LWC
+Business Information,Organization - Business Profile,Email,Account,Business_Email__c,N/A,Custom,Email,TRUE,UNKNOWN,FALSE,No standard business email field - IN LWC - stub persistence
+Business Information,Organization - Business Profile,Copy/Use Address,Account,N/A,N/A,N/A,Action,FALSE,N/A,FALSE,Clones address to another section - NOT in current LWC
+Business Information,Organization - Tax & Classification,Tax ID (EIN),Account,Business_Tax_ID__c,FinServ__TaxID__c,Custom/FSC,Text(11) Encrypted,TRUE,TRUE,FALSE,Format: XX-XXXXXXX - IN LWC as Federal Tax ID - stub persistence
+Business Information,Organization - Tax & Classification,Tax ID Type,Account,Business_Tax_ID_Type__c,Tax_ID_Type__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Federal Employer Tax ID (EIN) Foreign Tax ID - NOT in current LWC
+Business Information,Organization - Tax & Classification,Tax Country,Account,Tax_Country__c,Tax_Country__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Default: USA - NOT in current LWC
+Business Information,Organization - Industry & Risk,SIC Code,Account,SIC_Code__c,Sic,Custom,Text(10),FALSE,TRUE,FALSE,Standard Industrial Classification - NOT in current LWC
+Business Information,Organization - Industry & Risk,SIC Description,Account,SIC_Description__c,SicDesc,Custom,Text(255),FALSE,TRUE,FALSE,Auto-populated from SIC lookup - NOT in current LWC
+Business Information,Organization - Industry & Risk,NAICS Code,Account,NAICS_Code__c,NaicsCode,Custom,Text(10),FALSE,TRUE,FALSE,North American Industry Classification - NOT in current LWC
+Business Information,Organization - Industry & Risk,NAICS Description,Account,NAICS_Description__c,NaicsDesc,Custom,Text(255),FALSE,UNKNOWN,FALSE,Auto-populated from NAICS lookup - NOT in current LWC
+Business Information,Organization - Industry & Risk,BSA/CIP Rating,Account,BSA_CIP_Rating__c,BSA_CIP_Rating__c,Custom,Picklist,FALSE,UNKNOWN,FALSE,Low Medium High Prohibited - NOT in current LWC
+Business Information,Organization - Industry & Risk,Rating Date,Account,BSA_Rating_Date__c,BSA_Rating_Date__c,Custom,Date,FALSE,UNKNOWN,FALSE,Date of last BSA/AML review - NOT in current LWC
+Business Information,Organization - Industry & Risk,Next Rating Date,Account,Next_BSA_Rating_Date__c,Next_BSA_Rating_Date__c,Custom,Date,FALSE,UNKNOWN,FALSE,Calculated: Rating Date + 12 months - NOT in current LWC
+Business Information,Organization - Business Profile,Business Website,Account,N/A,Website,N/A,URL,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Business Information,Organization - Business Profile,Year Established,Account,N/A,YearStarted,N/A,Number,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Business Information,Organization - Business Profile,Number of Employees,Account,N/A,NumberOfEmployees,N/A,Picklist,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Business Information,Organization - Business Profile,Business Description,Account,N/A,Description,N/A,Long Text,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Business Information,Organization - Industry & Risk,Industry Type,Account,N/A,Industry,N/A,Picklist,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Additional Applicants,Person - Identity,First Name,Applicant,FirstName,FirstName,Standard,Text,TRUE,TRUE,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Identity,Last Name,Applicant,LastName,LastName,Standard,Text,TRUE,TRUE,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Identity,Role,Applicant,Role__c,N/A,Custom,Picklist,TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence - Need to verify field
+Additional Applicants,Person - Identity,Ownership Percentage,Applicant,Ownership_Percentage__c,N/A,Custom,Number,TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence - Need to verify field
+Additional Applicants,Person - Address & Contact,Email,Applicant,Email,PersonEmail,Standard,Email,TRUE,TRUE,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Address & Contact,Phone - Mobile,Applicant,Mobile_Phone__c,PersonMobilePhone,Custom,Phone,TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Identity,Birth Date,Applicant,BirthDate,PersonBirthdate,Standard,Date,TRUE,TRUE,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Identity,Tax ID (SSN/ITIN),Applicant,Tax_ID__c,FinServ__TaxID__pc,Custom/FSC,Text(11) Encrypted,TRUE,UNKNOWN,FALSE,IN LWC Modal as SSN - stub persistence
+Additional Applicants,Person - Address & Contact,Address Line 1,Applicant,Mailing_Street_Line_1__c,PersonMailingStreet,Custom,Text(255),TRUE,UNKNOWN,FALSE,IN LWC Modal as Street Address - stub persistence
+Additional Applicants,Person - Address & Contact,City,Applicant,Mailing_City__c,PersonMailingCity,Custom,Text(80),TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Address & Contact,State,Applicant,Mailing_State__c,PersonMailingState,Custom,Picklist,TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence
+Additional Applicants,Person - Address & Contact,ZIP Code,Applicant,Mailing_Postal_Code__c,PersonMailingPostalCode,Custom,Text(10),TRUE,UNKNOWN,FALSE,IN LWC Modal - stub persistence
+Product Selection,N/A,Product,ApplicationFormProduct,ProductCode,N/A,Standard,Picklist,TRUE,TRUE,FALSE,IN LWC - stub persistence
+Additional Services,N/A,Service Checkboxes,N/A,N/A,N/A,N/A,Checkbox,TRUE,FALSE,FALSE,Hardcoded in LWC - no Salesforce object mapping
+Document Upload,N/A,Document Name,ContentVersion,Title,N/A,Standard,Text,TRUE,TRUE,FALSE,IN LWC Modal - using lightning-file-upload
+Document Upload,N/A,Document Type,ContentVersion,FileType,N/A,Standard,Picklist,TRUE,TRUE,FALSE,IN LWC Modal - using lightning-file-upload
+Document Upload,N/A,Description,ContentVersion,Description,N/A,Standard,Long Text,TRUE,TRUE,FALSE,IN LWC Modal - using lightning-file-upload
+Document Upload,N/A,File Name,ContentVersion,PathOnClient,N/A,Standard,Text,TRUE,TRUE,FALSE,IN LWC Modal - using lightning-file-upload
+Review and Submit,N/A,Confirmation Checkbox,N/A,N/A,N/A,N/A,Checkbox,TRUE,FALSE,FALSE,UI-only field for user confirmation

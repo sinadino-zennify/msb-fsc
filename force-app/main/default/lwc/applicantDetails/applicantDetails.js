@@ -6,34 +6,76 @@ export default class ApplicantDetails extends LightningElement {
     @api stepConfig;
     @api value;
 
-    // Personal Information Fields
+    // Personal Identity Fields
+    salutation;
     firstName;
     lastName;
-    email;
-    phone;
     dateOfBirth;
-    ssn;
-    mailingStreet;
+    taxIdType;
+    taxId;
+
+    // Contact Information Fields
+    email;
+    mobilePhone;
+    homePhone;
+    workPhone;
+
+    // Mailing Address Fields
+    mailingStreetLine1;
+    mailingStreetLine2;
     mailingCity;
     mailingState;
     mailingPostalCode;
+    mailingCountry;
+
+    // Government ID Fields
+    governmentIdType;
+    governmentIdNumber;
+    idIssuingCountry;
+    idIssuingState;
+    idIssueDate;
+    idExpirationDate;
 
     connectedCallback() {
         if (this.value) {
+            // Personal Identity
+            this.salutation = this.value.salutation;
             this.firstName = this.value.firstName;
             this.lastName = this.value.lastName;
-            this.email = this.value.email;
-            this.phone = this.value.phone;
             this.dateOfBirth = this.value.dateOfBirth;
-            this.ssn = this.value.ssn;
-            this.mailingStreet = this.value.mailingStreet;
+            this.taxIdType = this.value.taxIdType;
+            this.taxId = this.value.taxId;
+            
+            // Contact Information
+            this.email = this.value.email;
+            this.mobilePhone = this.value.mobilePhone;
+            this.homePhone = this.value.homePhone;
+            this.workPhone = this.value.workPhone;
+            
+            // Mailing Address
+            this.mailingStreetLine1 = this.value.mailingStreetLine1;
+            this.mailingStreetLine2 = this.value.mailingStreetLine2;
             this.mailingCity = this.value.mailingCity;
             this.mailingState = this.value.mailingState;
             this.mailingPostalCode = this.value.mailingPostalCode;
+            this.mailingCountry = this.value.mailingCountry;
+            
+            // Government ID
+            this.governmentIdType = this.value.governmentIdType;
+            this.governmentIdNumber = this.value.governmentIdNumber;
+            this.idIssuingCountry = this.value.idIssuingCountry;
+            this.idIssuingState = this.value.idIssuingState;
+            this.idIssueDate = this.value.idIssueDate;
+            this.idExpirationDate = this.value.idExpirationDate;
         }
     }
 
-    // Event Handlers
+    // Event Handlers - Personal Identity
+    handleSalutationChange(event) {
+        this.salutation = event.target.value;
+        this.emitPayloadChange();
+    }
+
     handleFirstNameChange(event) {
         this.firstName = event.target.value;
         this.emitPayloadChange();
@@ -44,28 +86,50 @@ export default class ApplicantDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    handleEmailChange(event) {
-        this.email = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handlePhoneChange(event) {
-        this.phone = event.target.value;
-        this.emitPayloadChange();
-    }
-
     handleDateOfBirthChange(event) {
         this.dateOfBirth = event.target.value;
         this.emitPayloadChange();
     }
 
-    handleSsnChange(event) {
-        this.ssn = event.target.value;
+    handleTaxIdTypeChange(event) {
+        this.taxIdType = event.target.value;
         this.emitPayloadChange();
     }
 
-    handleMailingStreetChange(event) {
-        this.mailingStreet = event.target.value;
+    handleTaxIdChange(event) {
+        this.taxId = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    // Event Handlers - Contact Information
+    handleEmailChange(event) {
+        this.email = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleMobilePhoneChange(event) {
+        this.mobilePhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleHomePhoneChange(event) {
+        this.homePhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleWorkPhoneChange(event) {
+        this.workPhone = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    // Event Handlers - Mailing Address
+    handleMailingStreetLine1Change(event) {
+        this.mailingStreetLine1 = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleMailingStreetLine2Change(event) {
+        this.mailingStreetLine2 = event.target.value;
         this.emitPayloadChange();
     }
 
@@ -84,6 +148,42 @@ export default class ApplicantDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
+    handleMailingCountryChange(event) {
+        this.mailingCountry = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    // Event Handlers - Government ID
+    handleGovernmentIdTypeChange(event) {
+        this.governmentIdType = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleGovernmentIdNumberChange(event) {
+        this.governmentIdNumber = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssuingCountryChange(event) {
+        this.idIssuingCountry = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssuingStateChange(event) {
+        this.idIssuingState = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssueDateChange(event) {
+        this.idIssueDate = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdExpirationDateChange(event) {
+        this.idExpirationDate = event.target.value;
+        this.emitPayloadChange();
+    }
+
     emitPayloadChange() {
         this.dispatchEvent(new CustomEvent('payloadchange', {
             detail: { 
@@ -95,17 +195,73 @@ export default class ApplicantDetails extends LightningElement {
 
     get payload() {
         return {
+            // Personal Identity
+            salutation: this.salutation,
             firstName: this.firstName,
             lastName: this.lastName,
-            email: this.email,
-            phone: this.phone,
             dateOfBirth: this.dateOfBirth,
-            ssn: this.ssn,
-            mailingStreet: this.mailingStreet,
+            taxIdType: this.taxIdType,
+            taxId: this.taxId,
+            
+            // Contact Information
+            email: this.email,
+            mobilePhone: this.mobilePhone,
+            homePhone: this.homePhone,
+            workPhone: this.workPhone,
+            
+            // Mailing Address
+            mailingStreetLine1: this.mailingStreetLine1,
+            mailingStreetLine2: this.mailingStreetLine2,
             mailingCity: this.mailingCity,
             mailingState: this.mailingState,
-            mailingPostalCode: this.mailingPostalCode
+            mailingPostalCode: this.mailingPostalCode,
+            mailingCountry: this.mailingCountry,
+            
+            // Government ID
+            governmentIdType: this.governmentIdType,
+            governmentIdNumber: this.governmentIdNumber,
+            idIssuingCountry: this.idIssuingCountry,
+            idIssuingState: this.idIssuingState,
+            idIssueDate: this.idIssueDate,
+            idExpirationDate: this.idExpirationDate
         };
+    }
+
+    // Picklist Options
+    get salutationOptions() {
+        return [
+            { label: 'Mr.', value: 'Mr.' },
+            { label: 'Mrs.', value: 'Mrs.' },
+            { label: 'Ms.', value: 'Ms.' },
+            { label: 'Dr.', value: 'Dr.' },
+            { label: 'Prof.', value: 'Prof.' }
+        ];
+    }
+
+    get taxIdTypeOptions() {
+        return [
+            { label: 'SSN', value: 'SSN' },
+            { label: 'ITIN', value: 'ITIN' },
+            { label: 'Foreign Tax ID', value: 'Foreign Tax ID' }
+        ];
+    }
+
+    get countryOptions() {
+        return [
+            { label: 'USA', value: 'USA' },
+            { label: 'Canada', value: 'Canada' },
+            { label: 'Mexico', value: 'Mexico' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
+
+    get governmentIdTypeOptions() {
+        return [
+            { label: "Driver's License", value: "Driver's License" },
+            { label: 'Passport', value: 'Passport' },
+            { label: 'State ID', value: 'State ID' },
+            { label: 'Military ID', value: 'Military ID' }
+        ];
     }
 
     get stateOptions() {
@@ -165,26 +321,35 @@ export default class ApplicantDetails extends LightningElement {
 
     @api validate() {
         const messages = [];
+        
+        // Personal Identity validation
         if (!this.firstName) {
             messages.push('First Name is required.');
         }
         if (!this.lastName) {
             messages.push('Last Name is required.');
         }
-        if (!this.email) {
-            messages.push('Email is required.');
-        }
-        if (!this.phone) {
-            messages.push('Phone is required.');
-        }
         if (!this.dateOfBirth) {
             messages.push('Date of Birth is required.');
         }
-        if (!this.ssn) {
-            messages.push('Social Security Number is required.');
+        if (!this.taxIdType) {
+            messages.push('Tax ID Type is required.');
         }
-        if (!this.mailingStreet) {
-            messages.push('Street Address is required.');
+        if (!this.taxId) {
+            messages.push('Tax ID Number is required.');
+        }
+        
+        // Contact Information validation
+        if (!this.email) {
+            messages.push('Email is required.');
+        }
+        if (!this.mobilePhone) {
+            messages.push('Mobile Phone is required.');
+        }
+        
+        // Mailing Address validation
+        if (!this.mailingStreetLine1) {
+            messages.push('Street Address Line 1 is required.');
         }
         if (!this.mailingCity) {
             messages.push('City is required.');
@@ -195,6 +360,24 @@ export default class ApplicantDetails extends LightningElement {
         if (!this.mailingPostalCode) {
             messages.push('ZIP Code is required.');
         }
+        
+        // Government ID validation
+        if (!this.governmentIdType) {
+            messages.push('Government ID Type is required.');
+        }
+        if (!this.governmentIdNumber) {
+            messages.push('Government ID Number is required.');
+        }
+        if (!this.idIssuingCountry) {
+            messages.push('ID Issuing Country is required.');
+        }
+        if (!this.idIssueDate) {
+            messages.push('ID Issue Date is required.');
+        }
+        if (!this.idExpirationDate) {
+            messages.push('ID Expiration Date is required.');
+        }
+        
         return {
             isValid: messages.length === 0,
             messages: messages
@@ -202,16 +385,36 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     @api reset() {
+        // Personal Identity
+        this.salutation = null;
         this.firstName = null;
         this.lastName = null;
-        this.email = null;
-        this.phone = null;
         this.dateOfBirth = null;
-        this.ssn = null;
-        this.mailingStreet = null;
+        this.taxIdType = null;
+        this.taxId = null;
+        
+        // Contact Information
+        this.email = null;
+        this.mobilePhone = null;
+        this.homePhone = null;
+        this.workPhone = null;
+        
+        // Mailing Address
+        this.mailingStreetLine1 = null;
+        this.mailingStreetLine2 = null;
         this.mailingCity = null;
         this.mailingState = null;
         this.mailingPostalCode = null;
+        this.mailingCountry = null;
+        
+        // Government ID
+        this.governmentIdType = null;
+        this.governmentIdNumber = null;
+        this.idIssuingCountry = null;
+        this.idIssuingState = null;
+        this.idIssueDate = null;
+        this.idExpirationDate = null;
+        
         this.emitPayloadChange();
     }
 }

@@ -8,19 +8,26 @@
 ## 🎯 Active Sprint
 
 ### In Progress
-- [ ] **ST-002** — Populate Existing Data from Opportunity ([story file](ST-002-populate-existing-data-from-opportunity.md))
+- [ ] **ST-002** — Persist Application Data ([story file](ST-002-persist-application-data.md))
+  - Implement full persistence logic for ApplicationForm, Business Account, Applicant, PersonAccount, and ACRs
+  - Handle conditional persistence based on wizard step context
+  - Status: Not Started (story created 2025-11-05)
 
 ### Up Next
-- [ ] ST-003 — Additional Applicants Typeahead (depends on ST-002)
-- [ ] ST-004 — Persist Draft/Submit
+- [ ] **ST-003** — Pre-populate Wizard Data ([story file](ST-003-pre-populate-wizard-data.md))
+  - Pre-populate wizard from Opportunity or Account (Business/Person)
+  - Supports 3 entry points with field mappings from MSB-24
+  - Depends on: ST-002
+- [ ] ST-004 — Additional Applicants Typeahead
+  - Depends on: ST-003
 - [ ] ST-005 — Product Rules & Recommendations
 
 ---
 
 ## 📋 Backlog
 
-- [ ] **Implement Full Persistence Logic**: The current `WizardPersistenceService` only creates an `ApplicationForm` record. All other step handlers (`upsertApplicantStep`, `upsertBusinessStep`, etc.) are stubs. This story tracks the work to implement the actual DML to create/update `Applicant`, `Account`, and other related records from the wizard payloads.
 - [ ] **Experience Cloud Compatibility**: Make the `daoWizardContainer` LWC compatible with Experience Cloud. This includes: refactoring Workspace API calls to be environment-aware, updating the component's meta.xml file with community targets, ensuring guest user permissions are handled, and verifying styling works with community themes.
+- [ ] **Wizard UI Polish**: Additional UI enhancements beyond high-priority fields (e.g., conditional field visibility, field help text, inline validation messages)
 
 _Track new stories here or link to story files in `docs/02-requirements/`_
 
