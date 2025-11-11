@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_Postal_Code__c</fullName>
+    <label>Business ZIP Code</label>
+    <length>10</length>
+    <required>false</required>
+    <type>Text</type>
+    <description>Business address ZIP code. Format: #####-####</description>
+</CustomField>

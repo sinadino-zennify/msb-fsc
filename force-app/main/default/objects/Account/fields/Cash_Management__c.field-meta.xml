@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cash_Management__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Manual checkbox field used by Cash Management to override the rollup field used to condition the Cash Management alert banner on Account and Household lightning pages.</description>
+    <inlineHelpText>Check this box to manually override the conditions triggering the Cash Management alert banner on Account and Household pages for Accounts/Households that do not have active Cash Management services but are managed by Cash Management.</inlineHelpText>
+    <label>Cash Management</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

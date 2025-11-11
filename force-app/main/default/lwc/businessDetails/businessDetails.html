@@ -8,23 +8,66 @@
             </div>
         </template>
         
-        <!-- Business Profile Section -->
+        <!-- Business Account Type Selection -->
+        <div class="slds-section slds-is-open slds-m-bottom_medium">
+            <div class="slds-section__content slds-p-around_small">
+                <lightning-layout multiple-rows vertical-align="start">
+                    <lightning-layout-item size="12" padding="horizontal-small">
+                        <lightning-radio-group 
+                            name="businessAccountType"
+                            label="Business Account"
+                            options={businessAccountTypeOptions}
+                            value={businessAccountType}
+                            onchange={handleBusinessAccountTypeChange}
+                            type="button"
+                            required>
+                        </lightning-radio-group>
+                    </lightning-layout-item>
+                    
+                    <!-- Existing Business Account Lookup -->
+                    <lightning-layout-item if:true={isExistingBusinessAccount} size="12" padding="horizontal-small">
+                        <lightning-record-picker
+                            label="Search Business Account"
+                            placeholder="Search for existing business account"
+                            object-api-name="Account"
+                            value={selectedAccountId}
+                            onchange={handleAccountSelection}
+                            display-info={accountDisplayInfo}
+                            matching-info={accountMatchingInfo}
+                            filter={accountFilter}
+                            required>
+                        </lightning-record-picker>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </div>
+        
+        <!-- Business Identity Section -->
         <div class="slds-section slds-is-open slds-m-bottom_medium">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Business Profile">Business Profile</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Business Identity">Business Identity</span>
             </h3>
             <div class="slds-section__content slds-p-around_small">
                 <lightning-layout multiple-rows>
-                    <!-- Row 1: Business Name and Type -->
+                    <!-- Row 1: Business Name and DBA Name -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-input 
-                            label="Business Name" 
+                            label="Legal Business Name" 
                             value={businessName}
                             onchange={handleBusinessNameChange}
                             required>
                         </lightning-input>
                     </lightning-layout-item>
                     
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            label="DBA Name (Doing Business As)" 
+                            value={dbaName}
+                            onchange={handleDbaNameChange}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <!-- Row 2: Business Type and Tax ID -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-combobox
                             label="Business Type"
@@ -36,31 +79,76 @@
                         </lightning-combobox>
                     </lightning-layout-item>
                     
-                    <!-- Row 2: Year Established and Number of Employees -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-input 
-                            type="number"
-                            label="Year Established" 
-                            value={yearEstablished}
-                            onchange={handleYearEstablishedChange}
-                            min="1800"
-                            max="2025"
+                            label="Federal Tax ID (EIN)" 
+                            value={taxId}
+                            onchange={handleTaxIdChange}
+                            placeholder="XX-XXXXXXX"
+                            pattern="\d{2}-\d{7}"
+                            message-when-pattern-mismatch="Tax ID must be 9 digits in format XX-XXXXXXX"
+                            required>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <!-- Row 3: Date Established and State of Incorporation -->
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            type="date"
+                            label="Date Established" 
+                            value={dateEstablished}
+                            onchange={handleDateEstablishedChange}
+                            max={todayDate}
+                            message-when-range-overflow="Date Established cannot be a future date"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
                     
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-combobox
-                            label="Number of Employees"
-                            value={numberOfEmployees}
-                            options={employeeRangeOptions}
-                            onchange={handleNumberOfEmployeesChange}
-                            placeholder="Select employee range"
+                            label="State of Incorporation"
+                            value={stateOfIncorporation}
+                            options={stateOptions}
+                            onchange={handleStateOfIncorporationChange}
+                            placeholder="Select state"
                             required>
                         </lightning-combobox>
                     </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </div>
+
+        <!-- Industry & Classification Section -->
+        <div class="slds-section slds-is-open slds-m-bottom_medium">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Industry & Classification">Industry & Classification</span>
+            </h3>
+            <div class="slds-section__content slds-p-around_small">
+                <lightning-layout multiple-rows>
+                    <!-- Row 1: NAICS Code and NAICS Description -->
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-record-picker
+                            label="NAICS Code"
+                            placeholder="Search NAICS Code"
+                            object-api-name="NAICS__c"
+                            value={naicsCodeId}
+                            onchange={handleNaicsCodeChange}
+                            display-info={naicsDisplayInfo}
+                            matching-info={naicsMatchingInfo}
+                            required>
+                        </lightning-record-picker>
+                    </lightning-layout-item>
                     
-                    <!-- Row 3: Industry and Website -->
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            label="NAICS Description" 
+                            value={naicsDescription}
+                            readonly
+                            placeholder="Auto-populated from NAICS lookup">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <!-- Row 2: Industry Type -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-combobox
                             label="Industry Type"
@@ -72,17 +160,7 @@
                         </lightning-combobox>
                     </lightning-layout-item>
                     
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="url"
-                            label="Business Website" 
-                            value={businessWebsite}
-                            onchange={handleBusinessWebsiteChange}
-                            placeholder="https://www.example.com">
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 4: Business Description -->
+                    <!-- Row 3: Business Description -->
                     <lightning-layout-item size="12" padding="horizontal-small">
                         <lightning-textarea 
                             label="Business Description" 
@@ -103,28 +181,32 @@
             </h3>
             <div class="slds-section__content slds-p-around_small">
                 <lightning-layout multiple-rows>
-                    <!-- Row 1: Email and Primary Phone -->
+                    <!-- Row 1: Business Phone and Business Email -->
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            type="tel"
+                            label="Business Phone" 
+                            value={businessPhone}
+                            onchange={handleBusinessPhoneChange}
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                            placeholder="555-555-5555"
+                            required>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-input 
                             type="email"
                             label="Business Email" 
                             value={businessEmail}
                             onchange={handleBusinessEmailChange}
+                            message-when-type-mismatch="Please enter a valid email address"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
                     
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="tel"
-                            label="Business Phone (Primary)" 
-                            value={businessWorkPhone}
-                            onchange={handleBusinessWorkPhoneChange}
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 2: Additional Phones -->
+                    <!-- Row 2: Business Phone (Home) and Business Phone (Mobile) -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-input 
                             type="tel"
@@ -140,6 +222,64 @@
                             label="Business Phone (Mobile)" 
                             value={businessMobilePhone}
                             onchange={handleBusinessMobilePhoneChange}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <!-- Row 3: Business Website -->
+                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            type="url"
+                            label="Business Website" 
+                            value={businessWebsite}
+                            onchange={handleBusinessWebsiteChange}
+                            placeholder="https://www.example.com">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <!-- Row 4: Primary Contact Type Selection -->
+                    <lightning-layout-item if:true={isExistingBusinessAccount} size="12" padding="horizontal-small">
+                        <lightning-radio-group 
+                            name="primaryContactType"
+                            label="Primary Contact"
+                            options={primaryContactTypeOptions}
+                            value={primaryContactType}
+                            onchange={handlePrimaryContactTypeChange}
+                            type="button"
+                            required>
+                        </lightning-radio-group>
+                    </lightning-layout-item>
+                    
+                    <!-- Existing Primary Contact Lookup -->
+                    <lightning-layout-item if:true={isExistingPrimaryContact} size="12" padding="horizontal-small">
+                        <lightning-record-picker
+                            label="Search Primary Contact"
+                            placeholder="Search for existing contact"
+                            object-api-name="Account"
+                            value={selectedContactId}
+                            onchange={handleContactSelection}
+                            display-info={contactDisplayInfo}
+                            matching-info={contactMatchingInfo}
+                            filter={contactFilter}
+                            required>
+                        </lightning-record-picker>
+                    </lightning-layout-item>
+                    
+                    <!-- New Primary Contact Fields -->
+                    <lightning-layout-item if:true={isNewPrimaryContact} size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            label="Primary Contact Name" 
+                            value={primaryContactName}
+                            onchange={handlePrimaryContactNameChange}
+                            placeholder="Optional">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    
+                    <lightning-layout-item if:true={isNewPrimaryContact} size="12" medium-device-size="6" padding="horizontal-small">
+                        <lightning-input 
+                            label="Primary Contact Title" 
+                            value={primaryContactTitle}
+                            onchange={handlePrimaryContactTitleChange}
+                            placeholder="Optional">
                         </lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
@@ -199,6 +339,9 @@
                             label="ZIP Code" 
                             value={businessPostalCode}
                             onchange={handleBusinessPostalCodeChange}
+                            pattern="\d{5}(-\d{4})?"
+                            message-when-pattern-mismatch="ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX)"
+                            placeholder="12345 or 12345-6789"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -217,31 +360,32 @@
             </div>
         </div>
 
-        <!-- Tax Information Section -->
+        <!-- Financial & Operational Section -->
         <div class="slds-section slds-is-open slds-m-bottom_medium">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Tax Information">Tax Information</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Financial & Operational">Financial & Operational</span>
             </h3>
             <div class="slds-section__content slds-p-around_small">
                 <lightning-layout multiple-rows>
-                    <!-- Row 1: Tax ID and Type -->
+                    <!-- Row 1: Annual Revenue and Number of Employees -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-input 
-                            label="Federal Tax ID (EIN)" 
-                            value={taxId}
-                            onchange={handleTaxIdChange}
-                            placeholder="XX-XXXXXXX"
-                            required>
+                            type="number"
+                            label="Annual Revenue" 
+                            value={annualRevenue}
+                            onchange={handleAnnualRevenueChange}
+                            formatter="currency"
+                            placeholder="Optional">
                         </lightning-input>
                     </lightning-layout-item>
                     
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                         <lightning-combobox
-                            label="Tax ID Type"
-                            value={taxIdType}
-                            options={taxIdTypeOptions}
-                            onchange={handleTaxIdTypeChange}
-                            placeholder="Select type"
+                            label="Number of Employees"
+                            value={numberOfEmployees}
+                            options={employeeRangeOptions}
+                            onchange={handleNumberOfEmployeesChange}
+                            placeholder="Select employee range"
                             required>
                         </lightning-combobox>
                     </lightning-layout-item>

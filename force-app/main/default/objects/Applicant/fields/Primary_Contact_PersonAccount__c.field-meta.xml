@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Contact_PersonAccount__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Reference to an existing PersonAccount selected as the Primary Contact for this business application</description>
+    <externalId>false</externalId>
+    <label>Primary Contact (PersonAccount)</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Business Applications (Primary Contact)</relationshipLabel>
+    <relationshipName>Business_Applications_Primary_Contact</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

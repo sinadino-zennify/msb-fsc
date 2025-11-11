@@ -11,7 +11,7 @@ Person - Identity,Nickname,Text,Nickname__c,Custom,Text(80),Nickname__c,Custom,O
 Person - Identity,Occupation,Picklist,Occupation__c,Custom,Picklist,FinServ__Occupation__pc,FSC,FSC field
 Person - Identity,Mother's Maiden Name,Text,Mothers_Maiden_Name__c,Custom,Text(80) Encrypted,Mothers_Maiden_Name__c,Custom,Security question - encrypted
 Person - Identity,Person Type,Picklist,Type,Standard,Picklist,Person_Type__c,Custom,Values: Person Organization
-Person - Identity,Tax ID (SSN/ITIN),Text,Tax_ID__c,Custom,Text(11) Encrypted,FinServ__TaxID__pc,FSC,Masked display (XXX-XX-1234)
+Person - Identity,Tax ID (SSN/ITIN),Text,Tax_ID__c,Custom,Text(11) Encrypted,SSN_Tax_Id__c,Custom,Masked display (XXX-XX-1234)
 Person - Identity,Tax ID Type,Picklist,Tax_ID_Type__c,Custom,Picklist,Tax_ID_Type__c,Custom,Values: SSN ITIN Foreign Tax ID
 Person - Identity,Scan ID & Signature,Action Button,N/A,N/A,N/A,Attachment/Files,Files,Triggers file upload component
 Person - Address & Contact,Address Line 1,Text,Mailing_Street_Line_1__c,Custom,Text(255),PersonMailingStreet,Standard,Required
@@ -31,7 +31,10 @@ Person - Government ID,Issued By - State,Picklist,ID_Issuing_State__c,Custom,Pic
 Person - Government ID,Issue Date,Date,ID_Issue_Date__c,Custom,Date,ID_Issue_Date__c,Custom,Not future date
 Person - Government ID,Expiration Date,Date,ID_Expiration_Date__c,Custom,Date,ID_Expiration_Date__c,Custom,After Issue Date
 Organization - Business Profile,Organization Name,Text,BusinessEntityName,Standard,Text(255),Name,Standard,Required with search
+Organization - Business Profile,Doing Business As (DBA),Text,Doing_Business_As__c,Custom,Text(255),N/A,N/A,DBA Name - New field on Applicant
 Organization - Business Profile,Organization Type,Picklist,BusinessEntityType,Standard,Picklist,FinServ__CompanyType__c,FSC,LLC Corp Partnership etc.
+Organization - Business Profile,Date Established,Date,Date_Established__c,Custom,Date,N/A,N/A,Cannot be future date - New field on Applicant
+Organization - Business Profile,State of Incorporation,Picklist,Business_Registration_State__c,Custom,Picklist,N/A,N/A,US States - New field on Applicant
 Organization - Business Profile,Address Line 1,Text,Business_Street_Line_1__c,Custom,Text(255),BillingStreet,Standard,Required
 Organization - Business Profile,Address Line 2,Text,Business_Street_Line_2__c,Custom,Text(255),BillingStreet,Standard,Optional
 Organization - Business Profile,Country,Picklist,Business_Country__c,Custom,Picklist,BillingCountry,Standard,Default: USA
@@ -43,27 +46,17 @@ Organization - Business Profile,Phone - Work,Phone,Business_Work_Phone__c,Custom
 Organization - Business Profile,Phone - Mobile,Phone,Business_Mobile_Phone__c,Custom,Phone,Phone,Standard,
 Organization - Business Profile,Email,Email,Business_Email__c,Custom,Email,N/A,N/A,No standard business email field
 Organization - Business Profile,Copy/Use Address,Action,N/A,N/A,N/A,N/A,N/A,Clones address to another section
-Organization - Tax & Classification,Tax ID (EIN),Text,Business_Tax_ID__c,Custom,Text(11) Encrypted,FinServ__TaxID__c,FSC,Format: XX-XXXXXXX
+Organization - Tax & Classification,Tax ID (EIN),Text,Business_Tax_ID__c,Custom,Text(11) Encrypted,Business_Tax_ID__c,Custom,Format: XX-XXXXXXX
 Organization - Tax & Classification,Tax ID Type,Picklist,Business_Tax_ID_Type__c,Custom,Picklist,Tax_ID_Type__c,Custom,Federal Employer Tax ID (EIN) Foreign Tax ID
 Organization - Tax & Classification,Tax Country,Picklist,Tax_Country__c,Custom,Picklist,Tax_Country__c,Custom,Default: USA
 Organization - Industry & Risk,SIC Code,Lookup/Search,SIC_Code__c,Custom,Text(10),Sic,Standard,Standard Industrial Classification
 Organization - Industry & Risk,SIC Description,Text (Read-only),SIC_Description__c,Custom,Text(255),SicDesc,Standard,Auto-populated from SIC lookup
-Organization - Industry & Risk,NAICS Code,Picklist/Search,NAICS_Code__c,Custom,Text(10),NaicsCode,Standard,North American Industry Classification
+Organization - Industry & Risk,NAICS Code,Lookup,NAICS_Code__c,Custom,Lookup(NAICS__c),NAICS_Lookup__c,Custom,Lookup to NAICS__c custom object
 Organization - Industry & Risk,NAICS Description,Text (Read-only),NAICS_Description__c,Custom,Text(255),NaicsDesc,Standard,Auto-populated from NAICS lookup
 Organization - Industry & Risk,BSA/CIP Rating,Picklist,BSA_CIP_Rating__c,Custom,Picklist,BSA_CIP_Rating__c,Custom,Low Medium High Prohibited
 Organization - Industry & Risk,Rating Date,Date,BSA_Rating_Date__c,Custom,Date,BSA_Rating_Date__c,Custom,Date of last BSA/AML review
 Organization - Industry & Risk,Next Rating Date,Date,Next_BSA_Rating_Date__c,Custom,Date,Next_BSA_Rating_Date__c,Custom,Calculated: Rating Date + 12 months
-# Instructions for Users:
-# 1. Fill in your field mappings from {{INTEGRATION_SOURCE}}
-# 2. Column definitions:
-#    - Row: Sequential number for reference
-#    - Salesforce Object: Target Salesforce object (use correct names from data-model.md)
-#    - Salesforce Field API Name: Exact API name with __c suffix for custom fields
-#    - Angular App Field Name: Field name from external application (snake_case)
-#    - Type: Data type (Text, Number, Picklist, Date, Boolean, etc.)
-#    - JSON Object: Which JSON object this field belongs to (applicant/business/application)
-#    - Mapped: Yes/No - is this field currently mapped?
-#    - Notes: Implementation notes or special handling
-#    - Comments: Questions or clarifications needed
-# 3. Save this file and notify AI agents to sync field-mappings.md
-
+Organization - Business Profile,Primary Contact Name,Text,Primary_Contact_Name__c,Custom,Text(255),N/A,N/A,Optional - Manual entry
+Organization - Business Profile,Primary Contact Title,Text,Primary_Contact_Title__c,Custom,Text(100),N/A,N/A,Optional - Manual entry
+Organization - Business Profile,Annual Revenue,Currency,Annual_Revenue__c,Custom,Currency,AnnualRevenue,Standard,Optional
+Organization - Business Profile,Business Phone,Phone,Business_Phone__c,Custom,Phone,Business_Phone__c,Custom,Required - Primary business phone

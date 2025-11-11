@@ -7,11 +7,18 @@
 # ST-003: Populate Existing Data from Entry Points
 
 **Story ID**: ST-003  
-**JIRA ID**: MSB-24  
 **Work Item**: SVC-003, LWC-003  
 **Status**: Not Started  
 **Created**: 2025-11-05  
-**Last Updated**: 2025-11-10
+**Last Updated**: 2025-11-11
+
+## 🎫 JIRA Story Mapping
+
+| JIRA Story | Title | Status | Link |
+|------------|-------|--------|------|
+| MSB-24 | Pre-populate Wizard Data from Entry Points | In Progress | [View Story](https://zennify.atlassian.net/browse/MSB-24) |
+
+> **Note**: Use the JIRA links above for detailed acceptance criteria, comments, and status updates. This document provides technical implementation details.
 
 ---
 
@@ -26,40 +33,45 @@
 ## 🎯 Acceptance Criteria
 
 ### Entry Point Detection
-- [ ] Wizard identifies the source object type (Opportunity or Account) from `recordId`
+- [ ] Wizard identifies the source object type (Opportunity, Account) from `recordId`
 - [ ] Wizard identifies if Account is Business or Person Account type
 
 ### Entry Point 1: Opportunity → Business Account
 - [ ] Query Business Account via `Opportunity.AccountId`
-- [ ] Populate Business Information step from Account data using field mappings from ST-004
-- [ ] Query Primary Contact via `Account.FinServ__PrimaryContact__c` lookup
+- [ ] Populate Business Information step from Account data using field mappings
+- [ ] Query Primary Contact via `Account.FinServ__PrimaryContact__c` lookup (ContactId from PersonAccount)
 - [ ] If Primary Contact exists, populate Personal Information step from Contact/PersonAccount data
 - [ ] If no Primary Contact, skip primary applicant population
+- [ ] **Do NOT populate Additional Applicants** (deferred to future story)
 
 ### Entry Point 2: Opportunity → Person Account
 - [ ] Query Person Account via `Opportunity.AccountId`
 - [ ] Skip Business Information step (not applicable)
 - [ ] Populate Personal Information step directly from Person Account data
+- [ ] **Do NOT populate Additional Applicants** (deferred to future story)
 
 ### Entry Point 3: Account → Direct Launch
 - [ ] If Business Account:
   - [ ] Populate Business Information step from Account data
-  - [ ] Query Primary Contact via `Account.FinServ__PrimaryContact__c`
+  - [ ] Query Primary Contact via `Account.FinServ__PrimaryContact__c` (ContactId from PersonAccount)
   - [ ] Populate Personal Information step from Primary Contact if exists
 - [ ] If Person Account:
   - [ ] Skip Business Information step
   - [ ] Populate Personal Information step from Person Account data
+- [ ] **Do NOT populate Additional Applicants** (deferred to future story)
+
 
 ### Technical Requirements
 - [ ] All queries enforce CRUD/FLS with `WITH USER_MODE`
-- [ ] Service method returns structured DTO with Business and Primary Applicant data
+- [ ] Service method returns structured DTO with Business, Primary Applicant, and Additional Applicants data
 - [ ] Handle errors gracefully with user-friendly messages
 - [ ] Unit tests ≥85% coverage on new Apex service
 - [ ] Deployed to `msb-sbox` and verified with test records
 
-### Future Phase (Deferred)
-- [ ] 🔮 **Future**: Additional Applicants via AccountContactRelations (ACRs)
-- [ ] 🔮 **Future**: ACR role-based applicant identification
+### Important Notes
+- **Additional Applicants**: Only populated from ApplicationForm entry point (Entry Point 4)
+- **Primary Contact Field**: `Account.FinServ__PrimaryContact__c` contains the ContactId from a PersonAccount record (PersonAccount has both AccountId and ContactId)
+- **Account vs Opportunity vs ApplicationForm**: Each entry point has different data availability and population rules
 
 ---
 
@@ -69,84 +81,77 @@
    - [ ] 1.1 Create `WizardDataDTO` with nested structures:
      - `BusinessInfoDTO` (Account fields - nullable for Person Account scenarios)
      - `PrimaryApplicantDTO` (Contact/PersonAccount fields - nullable if no primary contact)
-   - [ ] 1.2 Map DTO fields to wizard step field names using ST-004 field mappings
+     - `List<AdditionalApplicantDTO>` (Applicant records - only populated for ApplicationForm entry point)
+   - [ ] 1.2 Map DTO fields to wizard step field names using field mappings
    - [ ] 1.3 Document field mappings in code comments
-   - [ ] 1.4 Add metadata fields: `entryPointType`, `accountType`, `hasPrimaryContact`
+   - [ ] 1.4 Add metadata fields: `entryPointType`, `accountType`, `hasPrimaryContact`, `hasAdditionalApplicants`
 
 2. [ ] Implement Apex: `WizardDataService`
    - [ ] 2.1 Create `@AuraEnabled` method `getWizardData(Id recordId)`
-   - [ ] 2.2 Determine object type from `recordId` (Opportunity vs Account vs ApplicationForm)
+   - [ ] 2.2 Determine object type from `recordId` (Opportunity vs Account)
    - [ ] 2.3 If Opportunity:
      - [ ] 2.3.1 Query Opportunity with AccountId
      - [ ] 2.3.2 Determine if Account is Business or Person Account
      - [ ] 2.3.3 Route to appropriate handler method
+     - [ ] 2.3.4 Do NOT populate Additional Applicants
    - [ ] 2.4 If Account:
      - [ ] 2.4.1 Determine if Business or Person Account
      - [ ] 2.4.2 Route to appropriate handler method
-   - [ ] 2.5 If ApplicationForm:
-     - [ ] 2.5.1 Return empty DTO (future story will handle this)
+     - [ ] 2.4.3 Do NOT populate Additional Applicants
    - [ ] 2.6 Enforce CRUD/FLS on all queries with `WITH USER_MODE`
    - [ ] 2.7 Handle errors and return structured error messages
 
 3. [ ] Implement Business Account handler
-   - [ ] 3.1 Query Account with all fields from ST-004 Business Details mapping
+   - [ ] 3.1 Query Account with all fields from  `./docs/01-foundation/business-account-field-mapping.md` and `./docs/01-foundation/personaccount-address-mapping.md` and `./docs/01-foundation/field-mappings.csv`
    - [ ] 3.2 Query Primary Contact via `FinServ__PrimaryContact__c` lookup
    - [ ] 3.3 Map Account fields to BusinessInfoDTO
    - [ ] 3.4 Map Contact/PersonAccount fields to PrimaryApplicantDTO (if exists)
    - [ ] 3.5 Handle null Primary Contact gracefully
 
 4. [ ] Implement Person Account handler
-   - [ ] 4.1 Query Person Account with all fields from ST-004 Primary Applicant mapping
+   - [ ] 4.1 Query Person Account with all fields from Primary Applicant mapping
    - [ ] 4.2 Map PersonAccount fields to PrimaryApplicantDTO
    - [ ] 4.3 Return null BusinessInfoDTO (not applicable)
 
-5. [ ] Implement field mapping logic
-   - [ ] 5.1 Map Account fields to Business Information step fields (per ST-004)
-   - [ ] 5.2 Map Contact fields to Personal Information step fields (per ST-004)
-   - [ ] 5.3 Map PersonAccount fields to Personal Information step fields (per ST-004)
-   - [ ] 5.4 Handle compound address fields (BillingStreet, PersonMailingStreet)
-   - [ ] 5.5 Document unmapped fields and reasons in code comments
 
-6. [ ] Update `WizardPersistenceService` (if needed)
-   - [ ] 6.1 Review current persistence logic for Business and Personal Information steps
-   - [ ] 6.2 Ensure compatibility with pre-populated data
-   - [ ] 6.3 Add logic to handle partial updates vs. full creates
+6. [ ] Implement field mapping logic
+   - [ ] 6.1 Map Account fields to Business Information step fields
+   - [ ] 6.2 Map PersonAccount fields to Personal Information step fields
+   - [ ] 6.4 Handle compound address fields (BillingStreet, PersonMailingStreet)
+   - [ ] 6.5 Document unmapped fields and reasons in code comments
 
-7. [ ] Update LWC: Wizard Container
-   - [ ] 7.1 On component initialization, call `WizardDataService.getWizardData(recordId)`
-   - [ ] 7.2 Store returned DTO in component state
-   - [ ] 7.3 Conditionally show/hide Business Information step based on `accountType`
-   - [ ] 7.4 Pass Business data to Business Information step (if applicable)
-   - [ ] 7.5 Pass Primary Applicant data to Personal Information step (if exists)
+7. [ ] Update `WizardPersistenceService` (if needed)
+   - [ ] 7.1 Review current persistence logic for Business and Personal Information steps
+   - [ ] 7.2 Ensure compatibility with pre-populated data
+   - [ ] 7.3 Add logic to handle partial updates vs. full creates
 
-8. [ ] Update step LWCs to accept pre-populated data
-   - [ ] 8.1 Update Business Information step to accept and bind pre-populated Account data
-   - [ ] 8.2 Update Personal Information step to accept and bind pre-populated Contact/PersonAccount data
-   - [ ] 8.3 Handle null/empty data gracefully (show empty form)
+8. [ ] Update LWC: Wizard Container
+   - [ ] 8.1 On component initialization, call `WizardDataService.getWizardData(recordId)`
+   - [ ] 8.2 Store returned DTO in component state
+   - [ ] 8.3 Conditionally show/hide Business Information step based on `accountType`
+   - [ ] 8.4 Pass Business data to Business Information step (if applicable)
+   - [ ] 8.5 Pass Primary Applicant data to Personal Information step (if exists)
 
-9. [ ] Unit testing
-   - [ ] 9.1 Test Entry Point 1: Opportunity → Business Account (with Primary Contact)
-   - [ ] 9.2 Test Entry Point 1: Opportunity → Business Account (without Primary Contact)
-   - [ ] 9.3 Test Entry Point 2: Opportunity → Person Account
-   - [ ] 9.4 Test Entry Point 3: Business Account direct launch
-   - [ ] 9.5 Test Entry Point 3: Person Account direct launch
-   - [ ] 9.6 Test ApplicationForm recordId (should return empty DTO)
-   - [ ] 9.7 Test CRUD/FLS enforcement
-   - [ ] 9.8 Test error handling (invalid recordId, no Account, etc.)
-   - [ ] 9.9 Ensure ≥85% code coverage
+9. [ ] Update step LWCs to accept pre-populated data
+   - [ ] 9.1 Update Business Information step to accept and bind pre-populated Account data
+   - [ ] 9.2 Update Personal Information step to accept and bind pre-populated PersonAccount data
+   - [ ] 9.3 Handle null/empty data gracefully (show empty form)
 
-10. [ ] Documentation
-    - [ ] 10.1 Document field mapping decisions in session notes
-    - [ ] 10.2 Update data model documentation if needed
-    - [ ] 10.3 Add code comments explaining entry point routing logic
-    - [ ] 10.4 Document deferred ACR functionality for future phase
+10. [ ] Unit testing
+    - [ ] 10.1 Test Entry Point 1: Opportunity → Business Account (with Primary Contact)
+    - [ ] 10.2 Test Entry Point 1: Opportunity → Business Account (without Primary Contact)
+    - [ ] 10.3 Test Entry Point 2: Opportunity → Person Account
+    - [ ] 10.4 Test Entry Point 3: Business Account direct launch
+    - [ ] 10.5 Test Entry Point 3: Person Account direct launch
+    - [ ] 10.6 Test CRUD/FLS enforcement
+    - [ ] 10.7 Test error handling (invalid recordId, no Account, etc.)
+    - [ ] 10.8 Ensure ≥85% code coverage
 
-11. [ ] Deployment & verification
-    - [ ] 11.1 Update `package.xml` with new Apex classes
-    - [ ] 11.2 Deploy to `msb-sbox`
-    - [ ] 11.3 Create test data for all 3 entry points
-    - [ ] 11.4 Verify wizard pre-populates data correctly for each scenario
-    - [ ] 11.5 Verify Business step is hidden for Person Account scenarios
+11. [ ] Documentation
+    - [ ] 11.1 Document field mapping decisions in session notes
+    - [ ] 11.2 Update data model documentation if needed
+    - [ ] 11.3 Add code comments explaining entry point routing logic
+    - [ ] 11.4 Document Additional Applicants population (ApplicationForm only)
 
 ---
 
@@ -156,7 +161,7 @@
 - **Opportunity** (Standard) – Entry point source record
 - **Account** (Business) – Business information source
 - **Account** (PersonAccount) – Personal information source for individual customers
-- **Contact** (Standard) – Primary Contact for Business Accounts (via `FinServ__PrimaryContact__c`)
+- **Contact** (Standard) – Primary Contact for Business Accounts (via `FinServ__PrimaryContact__c`) // Note the field will have the ContactId from the PersonAccount record which is composed by both AccountId and ContactId
 - **ApplicationForm** (FSC) – Target for wizard data (no changes in this story)
 
 ### Key Fields
@@ -182,7 +187,7 @@
   - `FirstName`, `LastName`, `PersonEmail`, `PersonMobilePhone`, `PersonBirthdate`
   - `FinServ__TaxID__pc`, `PersonMailingStreet`, `PersonMailingCity`, `PersonMailingState`, `PersonMailingPostalCode`, `PersonMailingCountry`
 
-#### Contact (Primary Contact for Business)
+#### Contact (Primary Contact for Business) // Note the Account.Finserv__PrimaryContact__c  field will have the ContactId from the PersonAccount record which is composed by both AccountId and ContactId
 - `Id`
 - **All fields from ST-004 Primary Contact mapping**:
   - `FirstName`, `LastName`, `Email`, `MobilePhone`, `Birthdate`
@@ -315,7 +320,7 @@ private static WizardDataDTO handlePersonAccount(Id accountId) {
 | `PersonMailingState` | `mailingState` | |
 | `PersonMailingPostalCode` | `mailingPostalCode` | |
 
-#### Contact → Primary Applicant
+#### Contact → Primary Applicant // Note th Account.Finserv__PrimaryContact__c field will have the ContactId from the PersonAccount record which is composed by both AccountId and ContactId
 
 | Contact Field API | Applicant Details Component Field | Notes |
 |------------------|-----------------------------------|-------|

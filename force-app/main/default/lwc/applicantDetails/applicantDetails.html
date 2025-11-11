@@ -58,6 +58,8 @@
                             value={taxId}
                             onchange={handleTaxIdChange}
                             placeholder="XXX-XX-XXXX"
+                            pattern="\d{3}-\d{2}-\d{4}"
+                            message-when-pattern-mismatch="SSN must be 9 digits in format XXX-XX-XXXX"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -80,6 +82,8 @@
                             label="Date of Birth" 
                             value={dateOfBirth}
                             onchange={handleDateOfBirthChange}
+                            max={todayDate}
+                            message-when-range-overflow="Date of Birth cannot be a future date"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -101,6 +105,7 @@
                             label="Email" 
                             value={email}
                             onchange={handleEmailChange}
+                            message-when-type-mismatch="Please enter a valid email address"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -111,6 +116,9 @@
                             label="Mobile Phone" 
                             value={mobilePhone}
                             onchange={handleMobilePhoneChange}
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                            placeholder="555-555-5555"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -121,7 +129,10 @@
                             type="tel"
                             label="Home Phone" 
                             value={homePhone}
-                            onchange={handleHomePhoneChange}>
+                            onchange={handleHomePhoneChange}
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                            placeholder="555-555-5555">
                         </lightning-input>
                     </lightning-layout-item>
                     
@@ -130,7 +141,10 @@
                             type="tel"
                             label="Work Phone" 
                             value={workPhone}
-                            onchange={handleWorkPhoneChange}>
+                            onchange={handleWorkPhoneChange}
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                            placeholder="555-555-5555">
                         </lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>
@@ -190,6 +204,9 @@
                             label="ZIP Code" 
                             value={mailingPostalCode}
                             onchange={handleMailingPostalCodeChange}
+                            pattern="\d{5}(-\d{4})?"
+                            message-when-pattern-mismatch="ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX)"
+                            placeholder="12345 or 12345-6789"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -264,6 +281,8 @@
                             label="Issue Date" 
                             value={idIssueDate}
                             onchange={handleIdIssueDateChange}
+                            max={todayDate}
+                            message-when-range-overflow="Issue Date cannot be a future date"
                             required>
                         </lightning-input>
                     </lightning-layout-item>

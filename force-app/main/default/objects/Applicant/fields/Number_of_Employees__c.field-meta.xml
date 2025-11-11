@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Number_of_Employees__c</fullName>
+    <label>Number of Employees</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>1-10</fullName>
+                <default>false</default>
+                <label>1-10</label>
+            </value>
+            <value>
+                <fullName>11-50</fullName>
+                <default>false</default>
+                <label>11-50</label>
+            </value>
+            <value>
+                <fullName>51-100</fullName>
+                <default>false</default>
+                <label>51-100</label>
+            </value>
+            <value>
+                <fullName>101-500</fullName>
+                <default>false</default>
+                <label>101-500</label>
+            </value>
+            <value>
+                <fullName>500+</fullName>
+                <default>false</default>
+                <label>500+</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <description>Employee count range for the business organization. Required for Financial & Operational section.</description>
+</CustomField>

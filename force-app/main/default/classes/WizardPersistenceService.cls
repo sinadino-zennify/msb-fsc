@@ -172,11 +172,103 @@ public with sharing class WizardPersistenceService {
     }
     
     private static PersistenceResponse upsertBusinessStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
-        // Simulate successful persistence for business step
-        response.savedIds.put('applicationForm', applicationId);
-        
-        // Log the payload for debugging
-        System.debug('Business step payload: ' + JSON.serialize(payload));
+        try {
+            String businessAccountType = (String) payload.get('businessAccountType');
+            String selectedAccountId = (String) payload.get('selectedAccountId');
+            String primaryContactType = (String) payload.get('primaryContactType');
+            String selectedContactId = (String) payload.get('selectedContactId');
+            
+            // Create or update Applicant record for Organization
+            // Applicant acts as staging area for ALL business data until ApplicationForm is submitted
+            Applicant applicant = new Applicant();
+            applicant.ApplicationFormId = applicationId;
+            applicant.Type = 'Organization';
+            
+            // Link to existing Account if selected (for reference only - Account not modified)
+            if (businessAccountType == 'existing' && String.isNotBlank(selectedAccountId)) {
+                applicant.AccountId = selectedAccountId;
+            }
+            
+            // Business Identity fields
+            applicant.BusinessEntityName = (String) payload.get('businessName');
+            applicant.Doing_Business_As__c = (String) payload.get('dbaName');
+            applicant.BusinessEntityType = (String) payload.get('businessType');
+            applicant.Business_Tax_ID__c = (String) payload.get('taxId');
+            
+            // Parse date string to Date
+            String dateEstStr = (String) payload.get('dateEstablished');
+            if (String.isNotBlank(dateEstStr)) {
+                applicant.Date_Established__c = Date.valueOf(dateEstStr);
+            }
+            
+            applicant.Business_Registration_State__c = (String) payload.get('stateOfIncorporation');
+            
+            // Industry & Classification fields
+            applicant.NAICS_Code__c = (String) payload.get('naicsCodeId'); // Lookup ID
+            applicant.Industry_Type__c = (String) payload.get('industryType');
+            applicant.Business_Description__c = (String) payload.get('businessDescription');
+            
+            // Contact Information fields
+            applicant.Business_Phone__c = (String) payload.get('businessPhone');
+            applicant.Business_Email__c = (String) payload.get('businessEmail');
+            applicant.Business_Home_Phone__c = (String) payload.get('businessHomePhone');
+            applicant.Business_Mobile_Phone__c = (String) payload.get('businessMobilePhone');
+            applicant.Business_Website__c = (String) payload.get('businessWebsite');
+            
+            // Primary Contact fields - store name/title for NEW contact OR reference to EXISTING PersonAccount
+            if (primaryContactType == 'new') {
+                // Store name and title for later PersonAccount creation
+                applicant.Primary_Contact_Name__c = (String) payload.get('primaryContactName');
+                applicant.Primary_Contact_Title__c = (String) payload.get('primaryContactTitle');
+                applicant.Primary_Contact_PersonAccount__c = null; // Clear any existing reference
+            } else if (primaryContactType == 'existing' && String.isNotBlank(selectedContactId)) {
+                // Store reference to existing PersonAccount
+                applicant.Primary_Contact_PersonAccount__c = selectedContactId;
+                // Clear name/title fields since we're using an existing contact
+                applicant.Primary_Contact_Name__c = null;
+                applicant.Primary_Contact_Title__c = null;
+            }
+            
+            // Business Address fields
+            applicant.Business_Street_Line_1__c = (String) payload.get('businessStreetLine1');
+            applicant.Business_Street_Line_2__c = (String) payload.get('businessStreetLine2');
+            applicant.Business_City__c = (String) payload.get('businessCity');
+            applicant.Business_State__c = (String) payload.get('businessState');
+            applicant.Business_Postal_Code__c = (String) payload.get('businessPostalCode');
+            applicant.Business_Country__c = (String) payload.get('businessCountry');
+            
+            // Financial & Operational fields
+            Object annualRevObj = payload.get('annualRevenue');
+            if (annualRevObj != null) {
+                applicant.Annual_Revenue__c = Decimal.valueOf(String.valueOf(annualRevObj));
+            }
+            applicant.Number_of_Employees__c = (String) payload.get('numberOfEmployees');
+            
+            // Upsert Applicant with CRUD/FLS checks
+            upsert as user applicant;
+            
+            response.savedIds.put('applicant', applicant.Id);
+            response.savedIds.put('applicationForm', applicationId);
+            
+            // Update ApplicationForm with Account linkage ONLY if existing Business Account selected
+            if (businessAccountType == 'existing' && String.isNotBlank(selectedAccountId)) {
+                ApplicationForm appForm = [SELECT Id FROM ApplicationForm WHERE Id = :applicationId WITH USER_MODE LIMIT 1];
+                appForm.AccountId = selectedAccountId;
+                update as user appForm;
+                response.savedIds.put('linkedAccount', selectedAccountId);
+            }
+            
+            System.debug('Business step persisted successfully. Applicant ID: ' + applicant.Id);
+            
+        } catch (Exception e) {
+            response.success = false;
+            response.messages.add(new ErrorMessage(
+                'PERSISTENCE_ERROR',
+                'Error saving business details: ' + e.getMessage(),
+                null
+            ));
+            System.debug('Error in upsertBusinessStep: ' + e.getMessage() + '\n' + e.getStackTraceString());
+        }
         
         return response;
     }
@@ -237,4 +329,40 @@ public with sharing class WizardPersistenceService {
         
         return app;
     }
+    
+    @AuraEnabled(cacheable=false)
+    public static Map<String, String> getNaicsDetails(Id naicsId) {
+        try {
+            NAICS__c naics = [SELECT Code__c, Description__c FROM NAICS__c WHERE Id = :naicsId WITH USER_MODE LIMIT 1];
+            return new Map<String, String>{
+                'code' => naics.Code__c,
+                'title' => naics.Description__c
+            };
+        } catch (Exception e) {
+            System.debug('Error fetching NAICS details: ' + e.getMessage());
+            return null;
+        }
+    }
+    
+    @AuraEnabled(cacheable=false)
+    public static Account getAccountDetails(Id accountId) {
+        try {
+            // Query standard Account fields only - SW_ fields are PersonAccount-only
+            // Business-specific fields (DBA, Date Established, Registration State) are stored on Applicant
+            Account acc = [
+                SELECT Name, Phone, Website,
+                       BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry,
+                       AnnualRevenue, NumberOfEmployees, Industry
+                FROM Account 
+                WHERE Id = :accountId 
+                WITH USER_MODE 
+                LIMIT 1
+            ];
+            return acc;
+        } catch (Exception e) {
+            System.debug('Error fetching Account details: ' + e.getMessage());
+            return null;
+        }
+    }
+    
 }

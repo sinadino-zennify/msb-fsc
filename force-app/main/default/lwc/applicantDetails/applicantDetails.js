@@ -319,6 +319,12 @@ export default class ApplicantDetails extends LightningElement {
         ];
     }
 
+    get todayDate() {
+        // Return today's date in YYYY-MM-DD format for date input max attribute
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    }
+
     @api validate() {
         const messages = [];
         
@@ -329,22 +335,50 @@ export default class ApplicantDetails extends LightningElement {
         if (!this.lastName) {
             messages.push('Last Name is required.');
         }
+        
+        // Date of Birth validation (required + not future + 18+ years old)
         if (!this.dateOfBirth) {
             messages.push('Date of Birth is required.');
+        } else {
+            if (this.validateFutureDate(this.dateOfBirth)) {
+                messages.push('Date of Birth cannot be a future date.');
+            } else if (!this.validateMinimumAge(this.dateOfBirth, 18)) {
+                messages.push('Applicant must be at least 18 years old.');
+            }
         }
+        
         if (!this.taxIdType) {
             messages.push('Tax ID Type is required.');
         }
+        
+        // Tax ID validation (required + format based on type)
         if (!this.taxId) {
             messages.push('Tax ID Number is required.');
+        } else if (this.taxIdType === 'SSN' && !this.validateSSNFormat(this.taxId)) {
+            messages.push('SSN must be 9 digits in format XXX-XX-XXXX.');
+        } else if (this.taxIdType === 'EIN' && !this.validateEINFormat(this.taxId)) {
+            messages.push('EIN must be 9 digits in format XX-XXXXXXX.');
         }
         
         // Contact Information validation
         if (!this.email) {
             messages.push('Email is required.');
+        } else if (!this.validateEmailFormat(this.email)) {
+            messages.push('Email must be a valid email address.');
         }
+        
         if (!this.mobilePhone) {
             messages.push('Mobile Phone is required.');
+        } else if (!this.validatePhoneFormat(this.mobilePhone)) {
+            messages.push('Mobile Phone must be a valid phone number (10 digits).');
+        }
+        
+        // Optional phone validation
+        if (this.homePhone && !this.validatePhoneFormat(this.homePhone)) {
+            messages.push('Home Phone must be a valid phone number (10 digits).');
+        }
+        if (this.workPhone && !this.validatePhoneFormat(this.workPhone)) {
+            messages.push('Work Phone must be a valid phone number (10 digits).');
         }
         
         // Mailing Address validation
@@ -359,6 +393,8 @@ export default class ApplicantDetails extends LightningElement {
         }
         if (!this.mailingPostalCode) {
             messages.push('ZIP Code is required.');
+        } else if (!this.validateZipCodeFormat(this.mailingPostalCode)) {
+            messages.push('ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX).');
         }
         
         // Government ID validation
@@ -373,15 +409,79 @@ export default class ApplicantDetails extends LightningElement {
         }
         if (!this.idIssueDate) {
             messages.push('ID Issue Date is required.');
+        } else if (this.validateFutureDate(this.idIssueDate)) {
+            messages.push('ID Issue Date cannot be a future date.');
         }
+        
         if (!this.idExpirationDate) {
             messages.push('ID Expiration Date is required.');
+        } else if (this.idIssueDate && !this.validateDateOrder(this.idIssueDate, this.idExpirationDate)) {
+            messages.push('ID Expiration Date must be after Issue Date.');
         }
         
         return {
             isValid: messages.length === 0,
             messages: messages
         };
+    }
+    
+    // Validation helper methods
+    validateSSNFormat(ssn) {
+        // Format: XXX-XX-XXXX (9 digits total)
+        const ssnPattern = /^\d{3}-\d{2}-\d{4}$/;
+        return ssnPattern.test(ssn);
+    }
+    
+    validateEINFormat(ein) {
+        // Format: XX-XXXXXXX (9 digits total)
+        const einPattern = /^\d{2}-\d{7}$/;
+        return einPattern.test(ein);
+    }
+    
+    validateFutureDate(dateString) {
+        const selectedDate = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate > today;
+    }
+    
+    validateMinimumAge(dateOfBirth, minimumAge) {
+        const dob = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
+        
+        // Adjust age if birthday hasn't occurred this year
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            return (age - 1) >= minimumAge;
+        }
+        return age >= minimumAge;
+    }
+    
+    validatePhoneFormat(phone) {
+        // Remove all non-digit characters
+        const digitsOnly = phone.replace(/\D/g, '');
+        // Must be 10 digits (US format)
+        return digitsOnly.length === 10;
+    }
+    
+    validateEmailFormat(email) {
+        // Basic email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+    
+    validateZipCodeFormat(zipCode) {
+        // Format: XXXXX or XXXXX-XXXX
+        const zipPattern = /^\d{5}(-\d{4})?$/;
+        return zipPattern.test(zipCode);
+    }
+    
+    validateDateOrder(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return end > start;
     }
 
     @api reset() {
