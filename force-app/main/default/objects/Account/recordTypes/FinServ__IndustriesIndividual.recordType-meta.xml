@@ -47,6 +47,33 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Business_Type__c</picklist>
+        <values>
+            <fullName>Corporation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LLC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Non-Profit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Partnership</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sole Proprietorship</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trust</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>CustomerPriority__c</picklist>
         <values>
             <fullName>High</fullName>

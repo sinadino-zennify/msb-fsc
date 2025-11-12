@@ -6,9 +6,8 @@
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
-    <type>Picklist</type>
-    <valueSet>
-        <valueSetName>US_States</valueSetName>
-    </valueSet>
+    <type>Text</type>
+    <length>50</length>
+    <unique>false</unique>
 </CustomField>
 
