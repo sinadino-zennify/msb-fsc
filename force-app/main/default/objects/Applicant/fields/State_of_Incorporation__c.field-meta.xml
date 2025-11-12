@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>State_of_Incorporation__c</fullName>
+    <description>State where the business is incorporated or registered</description>
     <label>State of Incorporation</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -265,5 +267,4 @@
             </value>
         </valueSetDefinition>
     </valueSet>
-    <description>State where the business is incorporated or registered</description>
 </CustomField>

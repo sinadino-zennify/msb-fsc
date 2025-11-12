@@ -32,7 +32,7 @@ Person - Government ID,Issue Date,Date,ID_Issue_Date__c,Custom,Date,ID_Issue_Dat
 Person - Government ID,Expiration Date,Date,ID_Expiration_Date__c,Custom,Date,ID_Expiration_Date__c,Custom,After Issue Date
 Organization - Business Profile,Organization Name,Text,BusinessEntityName,Standard,Text(255),Name,Standard,Required with search
 Organization - Business Profile,Doing Business As (DBA),Text,Doing_Business_As__c,Custom,Text(255),N/A,N/A,DBA Name - New field on Applicant
-Organization - Business Profile,Organization Type,Picklist,BusinessEntityType,Standard,Picklist,FinServ__CompanyType__c,FSC,LLC Corp Partnership etc.
+Organization - Business Profile,Business Type,Picklist,BusinessEntityType,Standard,Picklist,Business_Type__c,Custom,Values: Corporation LLC Partnership Sole Proprietorship Non-Profit Trust
 Organization - Business Profile,Date Established,Date,Date_Established__c,Custom,Date,N/A,N/A,Cannot be future date - New field on Applicant
 Organization - Business Profile,State of Incorporation,Picklist,Business_Registration_State__c,Custom,Picklist,N/A,N/A,US States - New field on Applicant
 Organization - Business Profile,Address Line 1,Text,Business_Street_Line_1__c,Custom,Text(255),BillingStreet,Standard,Required

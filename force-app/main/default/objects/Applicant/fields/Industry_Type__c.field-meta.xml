@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Industry_Type__c</fullName>
+    <description>Industry classification for the business. 13 industry options for categorization.</description>
     <label>Industry Type</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -75,5 +77,4 @@
             </value>
         </valueSetDefinition>
     </valueSet>
-    <description>Industry classification for the business. 13 industry options for categorization.</description>
 </CustomField>

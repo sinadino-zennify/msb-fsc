@@ -19,6 +19,19 @@ sf apex run --file scripts/test-api-template.apex --target-org {{ORG_ALIAS}}
 2. Replace `YourPayloadClass` with your actual DTO class name
 3. Add field validation logic
 
+### `create-applicants.apex`
+
+**Purpose**: Seed primary and secondary `Applicant` records (and matching PersonAccounts) for a specific `ApplicationForm`.  
+**Usage**:
+```bash
+sf apex run --file scripts/create-applicants.apex --target-org <ORG_ALIAS>
+```
+
+**Customize**:
+1. Update the `applicationFormId` inside the script for the target record.
+2. Adjust the sample applicant seed data (names, dates, IDs, addresses) as needed.
+3. Add or remove entries from the seed list to match your testing scenarios.
+
 ---
 
 ## ✍️ Creating New Scripts

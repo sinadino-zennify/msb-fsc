@@ -6,7 +6,22 @@ export default class BusinessDetails extends LightningElement {
     @api recordId;
     @api wizardApiName;
     @api stepConfig;
-    @api value;
+
+    _value;
+    hasAppliedInitialValue = false;
+
+    @api
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        this._value = val;
+        if (val && !this.hasAppliedInitialValue) {
+            this.applyValue(val);
+            this.hasAppliedInitialValue = true;
+        }
+    }
 
     // Business Account Toggle
     businessAccountType = 'new'; // 'new' or 'existing'
@@ -59,54 +74,6 @@ export default class BusinessDetails extends LightningElement {
     idIssuingState;
     idIssueDate;
     idExpirationDate;
-
-    connectedCallback() {
-        if (this.value) {
-            // Business Identity
-            this.businessName = this.value.businessName;
-            this.dbaName = this.value.dbaName;
-            this.businessType = this.value.businessType;
-            this.taxId = this.value.taxId;
-            this.dateEstablished = this.value.dateEstablished;
-            this.stateOfIncorporation = this.value.stateOfIncorporation;
-            
-            // Industry & Classification
-            this.naicsCodeId = this.value.naicsCodeId;
-            this.naicsCode = this.value.naicsCode;
-            this.naicsDescription = this.value.naicsDescription;
-            this.industryType = this.value.industryType;
-            this.businessDescription = this.value.businessDescription;
-            
-            // Contact Information
-            this.businessPhone = this.value.businessPhone;
-            this.businessEmail = this.value.businessEmail;
-            this.businessHomePhone = this.value.businessHomePhone;
-            this.businessMobilePhone = this.value.businessMobilePhone;
-            this.businessWebsite = this.value.businessWebsite;
-            this.primaryContactName = this.value.primaryContactName;
-            this.primaryContactTitle = this.value.primaryContactTitle;
-            
-            // Financial & Operational
-            this.annualRevenue = this.value.annualRevenue;
-            this.numberOfEmployees = this.value.numberOfEmployees;
-            
-            // Business Address
-            this.businessStreetLine1 = this.value.businessStreetLine1;
-            this.businessStreetLine2 = this.value.businessStreetLine2;
-            this.businessCity = this.value.businessCity;
-            this.businessState = this.value.businessState;
-            this.businessPostalCode = this.value.businessPostalCode;
-            this.businessCountry = this.value.businessCountry;
-            
-            // Government ID
-            this.governmentIdType = this.value.governmentIdType;
-            this.governmentIdNumber = this.value.governmentIdNumber;
-            this.idIssuingCountry = this.value.idIssuingCountry;
-            this.idIssuingState = this.value.idIssuingState;
-            this.idIssueDate = this.value.idIssueDate;
-            this.idExpirationDate = this.value.idExpirationDate;
-        }
-    }
 
     // Event Handlers
     handleBusinessNameChange(event) {
@@ -826,6 +793,59 @@ export default class BusinessDetails extends LightningElement {
         this.businessPostalCode = null;
         this.businessCountry = null;
         
+        this.emitPayloadChange();
+    }
+
+    applyValue(Object incomingValue) {
+        this.businessAccountType = incomingValue.businessAccountType || this.businessAccountType;
+        this.selectedAccountId = incomingValue.selectedAccountId;
+        this.primaryContactType = incomingValue.primaryContactType || this.primaryContactType;
+        this.selectedContactId = incomingValue.selectedContactId;
+
+        // Business Identity
+        this.businessName = incomingValue.businessName;
+        this.dbaName = incomingValue.dbaName;
+        this.businessType = incomingValue.businessType;
+        this.taxId = incomingValue.taxId;
+        this.dateEstablished = incomingValue.dateEstablished;
+        this.stateOfIncorporation = incomingValue.stateOfIncorporation;
+
+        // Industry & Classification
+        this.naicsCodeId = incomingValue.naicsCodeId;
+        this.naicsCode = incomingValue.naicsCode;
+        this.naicsDescription = incomingValue.naicsDescription;
+        this.industryType = incomingValue.industryType;
+        this.businessDescription = incomingValue.businessDescription;
+
+        // Contact Information
+        this.businessPhone = incomingValue.businessPhone;
+        this.businessEmail = incomingValue.businessEmail;
+        this.businessHomePhone = incomingValue.businessHomePhone;
+        this.businessMobilePhone = incomingValue.businessMobilePhone;
+        this.businessWebsite = incomingValue.businessWebsite;
+        this.primaryContactName = incomingValue.primaryContactName;
+        this.primaryContactTitle = incomingValue.primaryContactTitle;
+
+        // Financial & Operational
+        this.annualRevenue = incomingValue.annualRevenue;
+        this.numberOfEmployees = incomingValue.numberOfEmployees;
+
+        // Business Address
+        this.businessStreetLine1 = incomingValue.businessStreetLine1;
+        this.businessStreetLine2 = incomingValue.businessStreetLine2;
+        this.businessCity = incomingValue.businessCity;
+        this.businessState = incomingValue.businessState;
+        this.businessPostalCode = incomingValue.businessPostalCode;
+        this.businessCountry = incomingValue.businessCountry;
+
+        // Government ID
+        this.governmentIdType = incomingValue.governmentIdType;
+        this.governmentIdNumber = incomingValue.governmentIdNumber;
+        this.idIssuingCountry = incomingValue.idIssuingCountry;
+        this.idIssuingState = incomingValue.idIssuingState;
+        this.idIssueDate = incomingValue.idIssueDate;
+        this.idExpirationDate = incomingValue.idExpirationDate;
+
         this.emitPayloadChange();
     }
 }

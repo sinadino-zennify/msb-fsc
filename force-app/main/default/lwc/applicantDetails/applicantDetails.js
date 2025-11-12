@@ -4,7 +4,22 @@ export default class ApplicantDetails extends LightningElement {
     @api recordId;
     @api wizardApiName;
     @api stepConfig;
-    @api value;
+
+    _value;
+    hasAppliedInitialValue = false;
+
+    @api
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        this._value = val;
+        if (val && !this.hasAppliedInitialValue) {
+            this.applyValue(val);
+            this.hasAppliedInitialValue = true;
+        }
+    }
 
     // Personal Identity Fields
     salutation;
@@ -35,40 +50,6 @@ export default class ApplicantDetails extends LightningElement {
     idIssuingState;
     idIssueDate;
     idExpirationDate;
-
-    connectedCallback() {
-        if (this.value) {
-            // Personal Identity
-            this.salutation = this.value.salutation;
-            this.firstName = this.value.firstName;
-            this.lastName = this.value.lastName;
-            this.dateOfBirth = this.value.dateOfBirth;
-            this.taxIdType = this.value.taxIdType;
-            this.taxId = this.value.taxId;
-            
-            // Contact Information
-            this.email = this.value.email;
-            this.mobilePhone = this.value.mobilePhone;
-            this.homePhone = this.value.homePhone;
-            this.workPhone = this.value.workPhone;
-            
-            // Mailing Address
-            this.mailingStreetLine1 = this.value.mailingStreetLine1;
-            this.mailingStreetLine2 = this.value.mailingStreetLine2;
-            this.mailingCity = this.value.mailingCity;
-            this.mailingState = this.value.mailingState;
-            this.mailingPostalCode = this.value.mailingPostalCode;
-            this.mailingCountry = this.value.mailingCountry;
-            
-            // Government ID
-            this.governmentIdType = this.value.governmentIdType;
-            this.governmentIdNumber = this.value.governmentIdNumber;
-            this.idIssuingCountry = this.value.idIssuingCountry;
-            this.idIssuingState = this.value.idIssuingState;
-            this.idIssueDate = this.value.idIssueDate;
-            this.idExpirationDate = this.value.idExpirationDate;
-        }
-    }
 
     // Event Handlers - Personal Identity
     handleSalutationChange(event) {
@@ -522,6 +503,40 @@ export default class ApplicantDetails extends LightningElement {
         this.idIssueDate = null;
         this.idExpirationDate = null;
         
+        this.emitPayloadChange();
+    }
+
+    applyValue(Object incomingValue) {
+        // Personal Identity
+        this.salutation = incomingValue.salutation;
+        this.firstName = incomingValue.firstName;
+        this.lastName = incomingValue.lastName;
+        this.dateOfBirth = incomingValue.birthDate || incomingValue.dateOfBirth;
+        this.taxIdType = incomingValue.taxIdType;
+        this.taxId = incomingValue.taxId;
+
+        // Contact Information
+        this.email = incomingValue.email;
+        this.mobilePhone = incomingValue.mobilePhone;
+        this.homePhone = incomingValue.homePhone;
+        this.workPhone = incomingValue.workPhone;
+
+        // Mailing Address
+        this.mailingStreetLine1 = incomingValue.mailingStreetLine1;
+        this.mailingStreetLine2 = incomingValue.mailingStreetLine2;
+        this.mailingCity = incomingValue.mailingCity;
+        this.mailingState = incomingValue.mailingState;
+        this.mailingPostalCode = incomingValue.mailingPostalCode;
+        this.mailingCountry = incomingValue.mailingCountry;
+
+        // Government ID
+        this.governmentIdType = incomingValue.governmentIdType;
+        this.governmentIdNumber = incomingValue.governmentIdNumber;
+        this.idIssuingCountry = incomingValue.idIssuingCountry;
+        this.idIssuingState = incomingValue.idIssuingState;
+        this.idIssueDate = incomingValue.idIssueDate;
+        this.idExpirationDate = incomingValue.idExpirationDate;
+
         this.emitPayloadChange();
     }
 }

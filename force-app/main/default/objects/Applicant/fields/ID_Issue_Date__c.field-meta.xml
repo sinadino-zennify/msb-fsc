@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>ID_Issue_Date__c</fullName>
+    <description>Date the government ID was issued. Cannot be a future date</description>
+    <encryptionScheme>None</encryptionScheme>
     <label>ID Issue Date</label>
     <required>false</required>
+    <trackHistory>false</trackHistory>
     <type>Date</type>
-    <description>Date the government ID was issued. Cannot be a future date</description>
 </CustomField>

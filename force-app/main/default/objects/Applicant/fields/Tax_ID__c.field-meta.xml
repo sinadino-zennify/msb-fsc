@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Tax_ID__c</fullName>
+    <description>Social Security Number or Individual Taxpayer Identification Number. Encrypted for PII protection. Masked display (XXX-XX-1234)</description>
     <label>Tax ID (SSN/ITIN)</label>
     <length>11</length>
-    <required>false</required>
-    <type>EncryptedText</type>
     <maskChar>asterisk</maskChar>
     <maskType>ssn</maskType>
-    <description>Social Security Number or Individual Taxpayer Identification Number. Encrypted for PII protection. Masked display (XXX-XX-1234)</description>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>EncryptedText</type>
 </CustomField>
