@@ -52,6 +52,13 @@ export default class BusinessDetails extends LightningElement {
     businessPostalCode;
     businessCountry;
 
+    // Government ID Fields (for authorized signer/representative)
+    governmentIdType;
+    governmentIdNumber;
+    idIssuingCountry;
+    idIssuingState;
+    idIssueDate;
+    idExpirationDate;
 
     connectedCallback() {
         if (this.value) {
@@ -91,6 +98,13 @@ export default class BusinessDetails extends LightningElement {
             this.businessPostalCode = this.value.businessPostalCode;
             this.businessCountry = this.value.businessCountry;
             
+            // Government ID
+            this.governmentIdType = this.value.governmentIdType;
+            this.governmentIdNumber = this.value.governmentIdNumber;
+            this.idIssuingCountry = this.value.idIssuingCountry;
+            this.idIssuingState = this.value.idIssuingState;
+            this.idIssueDate = this.value.idIssueDate;
+            this.idExpirationDate = this.value.idExpirationDate;
         }
     }
 
@@ -152,27 +166,38 @@ export default class BusinessDetails extends LightningElement {
     }
 
     handleBusinessAccountTypeChange(event) {
+        console.log('=== handleBusinessAccountTypeChange ===');
         this.businessAccountType = event.detail.value;
+        console.log('businessAccountType:', this.businessAccountType);
         if (this.businessAccountType === 'new') {
             // Clear existing account selection and reset fields
+            console.log('Clearing fields for new business account');
             this.selectedAccountId = null;
             this.clearAllFields();
         }
         // Reset primary contact toggle when switching account types
         this.primaryContactType = 'new';
         this.selectedContactId = null;
+        console.log('primaryContactType reset to:', this.primaryContactType);
         this.emitPayloadChange();
     }
 
     async handleAccountSelection(event) {
+        console.log('=== handleAccountSelection ===');
         this.selectedAccountId = event.detail.recordId;
+        console.log('selectedAccountId:', this.selectedAccountId);
         if (this.selectedAccountId) {
             try {
+                console.log('Fetching account details...');
                 const accountData = await getAccountDetails({ accountId: this.selectedAccountId });
+                console.log('Account data received:', JSON.stringify(accountData, null, 2));
                 if (accountData) {
+                    console.log('Populating fields from account data');
                     // Populate standard Account fields only
                     // Business-specific fields (DBA, Date Established, Registration State) remain empty for manual entry
                     this.businessName = accountData.Name;
+                    // Map Business Type from Account picklist when available
+                    this.businessType = accountData.Business_Type__c;
                     this.businessPhone = accountData.Phone;
                     this.businessWebsite = accountData.Website;
                     this.businessStreetLine1 = accountData.BillingStreet;
@@ -190,19 +215,25 @@ export default class BusinessDetails extends LightningElement {
                         else if (numEmp <= 500) this.numberOfEmployees = '101-500';
                         else this.numberOfEmployees = '500+';
                     }
+                    console.log('Fields populated successfully');
                     this.emitPayloadChange();
                 }
             } catch (error) {
-                console.error('Error fetching Account details:', error);
+                console.error('ERROR fetching Account details:', error);
+                console.error('Error stack:', error.stack);
             }
         } else {
+            console.log('No account selected, clearing fields');
             this.clearAllFields();
         }
     }
 
     handlePrimaryContactTypeChange(event) {
+        console.log('=== handlePrimaryContactTypeChange ===');
         this.primaryContactType = event.detail.value;
+        console.log('primaryContactType:', this.primaryContactType);
         if (this.primaryContactType === 'new') {
+            console.log('Clearing contact fields for new contact');
             this.selectedContactId = null;
             this.primaryContactName = null;
             this.primaryContactTitle = null;
@@ -211,9 +242,11 @@ export default class BusinessDetails extends LightningElement {
     }
 
     handleContactSelection(event) {
+        console.log('=== handleContactSelection ===');
         // Store selected PersonAccount ID for reference
         // Primary Contact Name and Title are entered manually (not pre-populated)
         this.selectedContactId = event.detail.recordId;
+        console.log('selectedContactId:', this.selectedContactId);
         this.emitPayloadChange();
     }
 
@@ -318,6 +351,37 @@ export default class BusinessDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
+    // Government ID Handlers
+    handleGovernmentIdTypeChange(event) {
+        this.governmentIdType = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleGovernmentIdNumberChange(event) {
+        this.governmentIdNumber = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssuingCountryChange(event) {
+        this.idIssuingCountry = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssuingStateChange(event) {
+        this.idIssuingState = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdIssueDateChange(event) {
+        this.idIssueDate = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleIdExpirationDateChange(event) {
+        this.idExpirationDate = event.target.value;
+        this.emitPayloadChange();
+    }
+
     handleBusinessCityChange(event) {
         this.businessCity = event.target.value;
         this.emitPayloadChange();
@@ -334,16 +398,20 @@ export default class BusinessDetails extends LightningElement {
     }
 
     emitPayloadChange() {
-        this.dispatchEvent(new CustomEvent('payloadchange', {
-            detail: { 
-                payload: this.payload,
-                isDirty: true
-            }
-        }));
+        console.log('=== BusinessDetails: emitPayloadChange ===');
+        console.log('businessType field value:', this.businessType);
+        const eventDetail = { 
+            payload: this.payload,
+            isDirty: true
+        };
+        console.log('Event detail:', JSON.stringify(eventDetail, null, 2));
+        this.dispatchEvent(new CustomEvent('payloadchange', { detail: eventDetail }));
     }
 
     get payload() {
-        return {
+        console.log('=== BusinessDetails: Building payload getter ===');
+        console.log('this.businessType:', this.businessType);
+        const payload = {
             // Account and Contact Selection
             businessAccountType: this.businessAccountType,
             selectedAccountId: this.selectedAccountId,
@@ -384,8 +452,20 @@ export default class BusinessDetails extends LightningElement {
             businessCity: this.businessCity,
             businessState: this.businessState,
             businessPostalCode: this.businessPostalCode,
-            businessCountry: this.businessCountry
+            businessCountry: this.businessCountry,
+            
+            // Government ID (for authorized signer/representative)
+            governmentIdType: this.governmentIdType,
+            governmentIdNumber: this.governmentIdNumber,
+            idIssuingCountry: this.idIssuingCountry,
+            idIssuingState: this.idIssuingState,
+            idIssueDate: this.idIssueDate,
+            idExpirationDate: this.idExpirationDate
         };
+        console.log('=== BusinessDetails: Payload built ===');
+        console.log('businessType in payload:', payload.businessType);
+        console.log('Full payload:', JSON.stringify(payload, null, 2));
+        return payload;
     }
 
     get businessTypeOptions() {
@@ -395,10 +475,19 @@ export default class BusinessDetails extends LightningElement {
             { label: 'Partnership', value: 'Partnership' },
             { label: 'Sole Proprietorship', value: 'Sole Proprietorship' },
             { label: 'Non-Profit', value: 'Non-Profit' },
-            { label: 'Other', value: 'Other' }
+            { label: 'Trust', value: 'Trust' }
         ];
     }
 
+    get governmentIdTypeOptions() {
+        return [
+            { label: 'Driver\'s License', value: 'Driver\'s License' },
+            { label: 'State ID', value: 'State ID' },
+            { label: 'Passport', value: 'Passport' },
+            { label: 'Military ID', value: 'Military ID' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
 
     get stateOptions() {
         return [

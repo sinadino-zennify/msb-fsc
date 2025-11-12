@@ -185,21 +185,25 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     emitPayloadChange() {
+        console.log('=== ApplicantDetails: emitPayloadChange ===');
+        console.log('dateOfBirth field value:', this.dateOfBirth);
+        const payload = this.payload;
+        console.log('Payload being emitted:', JSON.stringify(payload, null, 2));
         this.dispatchEvent(new CustomEvent('payloadchange', {
             detail: { 
-                payload: this.payload,
+                payload: payload,
                 isDirty: true
             }
         }));
     }
 
     get payload() {
-        return {
+        const payload = {
             // Personal Identity
             salutation: this.salutation,
             firstName: this.firstName,
             lastName: this.lastName,
-            dateOfBirth: this.dateOfBirth,
+            birthDate: this.dateOfBirth, // Apex expects 'birthDate'
             taxIdType: this.taxIdType,
             taxId: this.taxId,
             
@@ -225,6 +229,9 @@ export default class ApplicantDetails extends LightningElement {
             idIssueDate: this.idIssueDate,
             idExpirationDate: this.idExpirationDate
         };
+        console.log('=== ApplicantDetails: payload getter ===');
+        console.log('birthDate in payload:', payload.birthDate);
+        return payload;
     }
 
     // Picklist Options
