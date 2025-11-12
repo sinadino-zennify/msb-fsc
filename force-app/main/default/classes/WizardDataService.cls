@@ -75,7 +75,7 @@ public with sharing class WizardDataService {
                    NumberOfEmployees,
                    Industry,
                    Description,
-                   SW_Year_Founded__c,
+                   Date_Established__c,
                    NAICS_Lookup__c,
                    NAICS_Code__c,
                    NAICS_Description__c,
