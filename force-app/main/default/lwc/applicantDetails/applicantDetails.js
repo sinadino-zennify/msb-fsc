@@ -506,7 +506,7 @@ export default class ApplicantDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    applyValue(Object incomingValue) {
+    applyValue(incomingValue) {
         // Personal Identity
         this.salutation = incomingValue.salutation;
         this.firstName = incomingValue.firstName;

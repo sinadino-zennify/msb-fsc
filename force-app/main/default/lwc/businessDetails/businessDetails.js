@@ -796,7 +796,7 @@ export default class BusinessDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    applyValue(Object incomingValue) {
+    applyValue(incomingValue) {
         this.businessAccountType = incomingValue.businessAccountType || this.businessAccountType;
         this.selectedAccountId = incomingValue.selectedAccountId;
         this.primaryContactType = incomingValue.primaryContactType || this.primaryContactType;
