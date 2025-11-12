@@ -58,7 +58,6 @@ public with sharing class WizardDataService {
                    Name,
                    Type,
                    Business_Type__c,
-                   FinServ__TaxID__c,
                    Business_Tax_ID__c,
                    Business_Tax_ID_Type__c,
                    Phone,
@@ -200,7 +199,7 @@ public with sharing class WizardDataService {
         info.businessName = acc.Name;
         info.dbaName = null; // No non-SW DBA field on Account
         info.businessType = String.isNotBlank(acc.Business_Type__c) ? acc.Business_Type__c : acc.Type;
-        info.taxId = String.isNotBlank(acc.Business_Tax_ID__c) ? acc.Business_Tax_ID__c : acc.FinServ__TaxID__c;
+        info.taxId = acc.Business_Tax_ID__c; // Use custom field, FinServ__TaxID__c not available
         info.dateEstablished = null; // No standard date field available on Account
         info.stateOfIncorporation = null; // No non-SW field available on Account
 
