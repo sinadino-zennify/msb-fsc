@@ -164,7 +164,8 @@ public with sharing class WizardDataService {
                            Account.ID_Issuing_Country__c,
                            Account.ID_Issuing_State__c,
                            Account.ID_Issue_Date__c,
-                           Account.ID_Expiration_Date__c
+                           Account.ID_Expiration_Date__c,
+                           Account.IsPersonAccount
                     FROM Contact
                     WHERE Id = :acc.FinServ__PrimaryContact__c
                     WITH USER_MODE
