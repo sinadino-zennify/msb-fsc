@@ -266,12 +266,13 @@
                     </lightning-layout-item>
                     
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
+                        <lightning-combobox
                             label="Issued By - State" 
                             value={idIssuingState}
+                            options={stateOptions}
                             onchange={handleIdIssuingStateChange}
-                            placeholder="Enter state (if USA)">
-                        </lightning-input>
+                            placeholder="Select state (if USA)">
+                        </lightning-combobox>
                     </lightning-layout-item>
                     
                     <!-- Row 3: Issue and Expiration Dates -->
