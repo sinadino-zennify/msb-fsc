@@ -84,11 +84,6 @@ public with sharing class WizardDataService {
                    PersonEmail,
                    PersonMobilePhone,
                    PersonHomePhone,
-                   PersonMailingStreet,
-                   PersonMailingCity,
-                   PersonMailingState,
-                   PersonMailingPostalCode,
-                   PersonMailingCountry,
                    Salutation,
                    FirstName,
                    LastName,
@@ -245,13 +240,14 @@ public with sharing class WizardDataService {
         applicant.homePhone = personAccount.PersonHomePhone;
         applicant.workPhone = personAccount.Phone;
 
-        String[] streetLines = splitStreet(personAccount.PersonMailingStreet);
+        // Use BillingAddress for both PersonAccount and Business Account
+        String[] streetLines = splitStreet(personAccount.BillingStreet);
         applicant.mailingStreetLine1 = streetLines != null && streetLines.size() > 0 ? streetLines[0] : null;
         applicant.mailingStreetLine2 = streetLines != null && streetLines.size() > 1 ? streetLines[1] : null;
-        applicant.mailingCity = personAccount.PersonMailingCity;
-        applicant.mailingState = personAccount.PersonMailingState;
-        applicant.mailingPostalCode = personAccount.PersonMailingPostalCode;
-        applicant.mailingCountry = personAccount.PersonMailingCountry;
+        applicant.mailingCity = personAccount.BillingCity;
+        applicant.mailingState = personAccount.BillingState;
+        applicant.mailingPostalCode = personAccount.BillingPostalCode;
+        applicant.mailingCountry = personAccount.BillingCountry;
 
         applicant.governmentIdType = personAccount.Government_ID_Type__c;
         applicant.governmentIdNumber = personAccount.Government_ID_Number__c;
