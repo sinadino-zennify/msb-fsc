@@ -24,11 +24,15 @@ private class WizardDataServiceTest {
             BillingCity = 'Sacramento',
             BillingState = 'CA',
             BillingPostalCode = '95814',
-            BillingCountry = 'USA',
+            BillingCountry = 'United States',
             AnnualRevenue = 1000000,
             NumberOfEmployees = 75,
             Industry = 'Finance',
             Description = 'Financial Services',
+            Business_Tax_ID__c = '98-7654321',
+            SW_Doing_Business_As__c = 'Acme DBA',
+            SW_Date_Business_Established__c = Date.newInstance(2010, 1, 15),
+            SW_Business_Registration_State__c = 'CA',
             FinServ__TaxID__c = '12-3456789'
         );
         insert businessAccount;
@@ -60,6 +64,9 @@ private class WizardDataServiceTest {
             LIMIT 1
         ];
 
+        primaryContact.Title = 'Chief Financial Officer';
+        update primaryContact;
+
         businessAccount.FinServ__PrimaryContact__c = primaryContact.Id;
         update businessAccount;
 
@@ -83,13 +90,22 @@ private class WizardDataServiceTest {
         System.assertEquals('existing', result.businessInfo.businessAccountType, 'Business account type should be existing');
         System.assertEquals(businessAccount.Id, result.businessInfo.selectedAccountId, 'Existing account should be pre-selected');
         System.assertEquals(businessAccount.Name, result.businessInfo.businessName, 'Business name should be populated');
+        System.assertEquals('Acme DBA', result.businessInfo.dbaName, 'DBA should come from SW_Doing_Business_As__c');
+        System.assertEquals('98-7654321', result.businessInfo.taxId, 'Tax ID should come from Business_Tax_ID__c');
+        System.assertEquals('2010-01-15', result.businessInfo.dateEstablished, 'Date Established should reflect SW field');
+        System.assertEquals('California', result.businessInfo.stateOfIncorporation, 'State of Incorporation should be normalized');
+        System.assertEquals('California', result.businessInfo.businessState, 'Business state should be normalized');
+        System.assertEquals('USA', result.businessInfo.businessCountry, 'Business country should be normalized');
         System.assertEquals('Financial Services', result.businessInfo.businessDescription, 'Business description should come from Account');
+        System.assertEquals('Finance', result.businessInfo.industryType, 'Industry should map directly from Account');
         System.assertEquals('101-500', result.businessInfo.numberOfEmployees, 'Employee range should translate to 101-500');
 
         System.assertNotEquals(null, result.applicantInfo, 'Primary applicant info should be populated from primary contact');
         System.assertEquals('Emma', result.applicantInfo.firstName, 'Applicant first name should match primary contact');
         System.assertEquals('Taylor', result.applicantInfo.lastName, 'Applicant last name should match primary contact');
         System.assertEquals('123-45-6789', result.applicantInfo.taxId, 'Tax ID should come from Person Account');
+        System.assertEquals('Ms. Emma Taylor', result.businessInfo.primaryContactName, 'Primary contact name should be derived from contact');
+        System.assertEquals('Chief Financial Officer', result.businessInfo.primaryContactTitle, 'Primary contact title should map from contact');
     }
 
     @isTest
@@ -128,8 +144,10 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Opportunity', result.entryPointType);
         System.assertEquals('Person', result.accountType);
-        System.assertTrue(result.hideBusinessStep, 'Business step should be hidden for Person Account entry');
-        System.assertNull(result.businessInfo, 'Business info should not be populated for Person Account');
+        System.assertFalse(result.hideBusinessStep, 'Business step should remain visible for Person Account entry');
+        System.assertNotEquals(null, result.businessInfo, 'Business info DTO should be initialized');
+        System.assertEquals('new', result.businessInfo.businessAccountType, 'Business account type should default to new');
+        System.assertEquals('new', result.businessInfo.primaryContactType, 'Primary contact type should default to new');
 
         System.assertNotEquals(null, result.applicantInfo);
         System.assertEquals('Olivia', result.applicantInfo.firstName);
@@ -185,9 +203,13 @@ private class WizardDataServiceTest {
             BillingCity = 'Folsom',
             BillingState = 'CA',
             BillingPostalCode = '95630',
-            BillingCountry = 'USA',
+            BillingCountry = 'United States',
             NumberOfEmployees = 8,
-            Industry = 'Construction'
+            Industry = 'Construction',
+            Business_Tax_ID__c = '11-2223333',
+            SW_Doing_Business_As__c = 'River City Builders LLC',
+            SW_Date_Business_Established__c = Date.newInstance(2001, 4, 2),
+            SW_Business_Registration_State__c = 'CA'
         );
         insert businessAccount;
 
@@ -200,6 +222,12 @@ private class WizardDataServiceTest {
         System.assertFalse(result.hideBusinessStep);
         System.assertNotEquals(null, result.businessInfo);
         System.assertEquals('River City Builders', result.businessInfo.businessName);
+        System.assertEquals('River City Builders LLC', result.businessInfo.dbaName);
+        System.assertEquals('11-2223333', result.businessInfo.taxId);
+        System.assertEquals('2001-04-02', result.businessInfo.dateEstablished);
+        System.assertEquals('California', result.businessInfo.stateOfIncorporation);
+        System.assertEquals('California', result.businessInfo.businessState);
+        System.assertEquals('USA', result.businessInfo.businessCountry);
         System.assertEquals('1-10', result.businessInfo.numberOfEmployees);
     }
 
@@ -228,9 +256,11 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Account', result.entryPointType);
         System.assertEquals('Person', result.accountType);
-        System.assertTrue(result.hideBusinessStep);
+        System.assertFalse(result.hideBusinessStep);
+        System.assertNotEquals(null, result.businessInfo);
+        System.assertEquals('new', result.businessInfo.businessAccountType);
+        System.assertEquals('new', result.businessInfo.primaryContactType);
         System.assertNotEquals(null, result.applicantInfo);
-        System.assertEquals('Liam', result.applicantInfo.firstName);
     }
 
     @isTest

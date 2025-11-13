@@ -31,6 +31,22 @@ export default class BusinessDetails extends LightningElement {
     primaryContactType = 'new'; // 'new' or 'existing'
     selectedContactId;
 
+    industryTypeOptions = [
+        { label: 'Agriculture', value: 'Agriculture' },
+        { label: 'Construction', value: 'Construction' },
+        { label: 'Education', value: 'Education' },
+        { label: 'Finance', value: 'Finance' },
+        { label: 'Healthcare', value: 'Healthcare' },
+        { label: 'Hospitality', value: 'Hospitality' },
+        { label: 'Manufacturing', value: 'Manufacturing' },
+        { label: 'Professional Services', value: 'Professional Services' },
+        { label: 'Real Estate', value: 'Real Estate' },
+        { label: 'Retail', value: 'Retail' },
+        { label: 'Technology', value: 'Technology' },
+        { label: 'Transportation', value: 'Transportation' },
+        { label: 'Other', value: 'Other' }
+    ];
+
     // Business Identity Fields
     businessName;
     dbaName;
@@ -66,14 +82,6 @@ export default class BusinessDetails extends LightningElement {
     businessState;
     businessPostalCode;
     businessCountry;
-
-    // Government ID Fields (for authorized signer/representative)
-    governmentIdType;
-    governmentIdNumber;
-    idIssuingCountry;
-    idIssuingState;
-    idIssueDate;
-    idExpirationDate;
 
     // Event Handlers
     handleBusinessNameChange(event) {
@@ -318,37 +326,6 @@ export default class BusinessDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
-    // Government ID Handlers
-    handleGovernmentIdTypeChange(event) {
-        this.governmentIdType = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleGovernmentIdNumberChange(event) {
-        this.governmentIdNumber = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleIdIssuingCountryChange(event) {
-        this.idIssuingCountry = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleIdIssuingStateChange(event) {
-        this.idIssuingState = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleIdIssueDateChange(event) {
-        this.idIssueDate = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleIdExpirationDateChange(event) {
-        this.idExpirationDate = event.target.value;
-        this.emitPayloadChange();
-    }
-
     handleBusinessCityChange(event) {
         this.businessCity = event.target.value;
         this.emitPayloadChange();
@@ -419,15 +396,7 @@ export default class BusinessDetails extends LightningElement {
             businessCity: this.businessCity,
             businessState: this.businessState,
             businessPostalCode: this.businessPostalCode,
-            businessCountry: this.businessCountry,
-            
-            // Government ID (for authorized signer/representative)
-            governmentIdType: this.governmentIdType,
-            governmentIdNumber: this.governmentIdNumber,
-            idIssuingCountry: this.idIssuingCountry,
-            idIssuingState: this.idIssuingState,
-            idIssueDate: this.idIssueDate,
-            idExpirationDate: this.idExpirationDate
+            businessCountry: this.businessCountry
         };
         console.log('=== BusinessDetails: Payload built ===');
         console.log('businessType in payload:', payload.businessType);
@@ -446,89 +415,64 @@ export default class BusinessDetails extends LightningElement {
         ];
     }
 
-    get governmentIdTypeOptions() {
-        return [
-            { label: 'Driver\'s License', value: 'Driver\'s License' },
-            { label: 'State ID', value: 'State ID' },
-            { label: 'Passport', value: 'Passport' },
-            { label: 'Military ID', value: 'Military ID' },
-            { label: 'Other', value: 'Other' }
-        ];
-    }
-
-    get stateOptions() {
-        return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' },
-            { label: 'Arizona', value: 'AZ' },
-            { label: 'Arkansas', value: 'AR' },
-            { label: 'California', value: 'CA' },
-            { label: 'Colorado', value: 'CO' },
-            { label: 'Connecticut', value: 'CT' },
-            { label: 'Delaware', value: 'DE' },
-            { label: 'Florida', value: 'FL' },
-            { label: 'Georgia', value: 'GA' },
-            { label: 'Hawaii', value: 'HI' },
-            { label: 'Idaho', value: 'ID' },
-            { label: 'Illinois', value: 'IL' },
-            { label: 'Indiana', value: 'IN' },
-            { label: 'Iowa', value: 'IA' },
-            { label: 'Kansas', value: 'KS' },
-            { label: 'Kentucky', value: 'KY' },
-            { label: 'Louisiana', value: 'LA' },
-            { label: 'Maine', value: 'ME' },
-            { label: 'Maryland', value: 'MD' },
-            { label: 'Massachusetts', value: 'MA' },
-            { label: 'Michigan', value: 'MI' },
-            { label: 'Minnesota', value: 'MN' },
-            { label: 'Mississippi', value: 'MS' },
-            { label: 'Missouri', value: 'MO' },
-            { label: 'Montana', value: 'MT' },
-            { label: 'Nebraska', value: 'NE' },
-            { label: 'Nevada', value: 'NV' },
-            { label: 'New Hampshire', value: 'NH' },
-            { label: 'New Jersey', value: 'NJ' },
-            { label: 'New Mexico', value: 'NM' },
-            { label: 'New York', value: 'NY' },
-            { label: 'North Carolina', value: 'NC' },
-            { label: 'North Dakota', value: 'ND' },
-            { label: 'Ohio', value: 'OH' },
-            { label: 'Oklahoma', value: 'OK' },
-            { label: 'Oregon', value: 'OR' },
-            { label: 'Pennsylvania', value: 'PA' },
-            { label: 'Rhode Island', value: 'RI' },
-            { label: 'South Carolina', value: 'SC' },
-            { label: 'South Dakota', value: 'SD' },
-            { label: 'Tennessee', value: 'TN' },
-            { label: 'Texas', value: 'TX' },
-            { label: 'Utah', value: 'UT' },
-            { label: 'Vermont', value: 'VT' },
-            { label: 'Virginia', value: 'VA' },
-            { label: 'Washington', value: 'WA' },
-            { label: 'West Virginia', value: 'WV' },
-            { label: 'Wisconsin', value: 'WI' },
-            { label: 'Wyoming', value: 'WY' }
-        ];
-    }
-
-
-    get industryTypeOptions() {
-        return [
-            { label: 'Agriculture', value: 'Agriculture' },
-            { label: 'Construction', value: 'Construction' },
-            { label: 'Education', value: 'Education' },
-            { label: 'Finance', value: 'Finance' },
-            { label: 'Healthcare', value: 'Healthcare' },
-            { label: 'Hospitality', value: 'Hospitality' },
-            { label: 'Manufacturing', value: 'Manufacturing' },
-            { label: 'Professional Services', value: 'Professional Services' },
-            { label: 'Real Estate', value: 'Real Estate' },
-            { label: 'Retail', value: 'Retail' },
-            { label: 'Technology', value: 'Technology' },
-            { label: 'Transportation', value: 'Transportation' },
-            { label: 'Other', value: 'Other' }
-        ];
-    }
+    stateOptions = [
+        { label: 'Alabama', value: 'AL' },
+        { label: 'Alaska', value: 'AK' },
+        { label: 'Arizona', value: 'AZ' },
+        { label: 'Arkansas', value: 'AR' },
+        { label: 'California', value: 'CA' },
+        { label: 'Colorado', value: 'CO' },
+        { label: 'Connecticut', value: 'CT' },
+        { label: 'Delaware', value: 'DE' },
+        { label: 'Florida', value: 'FL' },
+        { label: 'Georgia', value: 'GA' },
+        { label: 'Hawaii', value: 'HI' },
+        { label: 'Idaho', value: 'ID' },
+        { label: 'Illinois', value: 'IL' },
+        { label: 'Indiana', value: 'IN' },
+        { label: 'Iowa', value: 'IA' },
+        { label: 'Kansas', value: 'KS' },
+        { label: 'Kentucky', value: 'KY' },
+        { label: 'Louisiana', value: 'LA' },
+        { label: 'Maine', value: 'ME' },
+        { label: 'Maryland', value: 'MD' },
+        { label: 'Massachusetts', value: 'MA' },
+        { label: 'Michigan', value: 'MI' },
+        { label: 'Minnesota', value: 'MN' },
+        { label: 'Mississippi', value: 'MS' },
+        { label: 'Missouri', value: 'MO' },
+        { label: 'Montana', value: 'MT' },
+        { label: 'Nebraska', value: 'NE' },
+        { label: 'Nevada', value: 'NV' },
+        { label: 'New Hampshire', value: 'NH' },
+        { label: 'New Jersey', value: 'NJ' },
+        { label: 'New Mexico', value: 'NM' },
+        { label: 'New York', value: 'NY' },
+        { label: 'North Carolina', value: 'NC' },
+        { label: 'North Dakota', value: 'ND' },
+        { label: 'Ohio', value: 'OH' },
+        { label: 'Oklahoma', value: 'OK' },
+        { label: 'Oregon', value: 'OR' },
+        { label: 'Pennsylvania', value: 'PA' },
+        { label: 'Rhode Island', value: 'RI' },
+        { label: 'South Carolina', value: 'SC' },
+        { label: 'South Dakota', value: 'SD' },
+        { label: 'Tennessee', value: 'TN' },
+        { label: 'Texas', value: 'TX' },
+        { label: 'Utah', value: 'UT' },
+        { label: 'Vermont', value: 'VT' },
+        { label: 'Virginia', value: 'VA' },
+        { label: 'Washington', value: 'WA' },
+        { label: 'West Virginia', value: 'WV' },
+        { label: 'Wisconsin', value: 'WI' },
+        { label: 'Wyoming', value: 'WY' },
+        { label: 'District of Columbia', value: 'DC' },
+        { label: 'Puerto Rico', value: 'PR' },
+        { label: 'Guam', value: 'GU' },
+        { label: 'U.S. Virgin Islands', value: 'VI' },
+        { label: 'American Samoa', value: 'AS' },
+        { label: 'Northern Mariana Islands', value: 'MP' }
+    ];
 
     get employeeRangeOptions() {
         return [
@@ -725,9 +669,11 @@ export default class BusinessDetails extends LightningElement {
     
     // Validation helper methods
     validateTaxIdFormat(taxId) {
-        // Format: XX-XXXXXXX (9 digits total)
-        const taxIdPattern = /^\d{2}-\d{7}$/;
-        return taxIdPattern.test(taxId);
+        const digitsOnly = taxId.replace(/\D/g, '');
+        if (/^[*]{9}$/.test(taxId)) {
+            return true;
+        }
+        return digitsOnly.length === 9;
     }
     
     validateFutureDate(dateString) {
@@ -738,10 +684,8 @@ export default class BusinessDetails extends LightningElement {
     }
     
     validatePhoneFormat(phone) {
-        // Remove all non-digit characters
         const digitsOnly = phone.replace(/\D/g, '');
-        // Must be 10 digits (US format)
-        return digitsOnly.length === 10;
+        return digitsOnly.length === 10 || digitsOnly.length === 11;
     }
     
     validateEmailFormat(email) {
@@ -808,13 +752,15 @@ export default class BusinessDetails extends LightningElement {
         this.businessType = incomingValue.businessType;
         this.taxId = incomingValue.taxId;
         this.dateEstablished = incomingValue.dateEstablished;
-        this.stateOfIncorporation = incomingValue.stateOfIncorporation;
+        this.stateOfIncorporation = this.getStateValue(incomingValue.stateOfIncorporation);
 
         // Industry & Classification
         this.naicsCodeId = incomingValue.naicsCodeId;
         this.naicsCode = incomingValue.naicsCode;
         this.naicsDescription = incomingValue.naicsDescription;
-        this.industryType = incomingValue.industryType;
+        const normalizedIndustry = this.getSupportedIndustry(incomingValue.industryType);
+        this.addIndustryOptionIfMissing(normalizedIndustry);
+        this.industryType = normalizedIndustry;
         this.businessDescription = incomingValue.businessDescription;
 
         // Contact Information
@@ -834,18 +780,66 @@ export default class BusinessDetails extends LightningElement {
         this.businessStreetLine1 = incomingValue.businessStreetLine1;
         this.businessStreetLine2 = incomingValue.businessStreetLine2;
         this.businessCity = incomingValue.businessCity;
-        this.businessState = incomingValue.businessState;
+        this.businessState = this.getStateValue(incomingValue.businessState);
         this.businessPostalCode = incomingValue.businessPostalCode;
         this.businessCountry = incomingValue.businessCountry;
 
-        // Government ID
-        this.governmentIdType = incomingValue.governmentIdType;
-        this.governmentIdNumber = incomingValue.governmentIdNumber;
-        this.idIssuingCountry = incomingValue.idIssuingCountry;
-        this.idIssuingState = incomingValue.idIssuingState;
-        this.idIssueDate = incomingValue.idIssueDate;
-        this.idExpirationDate = incomingValue.idExpirationDate;
-
         this.emitPayloadChange();
+    }
+
+    addIndustryOptionIfMissing(value) {
+        if (!value) {
+            return;
+        }
+
+        const exists = this.industryTypeOptions.some(option => option.value === value);
+        if (!exists) {
+            this.industryTypeOptions = [
+                ...this.industryTypeOptions,
+                { label: value, value: value }
+            ];
+        }
+    }
+
+    getSupportedIndustry(industry) {
+        if (!industry) {
+            return null;
+        }
+
+        const normalized = industry.toString().trim().toLowerCase();
+        const supported = new Map([
+            ['agriculture', 'Agriculture'],
+            ['construction', 'Construction'],
+            ['education', 'Education'],
+            ['finance', 'Finance'],
+            ['financial services', 'Finance'],
+            ['healthcare', 'Healthcare'],
+            ['hospitality', 'Hospitality'],
+            ['manufacturing', 'Manufacturing'],
+            ['professional services', 'Professional Services'],
+            ['real estate', 'Real Estate'],
+            ['retail', 'Retail'],
+            ['technology', 'Technology'],
+            ['transportation', 'Transportation']
+        ]);
+
+        if (supported.has(normalized)) {
+            return supported.get(normalized);
+        }
+
+        return 'Other';
+    }
+
+    getStateValue(state) {
+        if (!state) {
+            return null;
+        }
+
+        const normalized = state.toString().trim().toLowerCase();
+        const match = this.stateOptions.find(option =>
+            option.value.toLowerCase() === normalized || option.label.toLowerCase() === normalized
+        );
+
+        return match ? match.value : state;
     }
 }

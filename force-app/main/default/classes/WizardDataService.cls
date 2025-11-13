@@ -65,6 +65,7 @@ public with sharing class WizardDataService {
                    Business_Email__c,
                    Business_Home_Phone__c,
                    Business_Mobile_Phone__c,
+                   Business_Work_Phone__c,
                    Website,
                    BillingStreet,
                    BillingCity,
@@ -75,6 +76,9 @@ public with sharing class WizardDataService {
                    NumberOfEmployees,
                    Industry,
                    Description,
+                   SW_Doing_Business_As__c,
+                   SW_Date_Business_Established__c,
+                   SW_Business_Registration_State__c,
                    Date_Established__c,
                    NAICS_Lookup__c,
                    NAICS_Code__c,
@@ -104,11 +108,18 @@ public with sharing class WizardDataService {
         dto.contextAccountId = acc.Id;
 
         if (acc.IsPersonAccount) {
-        dto.accountType = 'Person';
-            dto.hideBusinessStep = true;
+            dto.accountType = 'Person';
+            dto.hideBusinessStep = false;
             dto.applicantInfo = buildApplicantFromPersonAccount(acc);
             dto.hasApplicantInfo = dto.applicantInfo != null;
-        dto.hasPrimaryContact = dto.hasApplicantInfo;
+            dto.hasPrimaryContact = dto.hasApplicantInfo;
+
+            // Initialize an empty business info structure so the Business step renders
+            dto.businessInfo = new BusinessInfoDTO();
+            dto.businessInfo.businessAccountType = 'new';
+            dto.businessInfo.primaryContactType = 'new';
+            dto.hasBusinessInfo = false;
+
             dto.message = 'Pre-populated personal information from Person Account.';
         } else {
             dto.accountType = 'Business';
@@ -174,11 +185,14 @@ public with sharing class WizardDataService {
                     dto.businessInfo.selectedContactId = primaryContact.AccountId;
                 } else {
                     dto.businessInfo.primaryContactType = 'new';
-                    dto.businessInfo.primaryContactName = buildFullName(primaryContact.Salutation, primaryContact.FirstName, primaryContact.LastName);
-                    dto.businessInfo.primaryContactTitle = primaryContact.Title;
                 }
+
+                dto.businessInfo.primaryContactName = buildFullName(primaryContact.Salutation, primaryContact.FirstName, primaryContact.LastName);
+                dto.businessInfo.primaryContactTitle = primaryContact.Title;
             } else {
                 dto.businessInfo.primaryContactType = 'new';
+                dto.businessInfo.primaryContactName = null;
+                dto.businessInfo.primaryContactTitle = null;
                 dto.hasPrimaryContact = false;
             }
 
@@ -192,16 +206,21 @@ public with sharing class WizardDataService {
         info.selectedAccountId = acc.Id;
 
         info.businessName = acc.Name;
-        info.dbaName = null; // No non-SW DBA field on Account
+        info.dbaName = String.isNotBlank(acc.SW_Doing_Business_As__c) ? acc.SW_Doing_Business_As__c : null;
         info.businessType = String.isNotBlank(acc.Business_Type__c) ? acc.Business_Type__c : acc.Type;
         info.taxId = acc.Business_Tax_ID__c; // Use custom field, FinServ__TaxID__c not available
-        info.dateEstablished = null; // No standard date field available on Account
-        info.stateOfIncorporation = null; // No non-SW field available on Account
+
+        Date derivedEstablishedDate = acc.SW_Date_Business_Established__c != null
+            ? acc.SW_Date_Business_Established__c
+            : acc.Date_Established__c;
+        info.dateEstablished = formatDate(derivedEstablishedDate);
+
+        info.stateOfIncorporation = normalizeStateName(acc.SW_Business_Registration_State__c);
 
         info.naicsCodeId = acc.NAICS_Lookup__c;
         info.naicsCode = acc.NAICS_Code__c;
         info.naicsDescription = acc.NAICS_Description__c;
-        info.industryType = acc.Industry;
+        info.industryType = normalizeIndustry(acc.Industry);
         info.businessDescription = acc.Description;
 
         info.businessPhone = String.isNotBlank(acc.Business_Phone__c) ? acc.Business_Phone__c : acc.Phone;
@@ -217,9 +236,9 @@ public with sharing class WizardDataService {
         info.businessStreetLine1 = streetLines != null && streetLines.size() > 0 ? streetLines[0] : null;
         info.businessStreetLine2 = streetLines != null && streetLines.size() > 1 ? streetLines[1] : null;
         info.businessCity = acc.BillingCity;
-        info.businessState = acc.BillingState;
+        info.businessState = normalizeStateName(acc.BillingState);
         info.businessPostalCode = acc.BillingPostalCode;
-        info.businessCountry = acc.BillingCountry;
+        info.businessCountry = normalizeCountryName(acc.BillingCountry);
 
         info.primaryContactType = 'new';
         info.selectedContactId = null;
@@ -229,25 +248,25 @@ public with sharing class WizardDataService {
 
     private static ApplicantInfoDTO buildApplicantFromPersonAccount(Account personAccount) {
         ApplicantInfoDTO applicant = new ApplicantInfoDTO();
-        applicant.salutation = personAccount.Salutation;
+        applicant.salutation = normalizeSalutation(personAccount.Salutation);
         applicant.firstName = personAccount.FirstName;
         applicant.lastName = personAccount.LastName;
         applicant.birthDate = formatDate(personAccount.PersonBirthdate);
         applicant.taxId = personAccount.SSN_Tax_Id__c;
         applicant.taxIdType = personAccount.Tax_ID_Type__c;
         applicant.email = personAccount.PersonEmail;
-        applicant.mobilePhone = personAccount.PersonMobilePhone;
-        applicant.homePhone = personAccount.PersonHomePhone;
-        applicant.workPhone = personAccount.Phone;
+        applicant.mobilePhone = personAccount.Business_Mobile_Phone__c;
+        applicant.homePhone = personAccount.Business_Home_Phone__c;
+        applicant.workPhone = personAccount.Business_Work_Phone__c;
 
         // Use BillingAddress for both PersonAccount and Business Account
         String[] streetLines = splitStreet(personAccount.BillingStreet);
         applicant.mailingStreetLine1 = streetLines != null && streetLines.size() > 0 ? streetLines[0] : null;
         applicant.mailingStreetLine2 = streetLines != null && streetLines.size() > 1 ? streetLines[1] : null;
         applicant.mailingCity = personAccount.BillingCity;
-        applicant.mailingState = personAccount.BillingState;
+        applicant.mailingState = normalizeStateName(personAccount.BillingState);
         applicant.mailingPostalCode = personAccount.BillingPostalCode;
-        applicant.mailingCountry = personAccount.BillingCountry;
+        applicant.mailingCountry = normalizeCountryName(personAccount.BillingCountry);
 
         applicant.governmentIdType = personAccount.Government_ID_Type__c;
         applicant.governmentIdNumber = personAccount.Government_ID_Number__c;
@@ -311,6 +330,36 @@ public with sharing class WizardDataService {
             return '101-500';
         }
         return '500+';
+    }
+
+    private static String normalizeIndustry(String industryValue) {
+        if (String.isBlank(industryValue)) {
+            return null;
+        }
+
+        String normalized = industryValue.trim().toLowerCase();
+        Map<String, String> supported = new Map<String, String>{
+            'agriculture' => 'Agriculture',
+            'construction' => 'Construction',
+            'education' => 'Education',
+            'finance' => 'Finance',
+            'financial services' => 'Finance',
+            'healthcare' => 'Healthcare',
+            'hospitality' => 'Hospitality',
+            'consulting' => 'Professional Services',
+            'manufacturing' => 'Manufacturing',
+            'professional services' => 'Professional Services',
+            'real estate' => 'Real Estate',
+            'retail' => 'Retail',
+            'technology' => 'Technology',
+            'transportation' => 'Transportation'
+        };
+
+        if (supported.containsKey(normalized)) {
+            return supported.get(normalized);
+        }
+
+        return 'Other';
     }
 
     private static String[] splitStreet(String street) {
@@ -410,6 +459,102 @@ public with sharing class WizardDataService {
         @AuraEnabled public String idIssuingState;
         @AuraEnabled public String idIssueDate;
         @AuraEnabled public String idExpirationDate;
+    }
+
+    /**
+     * Normalize country code/name to match LWC picklist values
+     * LWC expects: 'USA', 'Canada', 'Mexico', 'Other'
+     */
+    private static String normalizeCountryName(String countryValue) {
+        if (String.isBlank(countryValue)) {
+            return null;
+        }
+
+        String normalized = countryValue.trim().toUpperCase();
+
+        // Map common US variations to 'USA'
+        if (normalized == 'US' || normalized == 'USA' || 
+            normalized == 'UNITED STATES' || normalized == 'UNITED STATES OF AMERICA') {
+            return 'USA';
+        }
+
+        // Map Canada variations
+        if (normalized == 'CA' || normalized == 'CANADA' || normalized == 'CAN') {
+            return 'Canada';
+        }
+
+        // Map Mexico variations
+        if (normalized == 'MX' || normalized == 'MEXICO' || normalized == 'MEX') {
+            return 'Mexico';
+        }
+
+        // Everything else maps to 'Other'
+        return 'Other';
+    }
+
+    /**
+     * Normalize state abbreviation/name to full state name
+     * LWC expects full state names like 'California', 'New York', etc.
+     * Account typically stores abbreviations like 'CA', 'NY', etc.
+     */
+    private static String normalizeStateName(String stateValue) {
+        if (String.isBlank(stateValue)) {
+            return null;
+        }
+
+        // If it's already a full state name (length > 2), return as-is
+        String trimmed = stateValue.trim();
+        if (trimmed.length() > 2) {
+            return trimmed;
+        }
+
+        // Map common state abbreviations to full names
+        Map<String, String> stateMap = new Map<String, String>{
+            'AL' => 'Alabama', 'AK' => 'Alaska', 'AZ' => 'Arizona', 'AR' => 'Arkansas',
+            'CA' => 'California', 'CO' => 'Colorado', 'CT' => 'Connecticut', 'DE' => 'Delaware',
+            'FL' => 'Florida', 'GA' => 'Georgia', 'HI' => 'Hawaii', 'ID' => 'Idaho',
+            'IL' => 'Illinois', 'IN' => 'Indiana', 'IA' => 'Iowa', 'KS' => 'Kansas',
+            'KY' => 'Kentucky', 'LA' => 'Louisiana', 'ME' => 'Maine', 'MD' => 'Maryland',
+            'MA' => 'Massachusetts', 'MI' => 'Michigan', 'MN' => 'Minnesota', 'MS' => 'Mississippi',
+            'MO' => 'Missouri', 'MT' => 'Montana', 'NE' => 'Nebraska', 'NV' => 'Nevada',
+            'NH' => 'New Hampshire', 'NJ' => 'New Jersey', 'NM' => 'New Mexico', 'NY' => 'New York',
+            'NC' => 'North Carolina', 'ND' => 'North Dakota', 'OH' => 'Ohio', 'OK' => 'Oklahoma',
+            'OR' => 'Oregon', 'PA' => 'Pennsylvania', 'RI' => 'Rhode Island', 'SC' => 'South Carolina',
+            'SD' => 'South Dakota', 'TN' => 'Tennessee', 'TX' => 'Texas', 'UT' => 'Utah',
+            'VT' => 'Vermont', 'VA' => 'Virginia', 'WA' => 'Washington', 'WV' => 'West Virginia',
+            'WI' => 'Wisconsin', 'WY' => 'Wyoming', 'DC' => 'District of Columbia',
+            'PR' => 'Puerto Rico', 'VI' => 'U.S. Virgin Islands', 'GU' => 'Guam',
+            'AS' => 'American Samoa', 'MP' => 'Northern Mariana Islands'
+        };
+
+        String upperState = trimmed.toUpperCase();
+        return stateMap.containsKey(upperState) ? stateMap.get(upperState) : trimmed;
+    }
+
+    /**
+     * Normalize salutation to match LWC picklist values where we include a trailing period.
+     */
+    private static String normalizeSalutation(String salutationValue) {
+        if (String.isBlank(salutationValue)) {
+            return null;
+        }
+
+        String trimmed = salutationValue.trim();
+        String upperNoPunctuation = trimmed.replace('.', '').toUpperCase();
+
+        Map<String, String> salutationMap = new Map<String, String>{
+            'MR' => 'Mr.',
+            'MRS' => 'Mrs.',
+            'MS' => 'Ms.',
+            'DR' => 'Dr.',
+            'PROF' => 'Prof.'
+        };
+
+        if (salutationMap.containsKey(upperNoPunctuation)) {
+            return salutationMap.get(upperNoPunctuation);
+        }
+
+        return trimmed;
     }
 }
 
