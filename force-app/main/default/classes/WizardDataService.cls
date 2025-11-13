@@ -97,7 +97,7 @@ public with sharing class WizardDataService {
                    Government_ID_Type__c,
                    Government_ID_Number__c,
                    ID_Issuing_Country__c,
-                   // ID_Issuing_State__c, // TODO: Uncomment after field is deleted and recreated as picklist
+                   ID_Issuing_State__c,
                    ID_Issue_Date__c,
                    ID_Expiration_Date__c
             FROM Account
@@ -156,7 +156,7 @@ public with sharing class WizardDataService {
                            Account.Government_ID_Type__c,
                            Account.Government_ID_Number__c,
                            Account.ID_Issuing_Country__c,
-                           // Account.ID_Issuing_State__c, // TODO: Uncomment after field is deleted and recreated as picklist
+                           Account.ID_Issuing_State__c,
                            Account.ID_Issue_Date__c,
                            Account.ID_Expiration_Date__c
                     FROM Contact
@@ -256,7 +256,7 @@ public with sharing class WizardDataService {
         applicant.governmentIdType = personAccount.Government_ID_Type__c;
         applicant.governmentIdNumber = personAccount.Government_ID_Number__c;
         applicant.idIssuingCountry = personAccount.ID_Issuing_Country__c;
-        // applicant.idIssuingState = personAccount.ID_Issuing_State__c; // TODO: Uncomment after field is deleted and recreated as picklist
+        applicant.idIssuingState = personAccount.ID_Issuing_State__c;
         applicant.idIssueDate = formatDate(personAccount.ID_Issue_Date__c);
         applicant.idExpirationDate = formatDate(personAccount.ID_Expiration_Date__c);
 

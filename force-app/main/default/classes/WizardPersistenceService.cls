@@ -262,7 +262,7 @@ public with sharing class WizardPersistenceService {
             applicant.Government_ID_Type__c = (String) payload.get('governmentIdType');
             applicant.Government_ID_Number__c = (String) payload.get('governmentIdNumber');
             applicant.ID_Issuing_Country__c = (String) payload.get('idIssuingCountry');
-            // applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState'); // TODO: Uncomment after field is deleted and recreated as picklist
+            applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState');
             
             // ID Dates
             String idIssueDateStr = (String) payload.get('idIssueDate');
@@ -439,7 +439,7 @@ public with sharing class WizardPersistenceService {
             applicant.Government_ID_Type__c = (String) payload.get('governmentIdType');
             applicant.Government_ID_Number__c = (String) payload.get('governmentIdNumber');
             applicant.ID_Issuing_Country__c = (String) payload.get('idIssuingCountry');
-            // applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState'); // TODO: Uncomment after field is deleted and recreated as picklist
+            applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState');
             
             // ID Dates
             String idIssueDateStr = (String) payload.get('idIssueDate');
