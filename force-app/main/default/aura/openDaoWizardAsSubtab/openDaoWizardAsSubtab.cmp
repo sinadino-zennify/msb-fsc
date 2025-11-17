@@ -1,0 +1,10 @@
+<!--
+    Component: openDaoWizardAsSubtab
+    Purpose: Opens DAO Wizard as a subtab in console apps
+    Usage: Can be used as a custom button/action or navigation override
+-->
+<aura:component implements="force:lightningQuickAction,force:hasRecordId">
+    <lightning:workspaceAPI aura:id="workspace" />
+    
+    <aura:handler name="init" value="{!this}" action="{!c.openWizardSubtab}"/>
+</aura:component>

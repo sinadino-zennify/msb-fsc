@@ -435,27 +435,6 @@ public with sharing class WizardPersistenceService {
             }
             applicant.Number_of_Employees__c = (String) payload.get('numberOfEmployees');
             
-            // Government ID fields (for business representative/authorized signer)
-            applicant.Government_ID_Type__c = (String) payload.get('governmentIdType');
-            applicant.Government_ID_Number__c = (String) payload.get('governmentIdNumber');
-            applicant.ID_Issuing_Country__c = (String) payload.get('idIssuingCountry');
-            applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState');
-            
-            // ID Dates
-            String idIssueDateStr = (String) payload.get('idIssueDate');
-            if (String.isNotBlank(idIssueDateStr)) {
-                applicant.ID_Issue_Date__c = Date.valueOf(idIssueDateStr);
-            } else {
-                applicant.ID_Issue_Date__c = null; // Clear the field if not provided
-            }
-            
-            String idExpirationDateStr = (String) payload.get('idExpirationDate');
-            if (String.isNotBlank(idExpirationDateStr)) {
-                applicant.ID_Expiration_Date__c = Date.valueOf(idExpirationDateStr);
-            } else {
-                applicant.ID_Expiration_Date__c = null; // Clear the field if not provided
-            }
-            
             // Upsert Applicant with CRUD/FLS checks
             System.debug('╔════════════════════════════════════════════════════════════════════════════════');
             System.debug('║ ABOUT TO UPSERT APPLICANT (Business)');

@@ -154,6 +154,15 @@ public with sharing class WizardDataService {
                            Account.PersonMailingState,
                            Account.PersonMailingPostalCode,
                            Account.PersonMailingCountry,
+                           Account.BillingStreet,
+                           Account.BillingCity,
+                           Account.BillingState,
+                           Account.BillingPostalCode,
+                           Account.BillingCountry,
+                           Account.Business_Email__c,
+                           Account.Business_Home_Phone__c,
+                           Account.Business_Mobile_Phone__c,
+                           Account.Business_Work_Phone__c,
                            Account.Salutation,
                            Account.FirstName,
                            Account.LastName,
@@ -171,6 +180,9 @@ public with sharing class WizardDataService {
                     WITH USER_MODE
                     LIMIT 1
                 ];
+
+                System.debug('🔎 WizardDataService: Primary contact loaded -> ' + JSON.serializePretty(primaryContact));
+                System.debug('🔎 WizardDataService: Primary contact related Account -> ' + JSON.serializePretty(primaryContact.Account));
 
                 dto.applicantInfo = buildApplicantFromPrimaryContact(primaryContact);
                 dto.hasApplicantInfo = dto.applicantInfo != null;
@@ -289,23 +301,41 @@ public with sharing class WizardDataService {
             return buildApplicantFromPersonAccount(contact.Account);
         }
 
+        Account relatedAccount = contact.Account;
+
         ApplicantInfoDTO applicant = new ApplicantInfoDTO();
         applicant.salutation = contact.Salutation;
         applicant.firstName = contact.FirstName;
         applicant.lastName = contact.LastName;
         applicant.birthDate = formatDate(contact.Birthdate);
-        applicant.email = contact.Email;
-        applicant.mobilePhone = contact.MobilePhone;
-        applicant.homePhone = contact.HomePhone;
-        applicant.workPhone = contact.Phone;
 
-        String[] streetLines = splitStreet(contact.MailingStreet);
+        // Prefer contact fields, fall back to Account fields when available
+        applicant.email = String.isNotBlank(contact.Email) ? contact.Email : relatedAccount != null ? relatedAccount.Business_Email__c : null;
+        applicant.mobilePhone = String.isNotBlank(contact.MobilePhone)
+            ? contact.MobilePhone
+            : relatedAccount != null ? relatedAccount.Business_Mobile_Phone__c : null;
+        applicant.homePhone = String.isNotBlank(contact.HomePhone)
+            ? contact.HomePhone
+            : relatedAccount != null ? relatedAccount.Business_Home_Phone__c : null;
+        applicant.workPhone = String.isNotBlank(contact.Phone)
+            ? contact.Phone
+            : relatedAccount != null ? relatedAccount.Business_Work_Phone__c : null;
+
+        // Address – use Account Billing address if present, otherwise contact mailing
+        String billingStreet = relatedAccount != null ? relatedAccount.BillingStreet : null;
+        String[] streetLines = splitStreet(String.isNotBlank(billingStreet) ? billingStreet : contact.MailingStreet);
         applicant.mailingStreetLine1 = streetLines != null && streetLines.size() > 0 ? streetLines[0] : null;
         applicant.mailingStreetLine2 = streetLines != null && streetLines.size() > 1 ? streetLines[1] : null;
-        applicant.mailingCity = contact.MailingCity;
-        applicant.mailingState = contact.MailingState;
-        applicant.mailingPostalCode = contact.MailingPostalCode;
-        applicant.mailingCountry = contact.MailingCountry;
+        String accountBillingCity = relatedAccount != null ? relatedAccount.BillingCity : null;
+        applicant.mailingCity = String.isNotBlank(accountBillingCity)
+            ? accountBillingCity
+            : contact.MailingCity;
+        String accountBillingState = relatedAccount != null ? relatedAccount.BillingState : null;
+        applicant.mailingState = normalizeStateName(String.isNotBlank(accountBillingState) ? accountBillingState : contact.MailingState);
+        String accountBillingPostalCode = relatedAccount != null ? relatedAccount.BillingPostalCode : null;
+        applicant.mailingPostalCode = String.isNotBlank(accountBillingPostalCode) ? accountBillingPostalCode : contact.MailingPostalCode;
+        String accountBillingCountry = relatedAccount != null ? relatedAccount.BillingCountry : null;
+        applicant.mailingCountry = normalizeCountryName(String.isNotBlank(accountBillingCountry) ? accountBillingCountry : contact.MailingCountry);
 
         return applicant;
     }

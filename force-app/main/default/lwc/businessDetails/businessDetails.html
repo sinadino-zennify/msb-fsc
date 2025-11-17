@@ -85,7 +85,7 @@
                             value={taxId}
                             onchange={handleTaxIdChange}
                             placeholder="XX-XXXXXXX"
-                            pattern="\d{2}-\d{7}"
+                            pattern="(\d{2}-\d{7}|\d{9}|[*]{9})"
                             message-when-pattern-mismatch="Tax ID must be 9 digits in format XX-XXXXXXX"
                             required>
                         </lightning-input>
@@ -188,7 +188,7 @@
                             label="Business Phone" 
                             value={businessPhone}
                             onchange={handleBusinessPhoneChange}
-                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10,11}"
                             message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
                             placeholder="555-555-5555"
                             required>
@@ -280,80 +280,6 @@
                             value={primaryContactTitle}
                             onchange={handlePrimaryContactTitleChange}
                             placeholder="Optional">
-                        </lightning-input>
-                    </lightning-layout-item>
-                </lightning-layout>
-            </div>
-        </div>
-
-        <!-- Government ID Section (for authorized signer/representative) -->
-        <div class="slds-section slds-is-open slds-m-bottom_medium">
-            <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Government ID">Government ID (Authorized Signer)</span>
-            </h3>
-            <div class="slds-section__content slds-p-around_small">
-                <lightning-layout multiple-rows>
-                    <!-- Row 1: Government ID Type and Number -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="Government ID Type"
-                            value={governmentIdType}
-                            options={governmentIdTypeOptions}
-                            onchange={handleGovernmentIdTypeChange}
-                            placeholder="Select ID type">
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            label="Government ID Number" 
-                            value={governmentIdNumber}
-                            onchange={handleGovernmentIdNumberChange}
-                            placeholder="ID Number">
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 2: ID Issuing Country and State -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="ID Issuing Country"
-                            value={idIssuingCountry}
-                            options={countryOptions}
-                            onchange={handleIdIssuingCountryChange}
-                            placeholder="Select country">
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="ID Issuing State"
-                            value={idIssuingState}
-                            options={stateOptions}
-                            onchange={handleIdIssuingStateChange}
-                            placeholder="Select state">
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 3: ID Issue Date and Expiration Date -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="date"
-                            label="ID Issue Date" 
-                            value={idIssueDate}
-                            onchange={handleIdIssueDateChange}
-                            max={todayDate}
-                            message-when-range-overflow="Issue date cannot be a future date">
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="date"
-                            label="ID Expiration Date" 
-                            value={idExpirationDate}
-                            onchange={handleIdExpirationDateChange}
-                            min={todayDate}
-                            message-when-range-underflow="Expiration date must be in the future">
                         </lightning-input>
                     </lightning-layout-item>
                 </lightning-layout>

@@ -1,3 +1,9 @@
+---
+name: Platform Foundation Guardrails
+description: Core CLI and metadata hygiene rules that apply across every MSB Salesforce project.
+tags: platform, general, rules
+---
+
 # General Salesforce Development Requirements
 
 - When calling the Salesforce CLI, always use `sf`, never use `sfdx` or the sfdx-style commands; they are deprecated.

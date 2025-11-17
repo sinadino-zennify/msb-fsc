@@ -14,8 +14,14 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     set value(val) {
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails value setter called with:', JSON.stringify(val, null, 2));
+        // eslint-disable-next-line no-console
+        console.log('🔍 hasAppliedInitialValue:', this.hasAppliedInitialValue);
         this._value = val;
         if (val && !this.hasAppliedInitialValue) {
+            // eslint-disable-next-line no-console
+            console.log('🔍 Calling applyValue with:', JSON.stringify(val, null, 2));
             this.applyValue(val);
             this.hasAppliedInitialValue = true;
         }
@@ -254,56 +260,62 @@ export default class ApplicantDetails extends LightningElement {
 
     get stateOptions() {
         return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' },
-            { label: 'Arizona', value: 'AZ' },
-            { label: 'Arkansas', value: 'AR' },
-            { label: 'California', value: 'CA' },
-            { label: 'Colorado', value: 'CO' },
-            { label: 'Connecticut', value: 'CT' },
-            { label: 'Delaware', value: 'DE' },
-            { label: 'Florida', value: 'FL' },
-            { label: 'Georgia', value: 'GA' },
-            { label: 'Hawaii', value: 'HI' },
-            { label: 'Idaho', value: 'ID' },
-            { label: 'Illinois', value: 'IL' },
-            { label: 'Indiana', value: 'IN' },
-            { label: 'Iowa', value: 'IA' },
-            { label: 'Kansas', value: 'KS' },
-            { label: 'Kentucky', value: 'KY' },
-            { label: 'Louisiana', value: 'LA' },
-            { label: 'Maine', value: 'ME' },
-            { label: 'Maryland', value: 'MD' },
-            { label: 'Massachusetts', value: 'MA' },
-            { label: 'Michigan', value: 'MI' },
-            { label: 'Minnesota', value: 'MN' },
-            { label: 'Mississippi', value: 'MS' },
-            { label: 'Missouri', value: 'MO' },
-            { label: 'Montana', value: 'MT' },
-            { label: 'Nebraska', value: 'NE' },
-            { label: 'Nevada', value: 'NV' },
-            { label: 'New Hampshire', value: 'NH' },
-            { label: 'New Jersey', value: 'NJ' },
-            { label: 'New Mexico', value: 'NM' },
-            { label: 'New York', value: 'NY' },
-            { label: 'North Carolina', value: 'NC' },
-            { label: 'North Dakota', value: 'ND' },
-            { label: 'Ohio', value: 'OH' },
-            { label: 'Oklahoma', value: 'OK' },
-            { label: 'Oregon', value: 'OR' },
-            { label: 'Pennsylvania', value: 'PA' },
-            { label: 'Rhode Island', value: 'RI' },
-            { label: 'South Carolina', value: 'SC' },
-            { label: 'South Dakota', value: 'SD' },
-            { label: 'Tennessee', value: 'TN' },
-            { label: 'Texas', value: 'TX' },
-            { label: 'Utah', value: 'UT' },
-            { label: 'Vermont', value: 'VT' },
-            { label: 'Virginia', value: 'VA' },
-            { label: 'Washington', value: 'WA' },
-            { label: 'West Virginia', value: 'WV' },
-            { label: 'Wisconsin', value: 'WI' },
-            { label: 'Wyoming', value: 'WY' }
+            { label: 'Alabama', value: 'Alabama' },
+            { label: 'Alaska', value: 'Alaska' },
+            { label: 'Arizona', value: 'Arizona' },
+            { label: 'Arkansas', value: 'Arkansas' },
+            { label: 'California', value: 'California' },
+            { label: 'Colorado', value: 'Colorado' },
+            { label: 'Connecticut', value: 'Connecticut' },
+            { label: 'Delaware', value: 'Delaware' },
+            { label: 'Florida', value: 'Florida' },
+            { label: 'Georgia', value: 'Georgia' },
+            { label: 'Hawaii', value: 'Hawaii' },
+            { label: 'Idaho', value: 'Idaho' },
+            { label: 'Illinois', value: 'Illinois' },
+            { label: 'Indiana', value: 'Indiana' },
+            { label: 'Iowa', value: 'Iowa' },
+            { label: 'Kansas', value: 'Kansas' },
+            { label: 'Kentucky', value: 'Kentucky' },
+            { label: 'Louisiana', value: 'Louisiana' },
+            { label: 'Maine', value: 'Maine' },
+            { label: 'Maryland', value: 'Maryland' },
+            { label: 'Massachusetts', value: 'Massachusetts' },
+            { label: 'Michigan', value: 'Michigan' },
+            { label: 'Minnesota', value: 'Minnesota' },
+            { label: 'Mississippi', value: 'Mississippi' },
+            { label: 'Missouri', value: 'Missouri' },
+            { label: 'Montana', value: 'Montana' },
+            { label: 'Nebraska', value: 'Nebraska' },
+            { label: 'Nevada', value: 'Nevada' },
+            { label: 'New Hampshire', value: 'New Hampshire' },
+            { label: 'New Jersey', value: 'New Jersey' },
+            { label: 'New Mexico', value: 'New Mexico' },
+            { label: 'New York', value: 'New York' },
+            { label: 'North Carolina', value: 'North Carolina' },
+            { label: 'North Dakota', value: 'North Dakota' },
+            { label: 'Ohio', value: 'Ohio' },
+            { label: 'Oklahoma', value: 'Oklahoma' },
+            { label: 'Oregon', value: 'Oregon' },
+            { label: 'Pennsylvania', value: 'Pennsylvania' },
+            { label: 'Rhode Island', value: 'Rhode Island' },
+            { label: 'South Carolina', value: 'South Carolina' },
+            { label: 'South Dakota', value: 'South Dakota' },
+            { label: 'Tennessee', value: 'Tennessee' },
+            { label: 'Texas', value: 'Texas' },
+            { label: 'Utah', value: 'Utah' },
+            { label: 'Vermont', value: 'Vermont' },
+            { label: 'Virginia', value: 'Virginia' },
+            { label: 'Washington', value: 'Washington' },
+            { label: 'West Virginia', value: 'West Virginia' },
+            { label: 'Wisconsin', value: 'Wisconsin' },
+            { label: 'Wyoming', value: 'Wyoming' },
+            { label: 'District of Columbia', value: 'District of Columbia' },
+            { label: 'Puerto Rico', value: 'Puerto Rico' },
+            { label: 'Guam', value: 'Guam' },
+            { label: 'U.S. Virgin Islands', value: 'U.S. Virgin Islands' },
+            { label: 'American Samoa', value: 'American Samoa' },
+            { label: 'Northern Mariana Islands', value: 'Northern Mariana Islands' }
         ];
     }
 
@@ -507,6 +519,9 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     applyValue(incomingValue) {
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails applyValue called with:', JSON.stringify(incomingValue, null, 2));
+        
         // Personal Identity
         this.salutation = incomingValue.salutation;
         this.firstName = incomingValue.firstName;
@@ -536,6 +551,14 @@ export default class ApplicantDetails extends LightningElement {
         this.idIssuingState = incomingValue.idIssuingState;
         this.idIssueDate = incomingValue.idIssueDate;
         this.idExpirationDate = incomingValue.idExpirationDate;
+
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails fields after apply:', {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            mailingCity: this.mailingCity
+        });
 
         this.emitPayloadChange();
     }

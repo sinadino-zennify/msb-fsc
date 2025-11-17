@@ -31,20 +31,20 @@ Person - Government ID,Issued By - State,Picklist,ID_Issuing_State__c,Custom,Pic
 Person - Government ID,Issue Date,Date,ID_Issue_Date__c,Custom,Date,ID_Issue_Date__c,Custom,Not future date
 Person - Government ID,Expiration Date,Date,ID_Expiration_Date__c,Custom,Date,ID_Expiration_Date__c,Custom,After Issue Date
 Organization - Business Profile,Organization Name,Text,BusinessEntityName,Standard,Text(255),Name,Standard,Required with search
-Organization - Business Profile,Doing Business As (DBA),Text,Doing_Business_As__c,Custom,Text(255),N/A,N/A,DBA Name - New field on Applicant
+Organization - Business Profile,Doing Business As (DBA),Text,Doing_Business_As__c,Custom,Text(255),SW_Doing_Business_As__c,N/A,DBA Name - New field on Applicant
 Organization - Business Profile,Business Type,Picklist,BusinessEntityType,Standard,Picklist,Business_Type__c,Custom,Values: Corporation LLC Partnership Sole Proprietorship Non-Profit Trust
-Organization - Business Profile,Date Established,Date,Date_Established__c,Custom,Date,N/A,N/A,Cannot be future date - New field on Applicant
-Organization - Business Profile,State of Incorporation,Picklist,Business_Registration_State__c,Custom,Picklist,N/A,N/A,US States - New field on Applicant
+Organization - Business Profile,Date Established,Date,Date_Established__c,Custom,Date,SW_Date_Business_Established__c,N/A,Cannot be future date - New field on Applicant
+Organization - Business Profile,State of Incorporation,Picklist,Business_Registration_State__c,Custom,Picklist,SW_Business_Registration_State__c,N/A,US States - New field on Applicant
 Organization - Business Profile,Address Line 1,Text,Business_Street_Line_1__c,Custom,Text(255),BillingStreet,Standard,Required
 Organization - Business Profile,Address Line 2,Text,Business_Street_Line_2__c,Custom,Text(255),BillingStreet,Standard,Optional
 Organization - Business Profile,Country,Picklist,Business_Country__c,Custom,Picklist,BillingCountry,Standard,Default: USA
 Organization - Business Profile,ZIP Code,Text,Business_Postal_Code__c,Custom,Text(10),BillingPostalCode,Standard,Format: #####-####
 Organization - Business Profile,City,Text,Business_City__c,Custom,Text(80),BillingCity,Standard,Auto-populate from ZIP
 Organization - Business Profile,State,Picklist,Business_State__c,Custom,Picklist,BillingState,Standard,US States
-Organization - Business Profile,Phone - Home,Phone,Business_Home_Phone__c,Custom,Phone,Phone,Standard,
+Organization - Business Profile,Phone - Home,Phone,Business_Home_Phone__c,Custom,Phone,Business_Home_Phone__c,Standard,
 Organization - Business Profile,Phone - Work,Phone,Business_Work_Phone__c,Custom,Phone,Phone,Standard,Primary phone
-Organization - Business Profile,Phone - Mobile,Phone,Business_Mobile_Phone__c,Custom,Phone,Phone,Standard,
-Organization - Business Profile,Email,Email,Business_Email__c,Custom,Email,N/A,N/A,No standard business email field
+Organization - Business Profile,Phone - Mobile,Phone,Business_Mobile_Phone__c,Custom,Phone,Business_Mobile_Phone__c,Standard,
+Organization - Business Profile,Email,Email,Business_Email__c,Custom,Email,Business_Email__c,N/A,No standard business email field
 Organization - Business Profile,Copy/Use Address,Action,N/A,N/A,N/A,N/A,N/A,Clones address to another section
 Organization - Tax & Classification,Tax ID (EIN),Text,Business_Tax_ID__c,Custom,Text(11) Encrypted,Business_Tax_ID__c,Custom,Format: XX-XXXXXXX
 Organization - Tax & Classification,Tax ID Type,Picklist,Business_Tax_ID_Type__c,Custom,Picklist,Tax_ID_Type__c,Custom,Federal Employer Tax ID (EIN) Foreign Tax ID

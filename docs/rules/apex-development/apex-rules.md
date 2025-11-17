@@ -1,3 +1,9 @@
+---
+name: Apex Development Guardrails
+description: Enforce Apex architecture, performance, security, and testing standards for MSB DAO work.
+tags: apex, rules, guardrails
+---
+
 # Apex Requirements
 
 ## General Requirements
@@ -69,3 +75,8 @@
 - Create minimal test data required for specific test scenarios
 - Use `System.runAs()` to test different user contexts
 - Implement proper test isolation - no dependencies between tests
+
+## MCP Tools Requirements
+- Before creating or refactoring Apex (classes, triggers, batches, queueables, invocables), assume prior context is stale and invoke the designated MCP tooling for Apex guidance.
+- Do not begin implementation until the tool responds with updated patterns or confirms no extra steps are needed.
+- When the tool returns schemas or templates, follow them verbatim (naming, method signatures, comments) unless the Product Owner explicitly approves deviations.

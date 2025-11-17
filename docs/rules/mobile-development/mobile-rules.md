@@ -1,3 +1,9 @@
+---
+name: Mobile Lightning Development Guardrails
+description: Requirements for invoking MCP tooling and safe patterns when building mobile-aware LWCs.
+tags: mobile, lwc, rules
+---
+
 # Mobile LWC Development Requirements
 
 Carefully review the user's task:

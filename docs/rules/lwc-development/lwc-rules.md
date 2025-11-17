@@ -1,3 +1,9 @@
+---
+name: Lightning Web Components Guardrails
+description: Standardize LWC architecture, UX, testing, and MCP-tool usage for MSB DAO delivery.
+tags: lwc, rules, guardrails
+---
+
 # Lightning Web Components (LWC) Requirements
 
 ## Component Architecture Requirements

@@ -416,26 +416,44 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
 
     async initializeWizardData() {
         if (this.initialDataRequested || !this.recordId || this.rawSteps.length === 0) {
+            // eslint-disable-next-line no-console
+            console.log('🔍 initializeWizardData SKIPPED:', {
+                initialDataRequested: this.initialDataRequested,
+                recordId: this.recordId,
+                rawStepsLength: this.rawSteps.length
+            });
             return;
         }
 
         this.initialDataRequested = true;
         this.isInitializing = true;
+        // eslint-disable-next-line no-console
+        console.log('🔍 initializeWizardData STARTING with recordId:', this.recordId, 'wizardApiName:', this.wizardApiName);
         try {
             const result = await getWizardData({
                 recordId: this.recordId,
                 wizardApiName: this.wizardApiName
             });
+            // eslint-disable-next-line no-console
+            console.log('🔍 getWizardData RESULT:', JSON.stringify(result, null, 2));
             this.prefillData = result;
             if (result?.applicantInfo) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting applicantInfo payload:', JSON.stringify(result.applicantInfo, null, 2));
                 this.payloadByStep.set('DAO_Business_InBranch_Applicant', result.applicantInfo);
             }
             if (result?.businessInfo) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting businessInfo payload:', JSON.stringify(result.businessInfo, null, 2));
                 this.payloadByStep.set('DAO_Business_InBranch_Business', result.businessInfo);
             }
             this.hasInitializedPrefill = true;
+            // eslint-disable-next-line no-console
+            console.log('🔍 payloadByStep after init:', Object.fromEntries(this.payloadByStep));
             this.recomputeSteps();
         } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('❌ initializeWizardData ERROR:', err);
             this.prefillError = err;
             this.showToast('Warning', 'Could not preload wizard data: ' + (err.body?.message || err.message), 'warning');
             this.recomputeSteps();
