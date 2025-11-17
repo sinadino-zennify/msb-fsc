@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Banking__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Manual checkbox field used by Relationship Banking to override the rollup field used to condition the Relationship Banking alert banner on Account and Household lightning pages.</description>
+    <inlineHelpText>Check this box to manually override the conditions triggering the Relationship Banking alert banner on Account and Household pages for Accounts/Households that do not have active Relationship Banking branch Financial Accounts but are managed by Relationship Banking.</inlineHelpText>
+    <label>Relationship Banking</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

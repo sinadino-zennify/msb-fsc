@@ -4,7 +4,28 @@ export default class ApplicantDetails extends LightningElement {
     @api recordId;
     @api wizardApiName;
     @api stepConfig;
-    @api value;
+
+    _value;
+    hasAppliedInitialValue = false;
+
+    @api
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails value setter called with:', JSON.stringify(val, null, 2));
+        // eslint-disable-next-line no-console
+        console.log('🔍 hasAppliedInitialValue:', this.hasAppliedInitialValue);
+        this._value = val;
+        if (val && !this.hasAppliedInitialValue) {
+            // eslint-disable-next-line no-console
+            console.log('🔍 Calling applyValue with:', JSON.stringify(val, null, 2));
+            this.applyValue(val);
+            this.hasAppliedInitialValue = true;
+        }
+    }
 
     // Personal Identity Fields
     salutation;
@@ -35,40 +56,6 @@ export default class ApplicantDetails extends LightningElement {
     idIssuingState;
     idIssueDate;
     idExpirationDate;
-
-    connectedCallback() {
-        if (this.value) {
-            // Personal Identity
-            this.salutation = this.value.salutation;
-            this.firstName = this.value.firstName;
-            this.lastName = this.value.lastName;
-            this.dateOfBirth = this.value.dateOfBirth;
-            this.taxIdType = this.value.taxIdType;
-            this.taxId = this.value.taxId;
-            
-            // Contact Information
-            this.email = this.value.email;
-            this.mobilePhone = this.value.mobilePhone;
-            this.homePhone = this.value.homePhone;
-            this.workPhone = this.value.workPhone;
-            
-            // Mailing Address
-            this.mailingStreetLine1 = this.value.mailingStreetLine1;
-            this.mailingStreetLine2 = this.value.mailingStreetLine2;
-            this.mailingCity = this.value.mailingCity;
-            this.mailingState = this.value.mailingState;
-            this.mailingPostalCode = this.value.mailingPostalCode;
-            this.mailingCountry = this.value.mailingCountry;
-            
-            // Government ID
-            this.governmentIdType = this.value.governmentIdType;
-            this.governmentIdNumber = this.value.governmentIdNumber;
-            this.idIssuingCountry = this.value.idIssuingCountry;
-            this.idIssuingState = this.value.idIssuingState;
-            this.idIssueDate = this.value.idIssueDate;
-            this.idExpirationDate = this.value.idExpirationDate;
-        }
-    }
 
     // Event Handlers - Personal Identity
     handleSalutationChange(event) {
@@ -185,21 +172,25 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     emitPayloadChange() {
+        console.log('=== ApplicantDetails: emitPayloadChange ===');
+        console.log('dateOfBirth field value:', this.dateOfBirth);
+        const payload = this.payload;
+        console.log('Payload being emitted:', JSON.stringify(payload, null, 2));
         this.dispatchEvent(new CustomEvent('payloadchange', {
             detail: { 
-                payload: this.payload,
+                payload: payload,
                 isDirty: true
             }
         }));
     }
 
     get payload() {
-        return {
+        const payload = {
             // Personal Identity
             salutation: this.salutation,
             firstName: this.firstName,
             lastName: this.lastName,
-            dateOfBirth: this.dateOfBirth,
+            birthDate: this.dateOfBirth, // Apex expects 'birthDate'
             taxIdType: this.taxIdType,
             taxId: this.taxId,
             
@@ -225,6 +216,9 @@ export default class ApplicantDetails extends LightningElement {
             idIssueDate: this.idIssueDate,
             idExpirationDate: this.idExpirationDate
         };
+        console.log('=== ApplicantDetails: payload getter ===');
+        console.log('birthDate in payload:', payload.birthDate);
+        return payload;
     }
 
     // Picklist Options
@@ -266,57 +260,69 @@ export default class ApplicantDetails extends LightningElement {
 
     get stateOptions() {
         return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' },
-            { label: 'Arizona', value: 'AZ' },
-            { label: 'Arkansas', value: 'AR' },
-            { label: 'California', value: 'CA' },
-            { label: 'Colorado', value: 'CO' },
-            { label: 'Connecticut', value: 'CT' },
-            { label: 'Delaware', value: 'DE' },
-            { label: 'Florida', value: 'FL' },
-            { label: 'Georgia', value: 'GA' },
-            { label: 'Hawaii', value: 'HI' },
-            { label: 'Idaho', value: 'ID' },
-            { label: 'Illinois', value: 'IL' },
-            { label: 'Indiana', value: 'IN' },
-            { label: 'Iowa', value: 'IA' },
-            { label: 'Kansas', value: 'KS' },
-            { label: 'Kentucky', value: 'KY' },
-            { label: 'Louisiana', value: 'LA' },
-            { label: 'Maine', value: 'ME' },
-            { label: 'Maryland', value: 'MD' },
-            { label: 'Massachusetts', value: 'MA' },
-            { label: 'Michigan', value: 'MI' },
-            { label: 'Minnesota', value: 'MN' },
-            { label: 'Mississippi', value: 'MS' },
-            { label: 'Missouri', value: 'MO' },
-            { label: 'Montana', value: 'MT' },
-            { label: 'Nebraska', value: 'NE' },
-            { label: 'Nevada', value: 'NV' },
-            { label: 'New Hampshire', value: 'NH' },
-            { label: 'New Jersey', value: 'NJ' },
-            { label: 'New Mexico', value: 'NM' },
-            { label: 'New York', value: 'NY' },
-            { label: 'North Carolina', value: 'NC' },
-            { label: 'North Dakota', value: 'ND' },
-            { label: 'Ohio', value: 'OH' },
-            { label: 'Oklahoma', value: 'OK' },
-            { label: 'Oregon', value: 'OR' },
-            { label: 'Pennsylvania', value: 'PA' },
-            { label: 'Rhode Island', value: 'RI' },
-            { label: 'South Carolina', value: 'SC' },
-            { label: 'South Dakota', value: 'SD' },
-            { label: 'Tennessee', value: 'TN' },
-            { label: 'Texas', value: 'TX' },
-            { label: 'Utah', value: 'UT' },
-            { label: 'Vermont', value: 'VT' },
-            { label: 'Virginia', value: 'VA' },
-            { label: 'Washington', value: 'WA' },
-            { label: 'West Virginia', value: 'WV' },
-            { label: 'Wisconsin', value: 'WI' },
-            { label: 'Wyoming', value: 'WY' }
+            { label: 'Alabama', value: 'Alabama' },
+            { label: 'Alaska', value: 'Alaska' },
+            { label: 'Arizona', value: 'Arizona' },
+            { label: 'Arkansas', value: 'Arkansas' },
+            { label: 'California', value: 'California' },
+            { label: 'Colorado', value: 'Colorado' },
+            { label: 'Connecticut', value: 'Connecticut' },
+            { label: 'Delaware', value: 'Delaware' },
+            { label: 'Florida', value: 'Florida' },
+            { label: 'Georgia', value: 'Georgia' },
+            { label: 'Hawaii', value: 'Hawaii' },
+            { label: 'Idaho', value: 'Idaho' },
+            { label: 'Illinois', value: 'Illinois' },
+            { label: 'Indiana', value: 'Indiana' },
+            { label: 'Iowa', value: 'Iowa' },
+            { label: 'Kansas', value: 'Kansas' },
+            { label: 'Kentucky', value: 'Kentucky' },
+            { label: 'Louisiana', value: 'Louisiana' },
+            { label: 'Maine', value: 'Maine' },
+            { label: 'Maryland', value: 'Maryland' },
+            { label: 'Massachusetts', value: 'Massachusetts' },
+            { label: 'Michigan', value: 'Michigan' },
+            { label: 'Minnesota', value: 'Minnesota' },
+            { label: 'Mississippi', value: 'Mississippi' },
+            { label: 'Missouri', value: 'Missouri' },
+            { label: 'Montana', value: 'Montana' },
+            { label: 'Nebraska', value: 'Nebraska' },
+            { label: 'Nevada', value: 'Nevada' },
+            { label: 'New Hampshire', value: 'New Hampshire' },
+            { label: 'New Jersey', value: 'New Jersey' },
+            { label: 'New Mexico', value: 'New Mexico' },
+            { label: 'New York', value: 'New York' },
+            { label: 'North Carolina', value: 'North Carolina' },
+            { label: 'North Dakota', value: 'North Dakota' },
+            { label: 'Ohio', value: 'Ohio' },
+            { label: 'Oklahoma', value: 'Oklahoma' },
+            { label: 'Oregon', value: 'Oregon' },
+            { label: 'Pennsylvania', value: 'Pennsylvania' },
+            { label: 'Rhode Island', value: 'Rhode Island' },
+            { label: 'South Carolina', value: 'South Carolina' },
+            { label: 'South Dakota', value: 'South Dakota' },
+            { label: 'Tennessee', value: 'Tennessee' },
+            { label: 'Texas', value: 'Texas' },
+            { label: 'Utah', value: 'Utah' },
+            { label: 'Vermont', value: 'Vermont' },
+            { label: 'Virginia', value: 'Virginia' },
+            { label: 'Washington', value: 'Washington' },
+            { label: 'West Virginia', value: 'West Virginia' },
+            { label: 'Wisconsin', value: 'Wisconsin' },
+            { label: 'Wyoming', value: 'Wyoming' },
+            { label: 'District of Columbia', value: 'District of Columbia' },
+            { label: 'Puerto Rico', value: 'Puerto Rico' },
+            { label: 'Guam', value: 'Guam' },
+            { label: 'U.S. Virgin Islands', value: 'U.S. Virgin Islands' },
+            { label: 'American Samoa', value: 'American Samoa' },
+            { label: 'Northern Mariana Islands', value: 'Northern Mariana Islands' }
         ];
+    }
+
+    get todayDate() {
+        // Return today's date in YYYY-MM-DD format for date input max attribute
+        const today = new Date();
+        return today.toISOString().split('T')[0];
     }
 
     @api validate() {
@@ -329,22 +335,50 @@ export default class ApplicantDetails extends LightningElement {
         if (!this.lastName) {
             messages.push('Last Name is required.');
         }
+        
+        // Date of Birth validation (required + not future + 18+ years old)
         if (!this.dateOfBirth) {
             messages.push('Date of Birth is required.');
+        } else {
+            if (this.validateFutureDate(this.dateOfBirth)) {
+                messages.push('Date of Birth cannot be a future date.');
+            } else if (!this.validateMinimumAge(this.dateOfBirth, 18)) {
+                messages.push('Applicant must be at least 18 years old.');
+            }
         }
+        
         if (!this.taxIdType) {
             messages.push('Tax ID Type is required.');
         }
+        
+        // Tax ID validation (required + format based on type)
         if (!this.taxId) {
             messages.push('Tax ID Number is required.');
+        } else if (this.taxIdType === 'SSN' && !this.validateSSNFormat(this.taxId)) {
+            messages.push('SSN must be 9 digits in format XXX-XX-XXXX.');
+        } else if (this.taxIdType === 'EIN' && !this.validateEINFormat(this.taxId)) {
+            messages.push('EIN must be 9 digits in format XX-XXXXXXX.');
         }
         
         // Contact Information validation
         if (!this.email) {
             messages.push('Email is required.');
+        } else if (!this.validateEmailFormat(this.email)) {
+            messages.push('Email must be a valid email address.');
         }
+        
         if (!this.mobilePhone) {
             messages.push('Mobile Phone is required.');
+        } else if (!this.validatePhoneFormat(this.mobilePhone)) {
+            messages.push('Mobile Phone must be a valid phone number (10 digits).');
+        }
+        
+        // Optional phone validation
+        if (this.homePhone && !this.validatePhoneFormat(this.homePhone)) {
+            messages.push('Home Phone must be a valid phone number (10 digits).');
+        }
+        if (this.workPhone && !this.validatePhoneFormat(this.workPhone)) {
+            messages.push('Work Phone must be a valid phone number (10 digits).');
         }
         
         // Mailing Address validation
@@ -359,6 +393,8 @@ export default class ApplicantDetails extends LightningElement {
         }
         if (!this.mailingPostalCode) {
             messages.push('ZIP Code is required.');
+        } else if (!this.validateZipCodeFormat(this.mailingPostalCode)) {
+            messages.push('ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX).');
         }
         
         // Government ID validation
@@ -373,15 +409,79 @@ export default class ApplicantDetails extends LightningElement {
         }
         if (!this.idIssueDate) {
             messages.push('ID Issue Date is required.');
+        } else if (this.validateFutureDate(this.idIssueDate)) {
+            messages.push('ID Issue Date cannot be a future date.');
         }
+        
         if (!this.idExpirationDate) {
             messages.push('ID Expiration Date is required.');
+        } else if (this.idIssueDate && !this.validateDateOrder(this.idIssueDate, this.idExpirationDate)) {
+            messages.push('ID Expiration Date must be after Issue Date.');
         }
         
         return {
             isValid: messages.length === 0,
             messages: messages
         };
+    }
+    
+    // Validation helper methods
+    validateSSNFormat(ssn) {
+        // Format: XXX-XX-XXXX (9 digits total)
+        const ssnPattern = /^\d{3}-\d{2}-\d{4}$/;
+        return ssnPattern.test(ssn);
+    }
+    
+    validateEINFormat(ein) {
+        // Format: XX-XXXXXXX (9 digits total)
+        const einPattern = /^\d{2}-\d{7}$/;
+        return einPattern.test(ein);
+    }
+    
+    validateFutureDate(dateString) {
+        const selectedDate = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate > today;
+    }
+    
+    validateMinimumAge(dateOfBirth, minimumAge) {
+        const dob = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
+        
+        // Adjust age if birthday hasn't occurred this year
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            return (age - 1) >= minimumAge;
+        }
+        return age >= minimumAge;
+    }
+    
+    validatePhoneFormat(phone) {
+        // Remove all non-digit characters
+        const digitsOnly = phone.replace(/\D/g, '');
+        // Must be 10 digits (US format)
+        return digitsOnly.length === 10;
+    }
+    
+    validateEmailFormat(email) {
+        // Basic email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+    
+    validateZipCodeFormat(zipCode) {
+        // Format: XXXXX or XXXXX-XXXX
+        const zipPattern = /^\d{5}(-\d{4})?$/;
+        return zipPattern.test(zipCode);
+    }
+    
+    validateDateOrder(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return end > start;
     }
 
     @api reset() {
@@ -415,6 +515,51 @@ export default class ApplicantDetails extends LightningElement {
         this.idIssueDate = null;
         this.idExpirationDate = null;
         
+        this.emitPayloadChange();
+    }
+
+    applyValue(incomingValue) {
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails applyValue called with:', JSON.stringify(incomingValue, null, 2));
+        
+        // Personal Identity
+        this.salutation = incomingValue.salutation;
+        this.firstName = incomingValue.firstName;
+        this.lastName = incomingValue.lastName;
+        this.dateOfBirth = incomingValue.birthDate || incomingValue.dateOfBirth;
+        this.taxIdType = incomingValue.taxIdType;
+        this.taxId = incomingValue.taxId;
+
+        // Contact Information
+        this.email = incomingValue.email;
+        this.mobilePhone = incomingValue.mobilePhone;
+        this.homePhone = incomingValue.homePhone;
+        this.workPhone = incomingValue.workPhone;
+
+        // Mailing Address
+        this.mailingStreetLine1 = incomingValue.mailingStreetLine1;
+        this.mailingStreetLine2 = incomingValue.mailingStreetLine2;
+        this.mailingCity = incomingValue.mailingCity;
+        this.mailingState = incomingValue.mailingState;
+        this.mailingPostalCode = incomingValue.mailingPostalCode;
+        this.mailingCountry = incomingValue.mailingCountry;
+
+        // Government ID
+        this.governmentIdType = incomingValue.governmentIdType;
+        this.governmentIdNumber = incomingValue.governmentIdNumber;
+        this.idIssuingCountry = incomingValue.idIssuingCountry;
+        this.idIssuingState = incomingValue.idIssuingState;
+        this.idIssueDate = incomingValue.idIssueDate;
+        this.idExpirationDate = incomingValue.idExpirationDate;
+
+        // eslint-disable-next-line no-console
+        console.log('🔍 ApplicantDetails fields after apply:', {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            mailingCity: this.mailingCity
+        });
+
         this.emitPayloadChange();
     }
 }

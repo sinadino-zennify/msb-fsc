@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Number_Format_Pers</fullName>
+    <active>true</active>
+    <description>Requires that the Account Number for a Person Account matches the formatting for the COCC Person Number (P:00000).</description>
+    <errorConditionFormula>AND(
+IsPersonAccount = true,
+ISCHANGED(AccountNumber),
+OR(
+NOT(LEFT(AccountNumber ,2) = &quot;P:&quot;),
+LEFT(AccountNumber ,3) = &quot;P: &quot;),
+$Profile.Name = &quot;End User&quot;)</errorConditionFormula>
+    <errorDisplayField>AccountNumber</errorDisplayField>
+    <errorMessage>Account Number must equal the COCC Person Number for this customer. The COCC Person Number entered in the Account Number field must be formatted as follows: &quot;P:00000&quot;</errorMessage>
+</ValidationRule>

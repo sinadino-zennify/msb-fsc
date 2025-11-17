@@ -1,3 +1,8 @@
+/* Hide the Lightning App Page header */
+:host {
+    display: block;
+}
+
 /* Wizard Container Styling */
 .slds-p-horizontal_medium {
     min-height: 500px;

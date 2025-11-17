@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Business_Tax_ID_Type__c</fullName>
+    <description>Type of business tax ID</description>
     <label>Business Tax ID Type</label>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
@@ -20,5 +23,4 @@
             </value>
         </valueSetDefinition>
     </valueSet>
-    <description>Type of business tax ID</description>
 </CustomField>

@@ -1,0 +1,5 @@
+/* Hide the action modal to prevent flash */
+:host {
+    display: none;
+}
+

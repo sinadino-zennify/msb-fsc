@@ -1,0 +1,62 @@
+Screen/Section,UI Field Label,UI Field Type,Applicant Field API,Field Status,Field Type,Account Field API,Account Field Type,Notes
+Person - Identity,Salutation,Picklist,Salutation,Standard,Picklist,Salutation,Standard,Values: Mr. Mrs. Ms. Dr. Prof.
+Person - Identity,First Name,Text,FirstName,Standard,Text,FirstName,Standard,Required
+Person - Identity,Middle Name,Text,MiddleName,Standard,Text,MiddleName,Standard,Optional
+Person - Identity,Last Name,Text,LastName,Standard,Text,LastName,Standard,Required
+Person - Identity,Suffix,Picklist,Suffix,Standard,Picklist,Suffix,Standard,Values: Jr. Sr. II III IV
+Person - Identity,Phonetic Name (Checkbox),Checkbox,Has_Phonetic_Name__c,Custom,Checkbox,Has_Phonetic_Name__c,Custom,Indicates if phonetic spelling exists
+Person - Identity,Phonetic Name,Text,Phonetic_Name__c,Custom,Text(120),Phonetic_Name__c,Custom,Displays when checkbox is true
+Person - Identity,Birth Date,Date,BirthDate,Standard,Date,PersonBirthdate,Standard,Required for CIP/KYC
+Person - Identity,Nickname,Text,Nickname__c,Custom,Text(80),Nickname__c,Custom,Optional
+Person - Identity,Occupation,Picklist,Occupation__c,Custom,Picklist,FinServ__Occupation__pc,FSC,FSC field
+Person - Identity,Mother's Maiden Name,Text,Mothers_Maiden_Name__c,Custom,Text(80) Encrypted,Mothers_Maiden_Name__c,Custom,Security question - encrypted
+Person - Identity,Person Type,Picklist,Type,Standard,Picklist,Person_Type__c,Custom,Values: Person Organization
+Person - Identity,Tax ID (SSN/ITIN),Text,Tax_ID__c,Custom,Text(11) Encrypted,SSN_Tax_Id__c,Custom,Masked display (XXX-XX-1234)
+Person - Identity,Tax ID Type,Picklist,Tax_ID_Type__c,Custom,Picklist,Tax_ID_Type__c,Custom,Values: SSN ITIN Foreign Tax ID
+Person - Identity,Scan ID & Signature,Action Button,N/A,N/A,N/A,Attachment/Files,Files,Triggers file upload component
+Person - Address & Contact,Address Line 1,Text,Mailing_Street_Line_1__c,Custom,Text(255),PersonMailingStreet,Standard,Required
+Person - Address & Contact,Address Line 2,Text,Mailing_Street_Line_2__c,Custom,Text(255),PersonMailingStreet,Standard,Optional
+Person - Address & Contact,Country,Picklist,Mailing_Country__c,Custom,Picklist,PersonMailingCountry,Standard,Default: USA
+Person - Address & Contact,ZIP Code,Text,Mailing_Postal_Code__c,Custom,Text(10),PersonMailingPostalCode,Standard,Format: #####-####
+Person - Address & Contact,City,Text,Mailing_City__c,Custom,Text(80),PersonMailingCity,Standard,Auto-populate from ZIP
+Person - Address & Contact,State,Picklist,Mailing_State__c,Custom,Picklist,PersonMailingState,Standard,US States + Territories
+Person - Address & Contact,Phone - Home,Phone,Home_Phone__c,Custom,Phone,PersonHomePhone,Standard,
+Person - Address & Contact,Phone - Work,Phone,Work_Phone__c,Custom,Phone,Phone,Standard,Primary phone
+Person - Address & Contact,Phone - Mobile,Phone,Mobile_Phone__c,Custom,Phone,PersonMobilePhone,Standard,
+Person - Address & Contact,Email,Email,Email,Standard,Email,PersonEmail,Standard,
+Person - Government ID,ID Type,Picklist,Government_ID_Type__c,Custom,Picklist,Government_ID_Type__c,Custom,Driver's License Passport State ID Military ID
+Person - Government ID,ID Number,Text,Government_ID_Number__c,Custom,Text(50) Encrypted,Government_ID_Number__c,Custom,Encrypted
+Person - Government ID,Issued By - Country,Picklist,ID_Issuing_Country__c,Custom,Picklist,ID_Issuing_Country__c,Custom,Default: USA
+Person - Government ID,Issued By - State,Picklist,ID_Issuing_State__c,Custom,Picklist,ID_Issuing_State__c,Custom,Conditional on Country=USA
+Person - Government ID,Issue Date,Date,ID_Issue_Date__c,Custom,Date,ID_Issue_Date__c,Custom,Not future date
+Person - Government ID,Expiration Date,Date,ID_Expiration_Date__c,Custom,Date,ID_Expiration_Date__c,Custom,After Issue Date
+Organization - Business Profile,Organization Name,Text,BusinessEntityName,Standard,Text(255),Name,Standard,Required with search
+Organization - Business Profile,Doing Business As (DBA),Text,Doing_Business_As__c,Custom,Text(255),SW_Doing_Business_As__c,N/A,DBA Name - New field on Applicant
+Organization - Business Profile,Business Type,Picklist,BusinessEntityType,Standard,Picklist,Business_Type__c,Custom,Values: Corporation LLC Partnership Sole Proprietorship Non-Profit Trust
+Organization - Business Profile,Date Established,Date,Date_Established__c,Custom,Date,SW_Date_Business_Established__c,N/A,Cannot be future date - New field on Applicant
+Organization - Business Profile,State of Incorporation,Picklist,Business_Registration_State__c,Custom,Picklist,SW_Business_Registration_State__c,N/A,US States - New field on Applicant
+Organization - Business Profile,Address Line 1,Text,Business_Street_Line_1__c,Custom,Text(255),BillingStreet,Standard,Required
+Organization - Business Profile,Address Line 2,Text,Business_Street_Line_2__c,Custom,Text(255),BillingStreet,Standard,Optional
+Organization - Business Profile,Country,Picklist,Business_Country__c,Custom,Picklist,BillingCountry,Standard,Default: USA
+Organization - Business Profile,ZIP Code,Text,Business_Postal_Code__c,Custom,Text(10),BillingPostalCode,Standard,Format: #####-####
+Organization - Business Profile,City,Text,Business_City__c,Custom,Text(80),BillingCity,Standard,Auto-populate from ZIP
+Organization - Business Profile,State,Picklist,Business_State__c,Custom,Picklist,BillingState,Standard,US States
+Organization - Business Profile,Phone - Home,Phone,Business_Home_Phone__c,Custom,Phone,Business_Home_Phone__c,Standard,
+Organization - Business Profile,Phone - Work,Phone,Business_Work_Phone__c,Custom,Phone,Phone,Standard,Primary phone
+Organization - Business Profile,Phone - Mobile,Phone,Business_Mobile_Phone__c,Custom,Phone,Business_Mobile_Phone__c,Standard,
+Organization - Business Profile,Email,Email,Business_Email__c,Custom,Email,Business_Email__c,N/A,No standard business email field
+Organization - Business Profile,Copy/Use Address,Action,N/A,N/A,N/A,N/A,N/A,Clones address to another section
+Organization - Tax & Classification,Tax ID (EIN),Text,Business_Tax_ID__c,Custom,Text(11) Encrypted,Business_Tax_ID__c,Custom,Format: XX-XXXXXXX
+Organization - Tax & Classification,Tax ID Type,Picklist,Business_Tax_ID_Type__c,Custom,Picklist,Tax_ID_Type__c,Custom,Federal Employer Tax ID (EIN) Foreign Tax ID
+Organization - Tax & Classification,Tax Country,Picklist,Tax_Country__c,Custom,Picklist,Tax_Country__c,Custom,Default: USA
+Organization - Industry & Risk,SIC Code,Lookup/Search,SIC_Code__c,Custom,Text(10),Sic,Standard,Standard Industrial Classification
+Organization - Industry & Risk,SIC Description,Text (Read-only),SIC_Description__c,Custom,Text(255),SicDesc,Standard,Auto-populated from SIC lookup
+Organization - Industry & Risk,NAICS Code,Lookup,NAICS_Code__c,Custom,Lookup(NAICS__c),NAICS_Lookup__c,Custom,Lookup to NAICS__c custom object
+Organization - Industry & Risk,NAICS Description,Text (Read-only),NAICS_Description__c,Custom,Text(255),NaicsDesc,Standard,Auto-populated from NAICS lookup
+Organization - Industry & Risk,BSA/CIP Rating,Picklist,BSA_CIP_Rating__c,Custom,Picklist,BSA_CIP_Rating__c,Custom,Low Medium High Prohibited
+Organization - Industry & Risk,Rating Date,Date,BSA_Rating_Date__c,Custom,Date,BSA_Rating_Date__c,Custom,Date of last BSA/AML review
+Organization - Industry & Risk,Next Rating Date,Date,Next_BSA_Rating_Date__c,Custom,Date,Next_BSA_Rating_Date__c,Custom,Calculated: Rating Date + 12 months
+Organization - Business Profile,Primary Contact Name,Text,Primary_Contact_Name__c,Custom,Text(255),N/A,N/A,Optional - Manual entry
+Organization - Business Profile,Primary Contact Title,Text,Primary_Contact_Title__c,Custom,Text(100),N/A,N/A,Optional - Manual entry
+Organization - Business Profile,Annual Revenue,Currency,Annual_Revenue__c,Custom,Currency,AnnualRevenue,Standard,Optional
+Organization - Business Profile,Business Phone,Phone,Business_Phone__c,Custom,Phone,Business_Phone__c,Custom,Required - Primary business phone

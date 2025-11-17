@@ -10,7 +10,15 @@
 **Work Item**: SVC-002, LWC-002  
 **Status**: Not Started  
 **Created**: 2025-11-05  
-**Last Updated**: 2025-11-05
+**Last Updated**: 2025-11-11
+
+## 🎫 JIRA Story Mapping
+
+| JIRA Story | Title | Status | Link |
+|------------|-------|--------|------|
+| TBD | Persist Application Data | Not Started | TBD |
+
+> **Note**: JIRA story not yet created. Please create and update this section with the JIRA link for agent reference.
 
 ---
 
@@ -26,8 +34,9 @@
 
 ### ApplicationForm Management
 - [ ] Create ApplicationForm record on first step if `applicationId` is null
-- [ ] Link ApplicationForm to Opportunity via `OpportunityId` lookup field
-- [ ] Link ApplicationForm to Business Account via `AccountId` lookup field
+- Depending on the Parent Object entry point:
+  - [ ] Link ApplicationForm to Opportunity via `OpportunityId` lookup field
+  - [ ] Link ApplicationForm to Business Account via `AccountId` lookup field
 - [ ] Update ApplicationForm fields from wizard payload as applicable
 
 ### Business Information Step Persistence
@@ -36,7 +45,7 @@
   - [ ] Map all 20 wizard fields to Account fields (see field mapping docs)
   - [ ] Handle compound address field (`BillingStreet` = Line1 + '\n' + Line2)
   - [ ] Link Account to ApplicationForm via `ApplicationForm.AccountId`
-  - [ ] If Account exists (from Opportunity), update it; otherwise create new
+  - [ ] If Business Account( `IsPersonAccount = false`) exists (from Opportunity), update it; otherwise create new
 
 ### Personal Information Step Persistence
 - [ ] When Personal Information step is saved:
@@ -46,9 +55,6 @@
   - [ ] Handle compound address field (`PersonMailingStreet` = Line1 + '\n' + Line2)
   - [ ] Link Applicant to ApplicationForm via `Applicant.ApplicationFormId`
   - [ ] Link Applicant to PersonAccount via `Applicant.AccountId`
-  - [ ] Create AccountContactRelation (ACR) linking PersonAccount to Business Account
-  - [ ] Set ACR `Roles` = 'Primary Applicant'
-  - [ ] Set ACR `IsDirect = true` and `IsActive = true`
 
 ### Additional Applicants Step Persistence
 - [ ] When Additional Applicants step is saved:
@@ -58,9 +64,6 @@
     - [ ] Map applicant fields to Applicant and PersonAccount
     - [ ] Link Applicant to ApplicationForm
     - [ ] Link Applicant to PersonAccount
-    - [ ] Create ACR linking PersonAccount to Business Account
-    - [ ] Set ACR `Roles` appropriately (not 'Primary Applicant')
-    - [ ] Set ACR `IsDirect = true` and `IsActive = true`
 
 ### Conditional Persistence
 - [ ] Handle partial data scenarios:
@@ -85,9 +88,9 @@
 ## 🛠️ Tasks and Sub-Tasks
 
 ### 1. Update ApplicationForm Creation Logic
-- [ ] 1.1 Modify `WizardPersistenceService.createApplicationForm()` to accept Opportunity ID
+- [ ] 1.1 Modify `WizardPersistenceService.createApplicationForm()` to accept Opportunity ID Or Account ID
 - [ ] 1.2 Set `ApplicationForm.OpportunityId` from wizard context
-- [ ] 1.3 Set `ApplicationForm.AccountId` after Business Account is created/updated
+- [ ] 1.3 Set `ApplicationForm.AccountId` from wizard context orafter Business Account is created/updated
 - [ ] 1.4 Add error handling for missing Opportunity
 
 ### 2. Implement Business Information Step Persistence
@@ -108,9 +111,7 @@
 - [ ] 3.6 Upsert PersonAccount with CRUD/FLS checks
 - [ ] 3.7 Create/update Applicant record and link to PersonAccount
 - [ ] 3.8 Upsert Applicant with CRUD/FLS checks
-- [ ] 3.9 Create AccountContactRelation with 'Primary Applicant' role
-- [ ] 3.10 Handle case where Business Account doesn't exist yet (defer ACR creation)
-- [ ] 3.11 Return Applicant ID, PersonAccount ID, and ACR ID
+- [ ] 3.9 Return Applicant ID, PersonAccount ID
 
 ### 4. Implement Additional Applicants Step Persistence
 - [ ] 4.1 Update `upsertAdditionalStep()` to handle list of additional applicants

@@ -1,7 +1,18 @@
 # Main Street Bank - Development Backlog
 
-**Last Updated**: 2025-11-05  
-**Client**: Main Street bank
+**Last Updated**: 2025-11-11  
+**Client**: Main Street Bank
+
+## 🎫 Story ID Reference
+
+| Story ID | JIRA Stories | Status |
+|----------|--------------|--------|
+| ST-001 | [MSB-18](https://zennify.atlassian.net/browse/MSB-18), [MSB-21](https://zennify.atlassian.net/browse/MSB-21) | ✅ Completed |
+| ST-002 | TBD | 🔄 In Progress |
+| ST-003 | [MSB-24](https://zennify.atlassian.net/browse/MSB-24) | 📋 Up Next |
+| ST-004 | TBD | 📋 Backlog |
+
+> **For AI Agents**: Use the JIRA links above to access detailed story information via JIRA MCP when needed.
 
 ---
 

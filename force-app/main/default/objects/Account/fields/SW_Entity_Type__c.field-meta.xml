@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SW_Entity_Type__c</fullName>
+    <label>Entity Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>cCorp</fullName>
+                <default>false</default>
+                <label>C Corporation</label>
+            </value>
+            <value>
+                <fullName>llc</fullName>
+                <default>false</default>
+                <label>Limited Liability Company (LLC)</label>
+            </value>
+            <value>
+                <fullName>llp</fullName>
+                <default>false</default>
+                <label>Limited Liability Partnership (LLP)</label>
+            </value>
+            <value>
+                <fullName>partnership</fullName>
+                <default>false</default>
+                <label>Partnership</label>
+            </value>
+            <value>
+                <fullName>sCorp</fullName>
+                <default>false</default>
+                <label>S Corporation</label>
+            </value>
+            <value>
+                <fullName>soleProp</fullName>
+                <default>false</default>
+                <label>Sole Proprietorship</label>
+            </value>
+            <value>
+                <fullName>cooperative</fullName>
+                <default>false</default>
+                <label>Co-operative</label>
+            </value>
+            <value>
+                <fullName>employeeStockOwnershipPlan</fullName>
+                <default>false</default>
+                <label>Employee Stock Ownership Program (ESOP)</label>
+            </value>
+            <value>
+                <fullName>jointVenture</fullName>
+                <default>false</default>
+                <label>Joint Venture</label>
+            </value>
+            <value>
+                <fullName>independentContractors</fullName>
+                <default>false</default>
+                <label>Independent Contractor(s)</label>
+            </value>
+            <value>
+                <fullName>nonprofitChildcareCenter</fullName>
+                <default>false</default>
+                <label>Non-Profit Childcare Center</label>
+            </value>
+            <value>
+                <fullName>professionalAssociation</fullName>
+                <default>false</default>
+                <label>Professional Association (PA)</label>
+            </value>
+            <value>
+                <fullName>rolloverAsBusinessStartUps</fullName>
+                <default>false</default>
+                <label>Rollover As Business Start-Ups</label>
+            </value>
+            <value>
+                <fullName>tenantInCommon</fullName>
+                <default>false</default>
+                <label>Tenants in Common</label>
+            </value>
+            <value>
+                <fullName>trust</fullName>
+                <default>false</default>
+                <label>Trust</label>
+            </value>
+            <value>
+                <fullName>nonprofit</fullName>
+                <default>false</default>
+                <label>Non-Profit</label>
+            </value>
+            <value>
+                <fullName>other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

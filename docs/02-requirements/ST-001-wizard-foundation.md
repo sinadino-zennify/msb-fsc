@@ -10,7 +10,16 @@
 **Work Item**: LWC-001, SVC-001, DM-001  
 **Status**: Completed  
 **Created**: 2025-10-24  
-**Last Updated**: 2025-10-27
+**Last Updated**: 2025-11-11
+
+## 🎫 JIRA Story Mapping
+
+| JIRA Story | Title | Status | Link |
+|------------|-------|--------|------|
+| MSB-18 | Wizard Foundation - CMDT Orchestration | Completed | [View Story](https://zennify.atlassian.net/browse/MSB-18) |
+| MSB-21 | Wizard Container & Navigation | Completed | [View Story](https://zennify.atlassian.net/browse/MSB-21) |
+
+> **Note**: Use the JIRA links above for detailed acceptance criteria, comments, and status updates. This document provides technical implementation details.
 
 ---
 

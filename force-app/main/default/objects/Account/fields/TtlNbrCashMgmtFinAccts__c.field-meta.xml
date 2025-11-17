@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TtlNbrCashMgmtFinAccts__c</fullName>
+    <description>Rollup field indicating the total number of FAs for which this Account is the Primary Owner that have Cash Management services active.</description>
+    <externalId>false</externalId>
+    <label>TtlNbrCashMgmtFinAccts</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

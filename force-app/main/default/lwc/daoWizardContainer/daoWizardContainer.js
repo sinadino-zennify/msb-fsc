@@ -1,21 +1,36 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
-import { getFocusedTabInfo, setTabLabel, setTabIcon, isConsoleNavigation, openSubtab, closeTab, refreshTab } from 'lightning/platformWorkspaceApi';
+import { getFocusedTabInfo, setTabLabel, setTabIcon, isConsoleNavigation, openSubtab, closeTab } from 'lightning/platformWorkspaceApi';
 import getSteps from '@salesforce/apex/WizardConfigService.getSteps';
 import upsertStep from '@salesforce/apex/WizardPersistenceService.upsertStep';
+import getWizardData from '@salesforce/apex/WizardDataService.getWizardData';
 
 export default class DaoWizardContainer extends NavigationMixin(LightningElement) {
-    @api recordId;
+    _recordId;
+    @api
+    get recordId() {
+        return this._recordId;
+    }
+    set recordId(value) {
+        this._recordId = value;
+        this.initializeWizardData();
+    }
     @api wizardApiName = 'DAO_Business_InBranch';
 
     steps = [];
+    rawSteps = [];
     currentIndex = 0;
     payloadByStep = new Map();
     isLoading = false;
+    isInitializing = false;
     error;
     applicationFormId; // Store the ApplicationForm ID after creation
     devMode = false;
+    prefillData;
+    prefillError;
+    hasInitializedPrefill = false;
+    initialDataRequested = false;
     
     connectedCallback() {
         // Log initial recordId passed by the host record page (Opportunity or ApplicationForm)
@@ -38,11 +53,13 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     @wire(getSteps, { wizardApiName: '$wizardApiName' })
     wiredSteps({ error, data }) {
         if (data) {
-            this.steps = data;
+            this.rawSteps = data;
             this.error = undefined;
-            this.updateTabInfo(); // Set tab label/icon when data loads
+            this.recomputeSteps();
+            this.initializeWizardData();
         } else if (error) {
             this.error = error;
+            this.rawSteps = [];
             this.steps = [];
             this.showToast('Error', 'Failed to load wizard steps: ' + error.body.message, 'error');
         }
@@ -119,6 +136,9 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     }
 
     async handleNext() {
+        if (this.isInitializing) {
+            return;
+        }
         if (!this.currentStep) return;
 
         this.isLoading = true;
@@ -142,7 +162,8 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
                 persistenceResult = await upsertStep({
                     applicationId: this.applicationFormId, // Don't use recordId - it's the Opportunity, not ApplicationForm
                     stepDeveloperName: this.currentStep.developerName,
-                    payload: payload
+                    payload: payload,
+                    contextRecordId: this.recordId // Pass the context record (Opportunity/Account) for ApplicationForm creation
                 });
             } catch (e) {
                 if (!this.devMode) throw e;
@@ -196,6 +217,9 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     }
 
     handlePrevious() {
+        if (this.isInitializing) {
+            return;
+        }
         if (!this.isFirst) {
             this.currentIndex--;
         }
@@ -220,7 +244,8 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             const persistenceResult = await upsertStep({
                 applicationId: this.applicationFormId, // Don't use recordId - it's the Opportunity, not ApplicationForm
                 stepDeveloperName: this.currentStep.developerName,
-                payload: payload
+                payload: payload,
+                contextRecordId: this.recordId // Pass the context record (Opportunity/Account) for ApplicationForm creation
             });
 
             // Capture ApplicationForm ID if this created it
@@ -367,5 +392,97 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             message: message,
             variant: variant
         }));
+    }
+
+    get showSpinner() {
+        return this.isLoading || this.isInitializing;
+    }
+
+    get disableNavigation() {
+        return this.isInitializing || this.steps.length === 0;
+    }
+
+    get disablePreviousButton() {
+        return this.disableNavigation || this.isFirst;
+    }
+
+    get disableSaveAndExitButton() {
+        return this.disableNavigation;
+    }
+
+    get disableNextButton() {
+        return this.disableNavigation || this.isLoading;
+    }
+
+    async initializeWizardData() {
+        if (this.initialDataRequested || !this.recordId || this.rawSteps.length === 0) {
+            // eslint-disable-next-line no-console
+            console.log('🔍 initializeWizardData SKIPPED:', {
+                initialDataRequested: this.initialDataRequested,
+                recordId: this.recordId,
+                rawStepsLength: this.rawSteps.length
+            });
+            return;
+        }
+
+        this.initialDataRequested = true;
+        this.isInitializing = true;
+        // eslint-disable-next-line no-console
+        console.log('🔍 initializeWizardData STARTING with recordId:', this.recordId, 'wizardApiName:', this.wizardApiName);
+        try {
+            const result = await getWizardData({
+                recordId: this.recordId,
+                wizardApiName: this.wizardApiName
+            });
+            // eslint-disable-next-line no-console
+            console.log('🔍 getWizardData RESULT:', JSON.stringify(result, null, 2));
+            this.prefillData = result;
+            if (result?.applicantInfo) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting applicantInfo payload:', JSON.stringify(result.applicantInfo, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Applicant', result.applicantInfo);
+            }
+            if (result?.businessInfo) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting businessInfo payload:', JSON.stringify(result.businessInfo, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Business', result.businessInfo);
+            }
+            this.hasInitializedPrefill = true;
+            // eslint-disable-next-line no-console
+            console.log('🔍 payloadByStep after init:', Object.fromEntries(this.payloadByStep));
+            this.recomputeSteps();
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('❌ initializeWizardData ERROR:', err);
+            this.prefillError = err;
+            this.showToast('Warning', 'Could not preload wizard data: ' + (err.body?.message || err.message), 'warning');
+            this.recomputeSteps();
+        } finally {
+            this.isInitializing = false;
+        }
+    }
+
+    recomputeSteps() {
+        if (!this.rawSteps || this.rawSteps.length === 0) {
+            this.steps = [];
+            return;
+        }
+
+        let computedSteps = [...this.rawSteps];
+        const businessStepName = 'DAO_Business_InBranch_Business';
+
+        if (this.prefillData?.hideBusinessStep) {
+            computedSteps = computedSteps.filter(step => step.developerName !== businessStepName);
+            this.payloadByStep.delete(businessStepName);
+        }
+
+        this.steps = computedSteps;
+        if (this.currentIndex >= this.steps.length) {
+            this.currentIndex = Math.max(0, this.steps.length - 1);
+        }
+
+        if (this.steps.length > 0) {
+            this.updateTabInfo();
+        }
     }
 }
