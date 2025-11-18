@@ -129,6 +129,31 @@
                 <default>false</default>
                 <label>Vice President</label>
             </value>
+            <value>
+                <fullName>Primary Applicant</fullName>
+                <default>false</default>
+                <label>Primary Applicant</label>
+            </value>
+            <value>
+                <fullName>Co-Applicant</fullName>
+                <default>false</default>
+                <label>Co-Applicant</label>
+            </value>
+            <value>
+                <fullName>Authorized Signer</fullName>
+                <default>false</default>
+                <label>Authorized Signer</label>
+            </value>
+            <value>
+                <fullName>Control Person</fullName>
+                <default>false</default>
+                <label>Control Person</label>
+            </value>
+            <value>
+                <fullName>Guarantor</fullName>
+                <default>false</default>
+                <label>Guarantor</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
     <visibleLines>8</visibleLines>

@@ -30,10 +30,29 @@ export default class ApplicantDetails extends LightningElement {
     // Personal Identity Fields
     salutation;
     firstName;
+    middleName;
     lastName;
+    suffix;
+    nickname;
     dateOfBirth;
+    mothersMaidenName;
     taxIdType;
     taxId;
+    
+    // Citizenship Fields
+    isUSCitizen; // Picklist: Yes, No (Required)
+    isUSResident; // Picklist: Yes, No (Conditional - shown when isUSCitizen = No)
+    countryOfResidence; // Picklist (Conditional - shown when isUSResident = No)
+    
+    // Employment Fields
+    employer;
+    occupation;
+    
+    // Organization Role Fields (for business applications)
+    organizationRole;
+    ownershipPercentage;
+    isControlPerson; // Picklist: Yes, No
+    roles = ['Primary Applicant']; // Default to Primary Applicant, hidden from UI
 
     // Contact Information Fields
     email;
@@ -48,6 +67,9 @@ export default class ApplicantDetails extends LightningElement {
     mailingState;
     mailingPostalCode;
     mailingCountry;
+    
+    // Address Lookup Configuration
+    showAddressLookup = true; // Enable address autocomplete via Google Maps Places API
 
     // Identity Documents (Track array for persistence)
     identityDocuments = [];
@@ -66,8 +88,83 @@ export default class ApplicantDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
+    handleMiddleNameChange(event) {
+        this.middleName = event.target.value;
+        this.emitPayloadChange();
+    }
+
     handleLastNameChange(event) {
         this.lastName = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleSuffixChange(event) {
+        this.suffix = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleNicknameChange(event) {
+        this.nickname = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleOccupationChange(event) {
+        this.occupation = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleMothersMaidenNameChange(event) {
+        this.mothersMaidenName = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleUSCitizenChange(event) {
+        this.isUSCitizen = event.target.value;
+        // If US Citizen = Yes, clear dependent fields
+        if (this.isUSCitizen === 'Yes') {
+            this.isUSResident = null;
+            this.countryOfResidence = null;
+        }
+        this.emitPayloadChange();
+    }
+
+    handleUSResidentChange(event) {
+        this.isUSResident = event.target.value;
+        // If US Resident = Yes, clear Country of Residence
+        if (this.isUSResident === 'Yes') {
+            this.countryOfResidence = null;
+        }
+        this.emitPayloadChange();
+    }
+
+    handleCountryOfResidenceChange(event) {
+        this.countryOfResidence = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleEmployerChange(event) {
+        this.employer = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleOrganizationRoleChange(event) {
+        this.organizationRole = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleOwnershipPercentageChange(event) {
+        this.ownershipPercentage = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleControlPersonChange(event) {
+        this.isControlPerson = event.target.value;
+        this.emitPayloadChange();
+    }
+
+    handleRolesChange(event) {
+        // Multi-select picklist - event.detail.value is an array
+        this.roles = event.detail.value || [];
         this.emitPayloadChange();
     }
 
@@ -108,33 +205,25 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     // Event Handlers - Mailing Address
-    handleMailingStreetLine1Change(event) {
-        this.mailingStreetLine1 = event.target.value;
+    // Handle lightning-input-address change (auto-populates street, city, province, country, postalCode)
+    handleAddressChange(event) {
+        // lightning-input-address provides address object with all fields
+        // When show-address-lookup is enabled, selecting from autocomplete populates all fields
+        const address = event.detail;
+        
+        // Update individual fields from the address object
+        // Support both 'street' and 'addressLine1' field names
+        this.mailingStreetLine1 = address.street || address.addressLine1 || '';
+        this.mailingCity = address.city || '';
+        this.mailingState = address.province || ''; // province = state in US
+        this.mailingCountry = address.country || '';
+        this.mailingPostalCode = address.postalCode || '';
+        
         this.emitPayloadChange();
     }
 
     handleMailingStreetLine2Change(event) {
         this.mailingStreetLine2 = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleMailingCityChange(event) {
-        this.mailingCity = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleMailingStateChange(event) {
-        this.mailingState = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleMailingPostalCodeChange(event) {
-        this.mailingPostalCode = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleMailingCountryChange(event) {
-        this.mailingCountry = event.target.value;
         this.emitPayloadChange();
     }
 
@@ -260,10 +349,29 @@ export default class ApplicantDetails extends LightningElement {
             // Personal Identity
             salutation: this.salutation,
             firstName: this.firstName,
+            middleName: this.middleName,
             lastName: this.lastName,
+            suffix: this.suffix,
+            nickname: this.nickname,
             birthDate: this.dateOfBirth, // Apex expects 'birthDate'
+            mothersMaidenName: this.mothersMaidenName,
             taxIdType: this.taxIdType,
             taxId: this.taxId,
+            
+            // Citizenship
+            isUSCitizen: this.isUSCitizen,
+            isUSResident: this.isUSResident,
+            countryOfResidence: this.countryOfResidence,
+            
+            // Employment
+            employer: this.employer,
+            occupation: this.occupation,
+            
+            // Organization Roles
+            organizationRole: this.organizationRole,
+            ownershipPercentage: this.ownershipPercentage,
+            isControlPerson: this.isControlPerson,
+            roles: Array.isArray(this.roles) ? this.roles.join(';') : this.roles, // Multi-select as semicolon-separated string
             
             // Contact Information
             email: this.email,
@@ -298,6 +406,27 @@ export default class ApplicantDetails extends LightningElement {
         ];
     }
 
+    get suffixOptions() {
+        return [
+            { label: 'Jr.', value: 'Jr.' },
+            { label: 'Sr.', value: 'Sr.' },
+            { label: 'II', value: 'II' },
+            { label: 'III', value: 'III' },
+            { label: 'IV', value: 'IV' }
+        ];
+    }
+
+    get occupationOptions() {
+        return [
+            { label: 'Employed', value: 'Employed' },
+            { label: 'Self-Employed', value: 'Self-Employed' },
+            { label: 'Retired', value: 'Retired' },
+            { label: 'Student', value: 'Student' },
+            { label: 'Unemployed', value: 'Unemployed' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
+
     get taxIdTypeOptions() {
         return [
             { label: 'SSN', value: 'SSN' },
@@ -306,13 +435,70 @@ export default class ApplicantDetails extends LightningElement {
         ];
     }
 
-    get countryOptions() {
+    get organizationRoleOptions() {
         return [
-            { label: 'USA', value: 'USA' },
-            { label: 'Canada', value: 'Canada' },
-            { label: 'Mexico', value: 'Mexico' },
+            { label: 'Business Owner', value: 'Business Owner' },
+            { label: 'Partner', value: 'Partner' },
+            { label: 'Officer', value: 'Officer' },
+            { label: 'Director', value: 'Director' },
+            { label: 'Shareholder', value: 'Shareholder' },
+            { label: 'Authorized Signer', value: 'Authorized Signer' },
             { label: 'Other', value: 'Other' }
         ];
+    }
+
+    get rolesOptions() {
+        return [
+            { label: 'Primary Applicant', value: 'Primary Applicant' },
+            { label: 'Co-Applicant', value: 'Co-Applicant' },
+            { label: 'Authorized Signer', value: 'Authorized Signer' },
+            { label: 'Beneficial Owner', value: 'Beneficial Owner' },
+            { label: 'Control Person', value: 'Control Person' }
+        ];
+    }
+
+    get citizenshipOptions() {
+        return [
+            { label: 'Yes', value: 'Yes' },
+            { label: 'No', value: 'No' }
+        ];
+    }
+
+    get countryOptions() {
+        return [
+            { label: 'United States', value: 'United States' },
+            { label: 'Canada', value: 'Canada' },
+            { label: 'Mexico', value: 'Mexico' },
+            { label: 'United Kingdom', value: 'United Kingdom' },
+            { label: 'France', value: 'France' },
+            { label: 'Germany', value: 'Germany' },
+            { label: 'Italy', value: 'Italy' },
+            { label: 'Spain', value: 'Spain' },
+            { label: 'Australia', value: 'Australia' },
+            { label: 'Japan', value: 'Japan' },
+            { label: 'China', value: 'China' },
+            { label: 'India', value: 'India' },
+            { label: 'Brazil', value: 'Brazil' },
+            { label: 'Argentina', value: 'Argentina' },
+            { label: 'Colombia', value: 'Colombia' },
+            { label: 'Chile', value: 'Chile' },
+            { label: 'South Africa', value: 'South Africa' },
+            { label: 'Nigeria', value: 'Nigeria' },
+            { label: 'Egypt', value: 'Egypt' },
+            { label: 'Russia', value: 'Russia' },
+            { label: 'South Korea', value: 'South Korea' },
+            { label: 'Singapore', value: 'Singapore' },
+            { label: 'Other', value: 'Other' }
+        ];
+    }
+
+    // Computed properties for conditional rendering
+    get showUSResident() {
+        return this.isUSCitizen === 'No';
+    }
+
+    get showCountryOfResidence() {
+        return this.isUSCitizen === 'No' && this.isUSResident === 'No';
     }
 
     // Identity Document Type Options (based on IdDocumentType field from IdentityDocument object)
@@ -569,10 +755,29 @@ export default class ApplicantDetails extends LightningElement {
         // Personal Identity
         this.salutation = null;
         this.firstName = null;
+        this.middleName = null;
         this.lastName = null;
+        this.suffix = null;
+        this.nickname = null;
         this.dateOfBirth = null;
+        this.mothersMaidenName = null;
         this.taxIdType = null;
         this.taxId = null;
+        
+        // Citizenship
+        this.isUSCitizen = null;
+        this.isUSResident = null;
+        this.countryOfResidence = null;
+        
+        // Employment
+        this.employer = null;
+        this.occupation = null;
+        
+        // Organization Roles
+        this.organizationRole = null;
+        this.ownershipPercentage = null;
+        this.isControlPerson = null;
+        this.roles = ['Primary Applicant']; // Reset to default
         
         // Contact Information
         this.email = null;
@@ -588,13 +793,8 @@ export default class ApplicantDetails extends LightningElement {
         this.mailingPostalCode = null;
         this.mailingCountry = null;
         
-        // Government ID
-        this.governmentIdType = null;
-        this.governmentIdNumber = null;
-        this.idIssuingCountry = null;
-        this.idIssuingState = null;
-        this.idIssueDate = null;
-        this.idExpirationDate = null;
+        // Identity Documents
+        this.identityDocuments = [];
         
         this.emitPayloadChange();
     }
@@ -606,10 +806,63 @@ export default class ApplicantDetails extends LightningElement {
         // Personal Identity
         this.salutation = incomingValue.salutation;
         this.firstName = incomingValue.firstName;
+        this.middleName = incomingValue.middleName;
         this.lastName = incomingValue.lastName;
+        this.suffix = incomingValue.suffix;
+        this.nickname = incomingValue.nickname;
         this.dateOfBirth = incomingValue.birthDate || incomingValue.dateOfBirth;
+        this.mothersMaidenName = incomingValue.mothersMaidenName;
         this.taxIdType = incomingValue.taxIdType;
         this.taxId = incomingValue.taxId;
+        
+        // Citizenship
+        // Convert Boolean values to "Yes"/"No" strings for picklist display
+        if (typeof incomingValue.isUSCitizen === 'boolean') {
+            this.isUSCitizen = incomingValue.isUSCitizen ? 'Yes' : 'No';
+        } else {
+            this.isUSCitizen = incomingValue.isUSCitizen; // Already a string ("Yes"/"No")
+        }
+        
+        if (typeof incomingValue.isUSResident === 'boolean') {
+            this.isUSResident = incomingValue.isUSResident ? 'Yes' : 'No';
+        } else {
+            this.isUSResident = incomingValue.isUSResident; // Already a string ("Yes"/"No") or null
+        }
+        
+        this.countryOfResidence = incomingValue.countryOfResidence;
+        
+        // Employment
+        this.employer = incomingValue.employer;
+        this.occupation = incomingValue.occupation;
+        
+        // Organization Roles
+        this.organizationRole = incomingValue.organizationRole;
+        
+        // Ownership Percentage: Convert from decimal (0.50) to whole number (50) for display
+        // Salesforce stores as 0.50 (50%), but UI displays as 50
+        if (incomingValue.ownershipPercentage != null) {
+            const ownershipPercentage = parseFloat(incomingValue.ownershipPercentage);
+            // If value is < 1, it's in decimal format (0.50), convert to whole number (50)
+            if (ownershipPercentage < 1 && ownershipPercentage > 0) {
+                this.ownershipPercentage = (ownershipPercentage * 100).toFixed(2);
+            } else {
+                this.ownershipPercentage = ownershipPercentage;
+            }
+        } else {
+            this.ownershipPercentage = null;
+        }
+        
+        // Is Control Person: Picklist value (Yes/No)
+        this.isControlPerson = incomingValue.isControlPerson || null;
+        
+        // Handle roles as string (semicolon-separated) or array
+        if (incomingValue.roles) {
+            this.roles = Array.isArray(incomingValue.roles) 
+                ? incomingValue.roles 
+                : (typeof incomingValue.roles === 'string' ? incomingValue.roles.split(';') : ['Primary Applicant']);
+        } else {
+            this.roles = ['Primary Applicant']; // Default
+        }
 
         // Contact Information
         this.email = incomingValue.email;

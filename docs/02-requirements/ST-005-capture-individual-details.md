@@ -38,16 +38,15 @@
 ## 🎯 Acceptance Criteria
 
 ### Primary Applicant Details (applicantDetails Component)
-- [ ] Primary Applicant screen renders with all required fields
-- [ ] Pre-population works when existing customer is selected
-- [ ] All fields validated for required inputs and correct formats
-- [ ] Identity Documents table allows multiple IDs (minimum 1 required)
-- [ ] Data saved to Applicant record (Type = 'Indiviudal', Role = 'Primary Applicant')
-- [ ] Tax ID (SSN/ITIN) is encrypted in storage
-- [ ] Citizenship status conditional fields display correctly
-- [ ] Organization role fields display for business applications
-- [ ] Inline error messages display before next step
-- [ ] Step completion updates `ApplicationForm.StepKey__c`
+- [x] Primary Applicant screen renders with all required fields
+- [x] All fields validated for required inputs and correct formats
+- [x] Identity Documents table allows multiple IDs (minimum 1 required)
+- [x] Data saved to Applicant record (Type = 'Indiviudal', Role = 'Primary Applicant')
+- [x] Tax ID (SSN/ITIN) is encrypted in storage
+- [x] Citizenship status conditional fields display correctly
+- [x] Organization role fields display for business applications
+- [x] Inline error messages display before next step
+- [x] Step completion updates `ApplicationForm.StepKey__c`
 
 ### Additional Applicants Details (additionalApplicants Component)
 - [ ] Additional Applicants screen allows adding multiple persons
@@ -68,22 +67,22 @@
 ### Phase 1: Primary Applicant Details (applicantDetails Component)
 
 #### 1. Create Primary Applicant Details LWC Component
-- [ ] 1.1 Create `applicantDetails` LWC component
-- [ ] 1.2 Implement form layout with all required sections:
-  - Existing Customer Toggle
+- [x] 1.1 Create `applicantDetails` LWC component
+- [x] 1.2 Implement form layout with all required sections: 
   - Personal Information (Name, DOB, Nickname, etc.)
   - Tax Information (SSN/ITIN, Tax ID Type)
   - Citizenship Status (US Citizen, US Resident, Country of Residence)
   - Employment Information (Employer, Occupation)
-  - Organization Roles (for business applications)
+  - Organization Roles
+  - Role defaulted to Primary Applicant
   - Identity Documents (table with Add/Edit/Delete)
   - Address (using lightning-input-address)
   - Contact Information (Email, Phones, Preferred Contact Method)
-- [ ] 1.3 Add "Existing Customer" toggle with PersonAccount lookup
-- [ ] 1.4 Implement conditional rendering based on toggle state
-- [ ] 1.5 Implement conditional rendering for citizenship fields
-- [ ] 1.6 Implement conditional rendering for organization role fields
-- [ ] 1.7 Style component with SLDS for consistent UI/UX
+- [x] 1.3 Add "Existing Customer" toggle with PersonAccount lookup
+- [x] 1.4 Implement conditional rendering based on toggle state
+- [x] 1.5 Implement conditional rendering for citizenship fields
+- [x] 1.6 Implement conditional rendering for organization role fields
+- [x] 1.7 Style component with SLDS for consistent UI/UX
 
 #### 2. Implement Identity Documents Table
 - [x] 2.1 Create identity documents table UI, use the applicant-field-mapping.md file as source of truth
@@ -94,97 +93,25 @@
 - [x] 2.6 Store documents in component state
 - [x] 2.7 Prepare documents for persistence to IdentityDocument object
 
-#### 3. Implement Client-Side Validation
-- [ ] 3.1 Add required field validation:
-  - First Name (required)
-  - Last Name (required)
-  - Date of Birth (required for CIP/KYC)
-  - Tax ID (required)
-  - Tax ID Type (required)
-  - US Citizen status (required)
-  - Address Line 1 (required)
-  - City (required)
-  - State (required)
-  - Postal Code (required)
-  - Email (required)
-  - Mobile Phone (required)
-  - Preferred Contact Method (required)
-  - At least 1 Identity Document (required)
-- [ ] 3.2 Implement conditional validation:
-  - If US Citizen = No → US Resident required
-  - If US Resident = No → Country of Residence required
-  - If Organization Role = Business Owner → Ownership Percent required
-- [ ] 3.3 Add format validation:
-  - Date of Birth (cannot be future, must be 18+)
-  - Tax ID format (SSN: ###-##-####)
-  - Email format
-  - Phone number format
-  - Postal Code format (#####-####)
-- [ ] 3.4 Display inline error messages below each field
-- [ ] 3.5 Show summary error message at top if validation fails
-- [ ] 3.6 Display CIP prompt: "⚠️ CIP Requirement: At least one government-issued ID must be provided"
-- [ ] 3.7 Implement `@api validate()` method for container integration
 
-#### 4. Implement Existing Customer Toggle Logic ( HOLD on This Task)
-- [ ] 4.1 Add toggle UI element
-- [ ] 4.2 Show PersonAccount lookup when toggle is ON
-- [ ] 4.3 Query PersonAccounts (IsPersonAccount = true)
-- [ ] 4.4 Pre-populate all fields from selected PersonAccount
-- [ ] 4.5 Query and display existing IdentityDocuments
-- [ ] 4.6 Store PersonAccount ID for ApplicationForm linkage
-- [ ] 4.7 Show manual entry form when toggle is OFF
-
-#### 5. Implement Address Autocomplete
-- [ ] 5.1 Use `<lightning-input-address>` component
-- [ ] 5.2 Enable Google Maps autocomplete
-- [ ] 5.3 Add separate Address Line 2 field below component
-- [ ] 5.4 Auto-populate City, State, Country, Postal Code from search
-- [ ] 5.5 Allow manual override of auto-populated fields
-- [ ] 5.6 Verify Maps & Location Services enabled in Setup
-
-#### 6. Update WizardPersistenceService for Primary Applicant
-- [ ] 6.1 Create or update `upsertPrimaryApplicantStep()` method
-- [ ] 6.2 Map wizard payload to Applicant fields (see Field Mappings section)
-- [ ] 6.3 Handle existing PersonAccount linkage:
-  - Set `ApplicationForm.AccountId` = selectedAccountId
-  - Set `Applicant.AccountId` = selectedAccountId
-- [ ] 6.4 Handle new customer scenario:
-  - Flag for PersonAccount creation on submission
-  - Store person data in Applicant record
-- [ ] 6.5 Create/Update IdentityDocument records:
-  - Link to Applicant via `Applicant__c` lookup
-  - Set all required fields
-  - Delete removed IDs from previous saves
-- [ ] 6.6 Encrypt Tax ID before storage
-- [ ] 6.7 Update `ApplicationForm.StepKey__c` = 'DAO_Business_InBranch_Applicant'
-- [ ] 6.8 Enforce CRUD/FLS with `WITH USER_MODE`
-- [ ] 6.9 Return structured response with saved IDs and any errors
-
-
-#### 7. Unit Testing - Primary Applicant
-- [ ] 7.1 Test `upsertPrimaryApplicantStep()` with new customer data
-- [ ] 7.2 Test `upsertPrimaryApplicantStep()` with existing PersonAccount linkage
-- [ ] 7.3 Test Tax ID encryption/decryption
-- [ ] 7.4 Test IdentityDocument creation/update/delete
-- [ ] 7.5 Test all validation rules (all scenarios)
-- [ ] 7.6 Test conditional field display logic
-- [ ] 7.7 Test ApplicationForm.AccountId linkage
-- [ ] 7.8 Test StepKey__c update
-- [ ] 7.9 Test CRUD/FLS enforcement
-- [ ] 7.10 Ensure ≥85% code coverage
-
+#### 3. Implement Address Autocomplete
+- [x] 3.1 Use `<lightning-input-address>` component
+- [x] 3.2 Enable Google Maps autocomplete
+- [x] 3.3 Add separate Address Line 2 field below component
+- [x] 3.4 Auto-populate City, State, Country, Postal Code from search
+- [x] 3.5 Allow manual override of auto-populated fields
+- [x] 3.6 Verify Maps & Location Services enabled in Setup
 
 
 ---
 
 ### Phase 2: Additional Applicants Details (additionalApplicants Component)
 
-#### 10. Create Additional Applicants LWC Component
-- [ ] 10.1 Create `additionalApplicants` LWC component
-- [ ] 10.2 Implement dynamic applicant list UI
-- [ ] 10.3 Add "Add Applicant" button
-- [ ] 10.4 Implement applicant card/accordion for each person
-- [ ] 10.5 Include all fields from Primary Applicant for each additional applicant:
+#### 4. Update Additional Applicants LWC Component
+- [ ] 4.2 Implement dynamic applicant list UI
+- [ ] 4.3 Add "Add Applicant" button
+- [ ] 4.4 Implement applicant card/accordion for each person
+- [ ] 4.5 Include all fields from Primary Applicant for each additional applicant:
   - Existing Customer Toggle
   - Personal Information
   - Tax Information
@@ -194,94 +121,33 @@
   - Identity Documents table
   - Address
   - Contact Information
-- [ ] 10.6 Add "Remove Applicant" button for each card
-- [ ] 10.7 Implement typeahead search for existing PersonAccounts
-- [ ] 10.8 Style component with SLDS
+- [ ] 4.6 Add "Remove Applicant" button for each card
+- [ ] 4.7 Implement typeahead search for existing PersonAccounts
+- [ ] 4.8 Style component with SLDS
 
-#### 11. Implement Additional Applicants Validation
-- [ ] 11.1 Validate required fields for each applicant (same as Primary)
-- [ ] 11.2 Validate at least 1 Identity Document per applicant
-- [ ] 11.3 Validate conditional fields for each applicant
-- [ ] 11.4 Validate ownership percentages (if applicable)
-- [ ] 11.5 Prevent duplicate applicants (same person added twice)
-- [ ] 11.6 Display validation errors per applicant
-- [ ] 11.7 Implement `@api validate()` method
+#### 5. Implement Additional Applicants Validation
+- [ ] 5.1 Validate required fields for each applicant (same as Primary)
+- [ ] 5.2 Validate at least 1 Identity Document per applicant
+- [ ] 5.3 Validate conditional fields for each applicant
+- [ ] 5.4 Validate ownership percentages (if applicable)
+- [ ] 5.5 Prevent duplicate applicants (same person added twice)
+- [ ] 5.6 Display validation errors per applicant
+- [ ] 5.7 Implement `@api validate()` method
 
-#### 12. Update WizardPersistenceService for Additional Applicants
-- [ ] 12.1 Create or update `upsertAdditionalApplicantsStep()` method
-- [ ] 12.2 Handle list of applicants in payload
-- [ ] 12.3 For each applicant:
+#### 6. Update WizardPersistenceService for Additional Applicants
+- [ ] 6.1 Create or update `upsertAdditionalApplicantsStep()` method
+- [ ] 6.2 Handle list of applicants in payload
+- [ ] 6.3 For each applicant:
   - Create/Update Applicant record (Type = 'Person', Role = 'Additional')
   - Map all fields (same as Primary Applicant)
   - Create/Update IdentityDocument records
   - Link to ApplicationForm
   - Flag for PersonAccount + ACR creation on submission
-- [ ] 12.4 Handle existing PersonAccount linkage for each applicant
-- [ ] 12.5 Handle bulk DML efficiently
-- [ ] 12.6 Update `ApplicationForm.StepKey__c` = 'DAO_Business_InBranch_AdditionalApplicants'
-- [ ] 12.7 Return list of created/updated IDs
-- [ ] 12.8 Enforce CRUD/FLS with `WITH USER_MODE`
-
-#### 13. Wire Additional Applicants Component to Container
-- [ ] 13.1 Add `additionalApplicants` to `daoWizardStepRouter`
-- [ ] 13.2 Update Wizard_Step__mdt with Additional Applicants step record
-- [ ] 13.3 Set correct `Order__c` and `ComponentBundle__c`
-- [ ] 13.4 Test navigation to/from Additional Applicants step
-
-#### 14. Unit Testing - Additional Applicants
-- [ ] 14.1 Test `upsertAdditionalApplicantsStep()` with multiple applicants
-- [ ] 14.2 Test with mix of existing and new customers
-- [ ] 14.3 Test IdentityDocument creation for each applicant
-- [ ] 14.4 Test applicant removal
-- [ ] 14.5 Test validation rules for all applicants
-- [ ] 14.6 Test bulk DML operations
-- [ ] 14.7 Test CRUD/FLS enforcement
-- [ ] 14.8 Ensure ≥85% code coverage
-
-#### 15. Integration Testing - Additional Applicants
-- [ ] 15.1 Test full wizard flow with Additional Applicants step
-- [ ] 15.2 Test adding multiple applicants
-- [ ] 15.3 Test removing applicants
-- [ ] 15.4 Test typeahead search
-- [ ] 15.5 Test Save & Exit and resume
-- [ ] 15.6 Verify all Applicant records created
-- [ ] 15.7 Verify all IdentityDocument records created
-- [ ] 15.8 Test error handling and display
-
----
-
-### Phase 3: Deployment & Verification
-
-#### 16. Deployment Preparation
-- [ ] 16.1 Update `package.xml` with all new components
-- [ ] 16.2 Update Wizard_Step__mdt records
-- [ ] 16.3 Verify Applicant custom fields exist in target org
-- [ ] 16.4 Verify IdentityDocument object and custom lookup field exist
-- [ ] 16.5 Verify encryption configuration for Tax ID field
-- [ ] 16.6 Verify Maps & Location Services enabled
-- [ ] 16.7 Create deployment checklist
-
-#### 17. Deployment & Verification
-- [ ] 17.1 Deploy to `msb-sbox`
-- [ ] 17.2 Verify Primary Applicant step renders correctly
-- [ ] 17.3 Verify Additional Applicants step renders correctly
-- [ ] 17.4 Test all validation rules in org
-- [ ] 17.5 Test existing customer toggle for both steps
-- [ ] 17.6 Test new customer entry for both steps
-- [ ] 17.7 Verify Applicant record creation
-- [ ] 17.8 Verify IdentityDocument record creation
-- [ ] 17.9 Verify ApplicationForm linkage
-- [ ] 17.10 Test Save & Exit and resume
-- [ ] 17.11 Verify Tax ID encryption
-- [ ] 17.12 Test address autocomplete
-
-#### 18. Documentation
-- [ ] 18.1 Document field mapping decisions
-- [ ] 18.2 Update data model documentation
-- [ ] 18.3 Document encryption approach
-- [ ] 18.4 Document IdentityDocument integration
-- [ ] 18.5 Add code comments
-- [ ] 18.6 Update session notes
+- [ ] 6.4 Handle existing PersonAccount linkage for each applicant
+- [ ] 6.5 Handle bulk DML efficiently
+- [ ] 6.6 Update `ApplicationForm.StepKey__c` = 'DAO_Business_InBranch_AdditionalApplicants'
+- [ ] 6.7 Return list of created/updated IDs
+- [ ] 6.8 Enforce CRUD/FLS with `WITH USER_MODE`
 
 ---
 

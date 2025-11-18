@@ -1,9 +1,9 @@
 /*
- * DAO Wizard Form Filler
- * -----------------------
- * Paste this script into the browser console while the DAO wizard is open.
- * It populates both Business and Applicant steps based on the DATA map below.
- * Use window.DAO_WIZARD_FILLER.logLabels() to inspect available labels.
+ * DAO Wizard Business Form Filler
+ * -------------------------------
+ * Paste this script into the browser console while on the Business Details step.
+ * It populates business fields based on the DATA map below.
+ * Use window.DAO_WIZARD_BUSINESS_FILLER.logLabels() to inspect available labels.
  */
 
 (() => {
@@ -14,58 +14,30 @@
         .toLowerCase();
 
     const DATA = {
-        shared: {
-            'country': 'USA'
-        },
-        business: {
-            'business account': 'new',
-            'legal business name': 'Acme Widgets LLC',
-            'dba name (doing business as)': 'Acme Widgets',
-            'business type': 'LLC',
-            'federal tax id (ein)': '12-3456789',
-            'date established': '2019-03-15',
-            'state of incorporation': 'California',
-            'industry type': 'Technology',
-            'business description': 'Automated test data via console filler script.',
-            'business phone': '555-555-5555',
-            'business email': 'info@acmewidgets.example',
-            'business phone (home)': '555-555-5556',
-            'business phone (mobile)': '555-555-5557',
-            'business website': 'https://www.acmewidgets.example',
-            'primary contact name': 'Jane Doe',
-            'primary contact title': 'CFO',
-            'annual revenue': '750000',
-            'number of employees': '51-100',
-            'street address line 1': '500 Market Street',
-            'street address line 2': 'Suite 1200',
-            'city': 'San Francisco',
-            'state': 'California',
-            'zip code': '94105'
-        },
-        applicant: {
-            'salutation': 'Mr.',
-            'first name': 'John',
-            'last name': 'Smith',
-            'tax id number (ssn/itin)': '888-88-4554',
-            'tax id type': 'SSN',
-            'date of birth': '1990-02-10',
-            'email': 'john.smith@example.com',
-            'mobile phone': '555-666-8989',
-            'home phone': '555-111-2222',
-            'work phone': '555-333-4444',
-            'street address line 1': '333 Bush Street',
-            'street address line 2': 'Apt 5A',
-            'city': 'San Francisco',
-            'state': 'California',
-            'zip code': '94104',
-            'country': 'USA',
-            'id type': "Driver's License",
-            'id number': 'S1234567',
-            'issued by - country': 'USA',
-            'issued by - state': 'California',
-            'issue date': '2021-05-01',
-            'expiration date': '2029-05-01'
-        }
+        'business account': 'new',
+        'legal business name': 'Acme Widgets LLC',
+        'dba name (doing business as)': 'Acme Widgets',
+        'business type': 'LLC',
+        'federal tax id (ein)': '12-3456789',
+        'date established': '2019-03-15',
+        'state of incorporation': 'California',
+        'industry type': 'Technology',
+        'business description': 'Automated test data via console filler script.',
+        'business phone': '555-555-5555',
+        'business email': 'info@acmewidgets.example',
+        'business phone (home)': '555-555-5556',
+        'business phone (mobile)': '555-555-5557',
+        'business website': 'https://www.acmewidgets.example',
+        'primary contact name': 'Jane Doe',
+        'primary contact title': 'CFO',
+        'annual revenue': '750000',
+        'number of employees': '51-100',
+        'street address line 1': '500 Market Street',
+        'street address line 2': 'Suite 1200',
+        'city': 'San Francisco',
+        'state': 'California',
+        'zip code': '94105',
+        'country': 'USA'
     };
 
     const fire = (el, type, detail) => {
@@ -75,7 +47,7 @@
         el.dispatchEvent(new Ctor(type, init));
     };
 
-    const setVal = (el, value) => {
+    const setVal = (el, value, normLabel) => {
         const tag = el.tagName;
         try {
             if (tag === 'LIGHTNING-INPUT' || tag === 'LIGHTNING-TEXTAREA') {
@@ -107,9 +79,9 @@
             }
             return node;
         })(el);
-        if (owner?.tagName === 'C-APPLICANT-DETAILS') return 'applicant';
+        // Only process elements within business details component
         if (owner?.tagName === 'C-BUSINESS-DETAILS') return 'business';
-        return 'shared';
+        return null; // Skip elements outside business details
     };
 
     const collect = (root, selector, visited = new Set()) => {
@@ -154,20 +126,27 @@
     };
 
     candidates.forEach(el => {
+        const context = contextFor(el);
+        if (context !== 'business') {
+            state.skipped++;
+            return;
+        }
+
         const rawLabel = labelOf(el);
         const normLabel = normalize(rawLabel);
         if (!normLabel) {
             state.skipped++;
             return;
         }
-        const context = contextFor(el);
-        const value = DATA[context]?.[normLabel] ?? DATA.shared[normLabel];
+        
+        const value = DATA[normLabel];
+        
         if (value == null) {
-            state.unmatched.push({ label: rawLabel, normalized: normLabel, context, tag: el.tagName });
+            state.unmatched.push({ label: rawLabel, normalized: normLabel, tag: el.tagName });
             state.skipped++;
             return;
         }
-        if (setVal(el, value)) {
+        if (setVal(el, value, normLabel)) {
             state.filled++;
         } else {
             state.skipped++;
@@ -176,17 +155,26 @@
 
     const helper = {
         logLabels: () => {
-            const rows = candidates.map(el => ({
-                label: labelOf(el),
-                normalized: normalize(labelOf(el)),
-                context: contextFor(el),
-                tag: el.tagName
-            }));
+            const rows = candidates
+                .filter(el => contextFor(el) === 'business')
+                .map(el => {
+                    const label = labelOf(el);
+                    return {
+                        label: label || '[No label]',
+                        normalized: label ? normalize(label) : '[N/A]',
+                        tag: el.tagName
+                    };
+                });
             console.table(rows);
+        },
+        getData: () => DATA,
+        setData: (newData) => {
+            Object.assign(DATA, newData);
+            console.log('✅ Data updated. Re-run the script to apply changes.');
         }
     };
 
-    window.DAO_WIZARD_FILLER = helper;
+    window.DAO_WIZARD_BUSINESS_FILLER = helper;
 
     if (state.unmatched.length) {
         console.groupCollapsed('⚠️ Unmatched labels');
@@ -194,6 +182,9 @@
         console.groupEnd();
     }
 
-    console.log(`Wizard form filler complete. Filled ${state.filled} field(s), skipped ${state.skipped}.`);
-    console.log('Use window.DAO_WIZARD_FILLER.logLabels() to inspect all detectable labels.');
+    console.log(`✅ Business form filler complete. Filled ${state.filled} field(s), skipped ${state.skipped}.`);
+    console.log('Use window.DAO_WIZARD_BUSINESS_FILLER.logLabels() to inspect all detectable labels.');
+    console.log('Use window.DAO_WIZARD_BUSINESS_FILLER.getData() to view current data.');
+    console.log('Use window.DAO_WIZARD_BUSINESS_FILLER.setData({...}) to update data.');
 })();
+
