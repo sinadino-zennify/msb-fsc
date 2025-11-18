@@ -225,79 +225,196 @@
             </div>
         </div>
 
-        <!-- Government ID Section -->
+        <!-- Identity Documents Section -->
         <div class="slds-section slds-is-open slds-m-bottom_medium">
             <h3 class="slds-section__title slds-theme_shade">
-                <span class="slds-truncate slds-p-horizontal_small" title="Government ID">Government ID</span>
+                <span class="slds-truncate slds-p-horizontal_small" title="Identity Documents">
+                    Identity Documents * (CIP Requirement)
+                </span>
             </h3>
             <div class="slds-section__content slds-p-around_small">
-                <lightning-layout multiple-rows>
-                    <!-- Row 1: ID Type and Number -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="ID Type"
-                            value={governmentIdType}
-                            options={governmentIdTypeOptions}
-                            onchange={handleGovernmentIdTypeChange}
-                            placeholder="Select ID type"
-                            required>
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            label="ID Number" 
-                            value={governmentIdNumber}
-                            onchange={handleGovernmentIdNumberChange}
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 2: Issuing Country and State -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="Issued By - Country"
-                            value={idIssuingCountry}
-                            options={countryOptions}
-                            onchange={handleIdIssuingCountryChange}
-                            placeholder="Select country"
-                            required>
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="Issued By - State" 
-                            value={idIssuingState}
-                            options={stateOptions}
-                            onchange={handleIdIssuingStateChange}
-                            placeholder="Select state (if USA)">
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 3: Issue and Expiration Dates -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="date"
-                            label="Issue Date" 
-                            value={idIssueDate}
-                            onchange={handleIdIssueDateChange}
-                            max={todayDate}
-                            message-when-range-overflow="Issue Date cannot be a future date"
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="date"
-                            label="Expiration Date" 
-                            value={idExpirationDate}
-                            onchange={handleIdExpirationDateChange}
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                </lightning-layout>
+                <!-- CIP Requirement Warning -->
+                <div class="slds-m-bottom_small">
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                            <lightning-icon icon-name="utility:warning" alternative-text="warning" size="x-small"></lightning-icon>
+                        </span>
+                        <h2>
+                            <span class="slds-text-heading_small">
+                                CIP Requirement: At least one government-issued ID must be provided
+                            </span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Add ID Button -->
+                <div class="slds-m-bottom_small">
+                    <lightning-button 
+                        label="Add ID" 
+                        icon-name="utility:add" 
+                        onclick={handleAddIdentityDocument}
+                        variant="brand">
+                    </lightning-button>
+                </div>
+
+                <!-- Identity Documents Table -->
+                <template if:true={hasIdentityDocuments}>
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="ID Type">ID Type</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="ID Number">ID Number</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Issued By">Issued By</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Issue Date">Issue Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Expiration Date">Expiration Date</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Actions">Actions</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={processedIdentityDocuments} for:item="doc">
+                                <tr key={doc.id} class="slds-hint-parent">
+                                    <td data-label="ID Type">
+                                        <div class="slds-truncate" title={doc.idType}>{doc.idTypeLabel}</div>
+                                    </td>
+                                    <td data-label="ID Number">
+                                        <div class="slds-truncate" title={doc.idNumber}>{doc.idNumberMasked}</div>
+                                    </td>
+                                    <td data-label="Issued By">
+                                        <div class="slds-truncate" title={doc.issuingAuthority}>{doc.issuingAuthority}</div>
+                                    </td>
+                                    <td data-label="Issue Date">
+                                        <div class="slds-truncate" title={doc.issueDate}>{doc.issueDate}</div>
+                                    </td>
+                                    <td data-label="Expiration Date">
+                                        <div class="slds-truncate" title={doc.expirationDate}>{doc.expirationDate}</div>
+                                    </td>
+                                    <td data-label="Actions">
+                                        <lightning-button-icon 
+                                            icon-name="utility:edit" 
+                                            alternative-text="Edit" 
+                                            title="Edit"
+                                            data-id={doc.id}
+                                            onclick={handleEditIdentityDocument}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon 
+                                            icon-name="utility:delete" 
+                                            alternative-text="Delete" 
+                                            title="Delete"
+                                            data-id={doc.id}
+                                            onclick={handleDeleteIdentityDocument}
+                                            variant="destructive">
+                                        </lightning-button-icon>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+
+                <!-- No IDs Message -->
+                <template if:false={hasIdentityDocuments}>
+                    <div class="slds-text-align_center slds-m-vertical_medium">
+                        <p class="slds-text-color_weak">No identity documents added yet. Click "Add ID" to begin.</p>
+                    </div>
+                </template>
+
+                <!-- Modal for Add/Edit Identity Document -->
+                <template if:true={showIdentityDocumentModal}>
+                    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" aria-label="Close modal" onclick={handleCloseModal}>
+                                    <lightning-icon icon-name="utility:close" alternative-text="close" size="small"></lightning-icon>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <h2 class="slds-text-heading_medium slds-hyphenate">{modalTitle}</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium">
+                                <lightning-layout multiple-rows>
+                                    <!-- ID Type -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="ID Type"
+                                            value={currentDocument.idType}
+                                            options={idDocumentTypeOptions}
+                                            onchange={handleModalFieldChange}
+                                            data-field="idType"
+                                            placeholder="Select ID type"
+                                            required>
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- ID Number -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="ID Number" 
+                                            value={currentDocument.idNumber}
+                                            onchange={handleModalFieldChange}
+                                            data-field="idNumber"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Issuing Authority -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Issued By (State, Country)" 
+                                            value={currentDocument.issuingAuthority}
+                                            onchange={handleModalFieldChange}
+                                            data-field="issuingAuthority"
+                                            placeholder="e.g., CT, USA"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Issue Date -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="date"
+                                            label="Issue Date" 
+                                            value={currentDocument.issueDate}
+                                            onchange={handleModalFieldChange}
+                                            data-field="issueDate"
+                                            max={todayDate}
+                                            message-when-range-overflow="Issue Date cannot be a future date"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Expiration Date -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="date"
+                                            label="Expiration Date" 
+                                            value={currentDocument.expirationDate}
+                                            onchange={handleModalFieldChange}
+                                            data-field="expirationDate"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <lightning-button label="Cancel" onclick={handleCloseModal}></lightning-button>
+                                <lightning-button variant="brand" label="Save" onclick={handleSaveDocument}></lightning-button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </template>
             </div>
         </div>
     </div>

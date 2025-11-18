@@ -56,14 +56,15 @@ This document maps wizard UI fields to the **Applicant** object fields. The Appl
 
 ## 🪪 Person - Government ID Fields
 
-| UI Field Label | Applicant Field API | Field Status | Field Type | Required | Notes |
+| UI Field Label | IdentityDocument Field API | Field Status | Field Type | Required | Notes |
 |----------------|---------------------|--------------|------------|----------|-------|
-| ID Type | `Government_ID_Type__c` | Custom | Picklist | No | Driver's License, Passport, State ID, Military ID |
-| ID Number | `Government_ID_Number__c` | Custom | Text(50) Encrypted | No | Encrypted |
-| Issued By - Country | `ID_Issuing_Country__c` | Custom | Picklist | No | Default: USA |
-| Issued By - State | `ID_Issuing_State__c` | Custom | Picklist | No | Conditional on Country=USA |
-| Issue Date | `ID_Issue_Date__c` | Custom | Date | No | Not future date |
-| Expiration Date | `ID_Expiration_Date__c` | Custom | Date | No | After Issue Date |
+| ID Type | `IdDocumentType` | Custom | Picklist | No | Driver's License, Passport, State ID, Military ID |
+| ID Number | `Name` | Custom | Text(50)  | No |  |
+| Issued By - Country | `IssuingAuthority` | Custom | Text | No | Default: USA |
+| Issued By - State | `Issuing_Authority_State__c` | Custom | Text | No | Conditional on State=CA |
+| Issue Date | `IssueDate` | Custom | Date | No | Not future date |
+| Expiration Date | `ExpirationDate` | Custom | Date | No | After Issue Date |
+| Applicant | `Applicant__c` | Custom | lookup(Applicant) | Yes | Applicant Id |
 
 ---
 
@@ -83,6 +84,9 @@ This document maps wizard UI fields to the **Applicant** object fields. The Appl
 | Phone - Work | `Business_Work_Phone__c` | Custom | Phone | No | Primary phone |
 | Phone - Mobile | `Business_Mobile_Phone__c` | Custom | Phone | No | |
 | Email | `Business_Email__c` | Custom | Email | No | No standard business email field |
+| Organization Role | `Organization_Role_c` | Custom | picklist | No | No |
+| Organization Percentage | `Ownership_Percentage__c` | Custom | Percent(3, 2) | No | No  |
+| Roles | `Roles__c` | Custom | Multi Picklist | No | No  |
 
 ---
 
@@ -132,6 +136,9 @@ This document maps wizard UI fields to the **Applicant** object fields. The Appl
 - `Mothers_Maiden_Name__c` (Text 80, Encrypted)
 - `Tax_ID__c` (Text 11, Encrypted)
 - `Tax_ID_Type__c` (Picklist)
+- `Is_US_Citizen__c` (Checkbox)
+- `Is_US_Resident__c` (Checkbox) 
+- `Country_Of_Residence__c` (Picklist)
 
 ### Custom Fields - Person Address & Contact
 - `Mailing_Street_Line_1__c` (Text 255) - **Required**
@@ -166,6 +173,8 @@ This document maps wizard UI fields to the **Applicant** object fields. The Appl
 - `Business_Tax_ID__c` (Text 11, Encrypted)
 - `Business_Tax_ID_Type__c` (Picklist)
 - `Tax_Country__c` (Picklist)
+- `Employer__c` (Text)
+- `Is_Control_Person__c` (picklist)
 
 ### Custom Fields - Industry & Risk
 - `SIC_Code__c` (Text 10)

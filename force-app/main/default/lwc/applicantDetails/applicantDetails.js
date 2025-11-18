@@ -49,13 +49,11 @@ export default class ApplicantDetails extends LightningElement {
     mailingPostalCode;
     mailingCountry;
 
-    // Government ID Fields
-    governmentIdType;
-    governmentIdNumber;
-    idIssuingCountry;
-    idIssuingState;
-    idIssueDate;
-    idExpirationDate;
+    // Identity Documents (Track array for persistence)
+    identityDocuments = [];
+    showIdentityDocumentModal = false;
+    currentDocument = {};
+    editingDocumentId = null;
 
     // Event Handlers - Personal Identity
     handleSalutationChange(event) {
@@ -171,6 +169,79 @@ export default class ApplicantDetails extends LightningElement {
         this.emitPayloadChange();
     }
 
+    // Identity Documents Handlers
+    handleAddIdentityDocument() {
+        this.currentDocument = {
+            id: null,
+            idType: '',
+            idNumber: '',
+            issuingAuthority: '',
+            issueDate: '',
+            expirationDate: ''
+        };
+        this.editingDocumentId = null;
+        this.showIdentityDocumentModal = true;
+    }
+
+    handleEditIdentityDocument(event) {
+        const docId = event.target.dataset.id;
+        const doc = this.identityDocuments.find(d => d.id === docId);
+        if (doc) {
+            this.currentDocument = { ...doc };
+            this.editingDocumentId = docId;
+            this.showIdentityDocumentModal = true;
+        }
+    }
+
+    handleDeleteIdentityDocument(event) {
+        const docId = event.target.dataset.id;
+        this.identityDocuments = this.identityDocuments.filter(d => d.id !== docId);
+        this.emitPayloadChange();
+    }
+
+    handleModalFieldChange(event) {
+        const field = event.target.dataset.field;
+        this.currentDocument = {
+            ...this.currentDocument,
+            [field]: event.target.value
+        };
+    }
+
+    handleSaveDocument() {
+        // Validate required fields
+        if (!this.currentDocument.idType || 
+            !this.currentDocument.idNumber || 
+            !this.currentDocument.issuingAuthority || 
+            !this.currentDocument.issueDate || 
+            !this.currentDocument.expirationDate) {
+            // Show error message
+            return;
+        }
+
+        if (this.editingDocumentId) {
+            // Update existing document
+            this.identityDocuments = this.identityDocuments.map(doc => 
+                doc.id === this.editingDocumentId ? { ...this.currentDocument } : doc
+            );
+        } else {
+            // Add new document
+            const newDoc = {
+                ...this.currentDocument,
+                id: `doc-${Date.now()}` // Generate unique ID
+            };
+            this.identityDocuments = [...this.identityDocuments, newDoc];
+        }
+
+        this.handleCloseModal();
+        this.emitPayloadChange();
+    }
+
+    handleCloseModal() {
+        this.showIdentityDocumentModal = false;
+        this.currentDocument = {};
+        this.editingDocumentId = null;
+    }
+
     emitPayloadChange() {
         console.log('=== ApplicantDetails: emitPayloadChange ===');
         console.log('dateOfBirth field value:', this.dateOfBirth);
@@ -208,13 +279,8 @@ export default class ApplicantDetails extends LightningElement {
             mailingPostalCode: this.mailingPostalCode,
             mailingCountry: this.mailingCountry,
             
-            // Government ID
-            governmentIdType: this.governmentIdType,
-            governmentIdNumber: this.governmentIdNumber,
-            idIssuingCountry: this.idIssuingCountry,
-            idIssuingState: this.idIssuingState,
-            idIssueDate: this.idIssueDate,
-            idExpirationDate: this.idExpirationDate
+            // Identity Documents
+            identityDocuments: this.identityDocuments
         };
         console.log('=== ApplicantDetails: payload getter ===');
         console.log('birthDate in payload:', payload.birthDate);
@@ -249,13 +315,45 @@ export default class ApplicantDetails extends LightningElement {
         ];
     }
 
-    get governmentIdTypeOptions() {
+    // Identity Document Type Options (based on IdDocumentType field from IdentityDocument object)
+    get idDocumentTypeOptions() {
         return [
             { label: "Driver's License", value: "Driver's License" },
             { label: 'Passport', value: 'Passport' },
             { label: 'State ID', value: 'State ID' },
             { label: 'Military ID', value: 'Military ID' }
         ];
+    }
+
+    // Computed properties for Identity Documents
+    get hasIdentityDocuments() {
+        return this.identityDocuments && this.identityDocuments.length > 0;
+    }
+
+    get modalTitle() {
+        return this.editingDocumentId ? 'Edit Identity Document' : 'Add Identity Document';
+    }
+
+    // Process documents for display (add labels and masked values)
+    get processedIdentityDocuments() {
+        return this.identityDocuments.map(doc => {
+            const typeOption = this.idDocumentTypeOptions.find(opt => opt.value === doc.idType);
+            return {
+                ...doc,
+                idTypeLabel: typeOption ? typeOption.label : doc.idType,
+                idNumberMasked: this.maskIdNumber(doc.idNumber)
+            };
+        });
+    }
+
+    // Helper method to mask ID numbers for display
+    maskIdNumber(idNumber) {
+        if (!idNumber || idNumber.length < 4) {
+            return idNumber;
+        }
+        const lastFour = idNumber.slice(-4);
+        const masked = 'X'.repeat(Math.max(0, idNumber.length - 4));
+        return masked + lastFour;
     }
 
     get stateOptions() {
@@ -397,26 +495,9 @@ export default class ApplicantDetails extends LightningElement {
             messages.push('ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX).');
         }
         
-        // Government ID validation
-        if (!this.governmentIdType) {
-            messages.push('Government ID Type is required.');
-        }
-        if (!this.governmentIdNumber) {
-            messages.push('Government ID Number is required.');
-        }
-        if (!this.idIssuingCountry) {
-            messages.push('ID Issuing Country is required.');
-        }
-        if (!this.idIssueDate) {
-            messages.push('ID Issue Date is required.');
-        } else if (this.validateFutureDate(this.idIssueDate)) {
-            messages.push('ID Issue Date cannot be a future date.');
-        }
-        
-        if (!this.idExpirationDate) {
-            messages.push('ID Expiration Date is required.');
-        } else if (this.idIssueDate && !this.validateDateOrder(this.idIssueDate, this.idExpirationDate)) {
-            messages.push('ID Expiration Date must be after Issue Date.');
+        // Identity Documents validation (CIP Requirement: At least 1 ID required)
+        if (!this.identityDocuments || this.identityDocuments.length === 0) {
+            messages.push('⚠️ CIP Requirement: At least one government-issued ID must be provided.');
         }
         
         return {
@@ -544,13 +625,10 @@ export default class ApplicantDetails extends LightningElement {
         this.mailingPostalCode = incomingValue.mailingPostalCode;
         this.mailingCountry = incomingValue.mailingCountry;
 
-        // Government ID
-        this.governmentIdType = incomingValue.governmentIdType;
-        this.governmentIdNumber = incomingValue.governmentIdNumber;
-        this.idIssuingCountry = incomingValue.idIssuingCountry;
-        this.idIssuingState = incomingValue.idIssuingState;
-        this.idIssueDate = incomingValue.idIssueDate;
-        this.idExpirationDate = incomingValue.idExpirationDate;
+        // Identity Documents
+        if (incomingValue.identityDocuments && Array.isArray(incomingValue.identityDocuments)) {
+            this.identityDocuments = [...incomingValue.identityDocuments];
+        }
 
         // eslint-disable-next-line no-console
         console.log('🔍 ApplicantDetails fields after apply:', {

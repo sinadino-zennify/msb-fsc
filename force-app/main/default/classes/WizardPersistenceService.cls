@@ -288,6 +288,99 @@ public with sharing class WizardPersistenceService {
             response.savedIds.put('applicationForm', applicationId);
             System.debug('Response savedIds: ' + response.savedIds);
             
+            // Handle Identity Documents (CIP Requirement)
+            List<Object> identityDocumentsPayload = (List<Object>) payload.get('identityDocuments');
+            if (identityDocumentsPayload != null && !identityDocumentsPayload.isEmpty()) {
+                System.debug('Processing ' + identityDocumentsPayload.size() + ' identity documents');
+                
+                // Query existing IdentityDocument records for this Applicant
+                List<IdentityDocument> existingDocs = [
+                    SELECT Id, Name, IdDocumentType, IssuingAuthority, IssueDate, ExpirationDate, 
+                           Applicant__c, IsActive
+                    FROM IdentityDocument
+                    WHERE Applicant__c = :applicant.Id
+                    WITH USER_MODE
+                ];
+                
+                Map<String, IdentityDocument> existingDocsMap = new Map<String, IdentityDocument>();
+                for (IdentityDocument doc : existingDocs) {
+                    existingDocsMap.put(doc.Name, doc);
+                }
+                
+                List<IdentityDocument> docsToUpsert = new List<IdentityDocument>();
+                Set<String> processedIdNumbers = new Set<String>();
+                
+                // Process each identity document from payload
+                for (Object docObj : identityDocumentsPayload) {
+                    Map<String, Object> docMap = (Map<String, Object>) docObj;
+                    String idNumber = (String) docMap.get('idNumber');
+                    
+                    if (String.isBlank(idNumber)) {
+                        continue; // Skip if no ID number
+                    }
+                    
+                    processedIdNumbers.add(idNumber);
+                    
+                    IdentityDocument doc;
+                    if (existingDocsMap.containsKey(idNumber)) {
+                        // Update existing document
+                        doc = existingDocsMap.get(idNumber);
+                        System.debug('Updating existing IdentityDocument with Name: ' + idNumber);
+                    } else {
+                        // Create new document
+                        doc = new IdentityDocument();
+                        doc.Name = idNumber; // ID Number stored in Name field
+                        doc.Applicant__c = applicant.Id; // Link to Applicant
+                        System.debug('Creating new IdentityDocument with Name: ' + idNumber);
+                    }
+                    
+                    // Map fields from payload to IdentityDocument
+                    doc.IdDocumentType = (String) docMap.get('idType');
+                    doc.IssuingAuthority = (String) docMap.get('issuingAuthority');
+                    
+                    // Parse dates
+                    String issueDateStr = (String) docMap.get('issueDate');
+                    if (String.isNotBlank(issueDateStr)) {
+                        doc.IssueDate = Date.valueOf(issueDateStr);
+                    }
+                    
+                    String expirationDateStr = (String) docMap.get('expirationDate');
+                    if (String.isNotBlank(expirationDateStr)) {
+                        doc.ExpirationDate = Date.valueOf(expirationDateStr);
+                    }
+                    
+                    doc.IsActive = true;
+                    
+                    docsToUpsert.add(doc);
+                }
+                
+                // Upsert identity documents
+                if (!docsToUpsert.isEmpty()) {
+                    upsert as user docsToUpsert;
+                    System.debug('Upserted ' + docsToUpsert.size() + ' IdentityDocument records');
+                    
+                    // Add IDs to response
+                    List<Id> docIds = new List<Id>();
+                    for (IdentityDocument doc : docsToUpsert) {
+                        docIds.add(doc.Id);
+                    }
+                    response.savedIds.put('identityDocuments', String.join(docIds, ','));
+                }
+                
+                // Delete removed documents (documents that exist but weren't in the payload)
+                List<IdentityDocument> docsToDelete = new List<IdentityDocument>();
+                for (IdentityDocument existingDoc : existingDocs) {
+                    if (!processedIdNumbers.contains(existingDoc.Name)) {
+                        docsToDelete.add(existingDoc);
+                    }
+                }
+                
+                if (!docsToDelete.isEmpty()) {
+                    delete as user docsToDelete;
+                    System.debug('Deleted ' + docsToDelete.size() + ' removed IdentityDocument records');
+                }
+            }
+            
             System.debug('--- upsertApplicantStep END (Success) ---');
             return response;
         } catch (Exception e) {
