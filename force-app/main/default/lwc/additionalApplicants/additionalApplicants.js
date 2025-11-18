@@ -4,20 +4,45 @@ export default class AdditionalApplicants extends LightningElement {
     @api recordId;
     @api wizardApiName;
     @api stepConfig;
-    @api value;
+
+    _value;
+    hasAppliedInitialValue = false;
+
+    @api
+    get value() {
+        return this._value;
+    }
+
+    set value(val) {
+        this._value = val;
+        if (val && val.applicants && !this.hasAppliedInitialValue) {
+            this.applicants = val.applicants.map((app, index) => ({
+                ...app,
+                id: app.id || `applicant-${Date.now()}-${index}`
+            }));
+            this.hasAppliedInitialValue = true;
+        }
+    }
 
     @track applicants = [];
     @track showModal = false;
     @track editingIndex = -1;
     @track currentApplicant = {};
 
+    // Identity Document Modal State
+    @track showDocumentModal = false;
+    @track currentDocument = {};
+    @track editingDocumentId = null;
+
+    // Address Lookup Configuration
+    showAddressLookup = true;
+
+    // Lifecycle Hooks
     connectedCallback() {
-        if (this.value && this.value.applicants) {
-            this.applicants = [...this.value.applicants];
-        }
+        // Value will be set via @api setter
     }
 
-    // Modal Management
+    // Modal Management - Applicant
     handleAddApplicant() {
         this.currentApplicant = this.getEmptyApplicant();
         this.editingIndex = -1;
@@ -25,8 +50,9 @@ export default class AdditionalApplicants extends LightningElement {
     }
 
     handleEditApplicant(event) {
-        const index = parseInt(event.currentTarget.dataset.index);
-        this.currentApplicant = { ...this.applicants[index] };
+        const index = parseInt(event.currentTarget.dataset.index, 10);
+        // Deep clone to avoid mutating the original
+        this.currentApplicant = JSON.parse(JSON.stringify(this.applicants[index]));
         this.editingIndex = index;
         this.showModal = true;
     }
@@ -38,103 +64,490 @@ export default class AdditionalApplicants extends LightningElement {
     }
 
     handleSaveApplicant() {
-        if (this.validateCurrentApplicant()) {
+        // Trigger validation on all input fields within the modal to show errors
+        const modalContainer = this.template.querySelector('.slds-modal__container');
+        let allValid = true;
+        
+        if (modalContainer) {
+            const allInputs = modalContainer.querySelectorAll('lightning-input, lightning-combobox, lightning-dual-listbox, lightning-input-address');
+            
+            allInputs.forEach(input => {
+                if (input && input.reportValidity) {
+                    const isValid = input.reportValidity();
+                    if (!isValid) {
+                        allValid = false;
+                    }
+                }
+            });
+        }
+        
+        // Also run our custom validation
+        const validation = this.validateCurrentApplicant();
+        
+        if (validation.isValid && allValid) {
+            const applicantToSave = { ...this.currentApplicant };
+            
+            // Ensure ID exists
+            if (!applicantToSave.id) {
+                applicantToSave.id = `applicant-${Date.now()}`;
+            }
+
             if (this.editingIndex >= 0) {
                 // Edit existing
-                this.applicants[this.editingIndex] = { ...this.currentApplicant };
+                this.applicants[this.editingIndex] = applicantToSave;
             } else {
                 // Add new
-                this.applicants.push({ ...this.currentApplicant });
+                this.applicants.push(applicantToSave);
             }
+            
             this.applicants = [...this.applicants]; // Trigger reactivity
             this.handleCloseModal();
             this.emitPayloadChange();
+        } else {
+            // Show validation errors
+            validation.messages.forEach(message => {
+                // eslint-disable-next-line no-console
+                console.error(message);
+            });
+            // Dispatch error event to show in UI
+            this.dispatchEvent(new CustomEvent('validationerror', {
+                detail: { messages: validation.messages }
+            }));
         }
     }
 
     handleDeleteApplicant(event) {
-        const index = parseInt(event.currentTarget.dataset.index);
+        const index = parseInt(event.currentTarget.dataset.index, 10);
         this.applicants.splice(index, 1);
         this.applicants = [...this.applicants]; // Trigger reactivity
         this.emitPayloadChange();
     }
 
-    // Form Field Handlers
+    // Modal Management - Identity Document
+    handleAddDocument() {
+        this.currentDocument = this.getEmptyDocument();
+        this.editingDocumentId = null;
+        this.showDocumentModal = true;
+    }
+
+    handleEditDocument(event) {
+        const uniqueId = event.detail.value;
+        const doc = this.currentApplicant.identityDocuments.find(d => d.uniqueId === uniqueId);
+        if (doc) {
+            this.currentDocument = { ...doc };
+            this.editingDocumentId = uniqueId;
+            this.showDocumentModal = true;
+        }
+    }
+
+    handleDeleteDocument(event) {
+        const uniqueId = event.detail.value;
+        this.currentApplicant.identityDocuments = this.currentApplicant.identityDocuments.filter(
+            d => d.uniqueId !== uniqueId
+        );
+        // Trigger reactivity
+        this.currentApplicant = { ...this.currentApplicant };
+    }
+
+    handleCloseDocumentModal() {
+        this.showDocumentModal = false;
+        this.currentDocument = {};
+        this.editingDocumentId = null;
+    }
+
+    handleSaveDocument() {
+        const validation = this.validateCurrentDocument();
+        if (validation.isValid) {
+            const docToSave = { ...this.currentDocument };
+            
+            // Mask ID number for display
+            docToSave.maskedIdNumber = this.maskIdNumber(docToSave.idNumber);
+            
+            // Ensure uniqueId exists
+            if (!docToSave.uniqueId) {
+                docToSave.uniqueId = `doc-${Date.now()}`;
+            }
+
+            if (!this.currentApplicant.identityDocuments) {
+                this.currentApplicant.identityDocuments = [];
+            }
+
+            if (this.editingDocumentId) {
+                // Edit existing
+                const index = this.currentApplicant.identityDocuments.findIndex(
+                    d => d.uniqueId === this.editingDocumentId
+                );
+                if (index >= 0) {
+                    this.currentApplicant.identityDocuments[index] = docToSave;
+                }
+            } else {
+                // Add new
+                this.currentApplicant.identityDocuments.push(docToSave);
+            }
+            
+            // Trigger reactivity
+            this.currentApplicant = { ...this.currentApplicant };
+            this.handleCloseDocumentModal();
+            this.emitPayloadChange();
+        } else {
+            // Show validation errors
+            validation.messages.forEach(message => {
+                // eslint-disable-next-line no-console
+                console.error(message);
+            });
+            // Dispatch error event to show in UI
+            this.dispatchEvent(new CustomEvent('validationerror', {
+                detail: { messages: validation.messages }
+            }));
+        }
+    }
+
+    handleDocumentFieldChange(event) {
+        const field = event.target.dataset.field || event.currentTarget.dataset.field;
+        this.currentDocument[field] = event.target.value;
+    }
+
+    // Form Field Handlers - Personal Identity
+    handleSalutationChange(event) {
+        this.currentApplicant.salutation = event.target.value;
+    }
+
     handleFirstNameChange(event) {
         this.currentApplicant.firstName = event.target.value;
+    }
+
+    handleMiddleNameChange(event) {
+        this.currentApplicant.middleName = event.target.value;
     }
 
     handleLastNameChange(event) {
         this.currentApplicant.lastName = event.target.value;
     }
 
-    handleEmailChange(event) {
-        this.currentApplicant.email = event.target.value;
+    handleSuffixChange(event) {
+        this.currentApplicant.suffix = event.target.value;
     }
 
-    handlePhoneChange(event) {
-        this.currentApplicant.phone = event.target.value;
+    handleNicknameChange(event) {
+        this.currentApplicant.nickname = event.target.value;
     }
 
     handleDateOfBirthChange(event) {
         this.currentApplicant.dateOfBirth = event.target.value;
     }
 
-    handleSsnChange(event) {
-        this.currentApplicant.ssn = event.target.value;
+    handleMothersMaidenNameChange(event) {
+        this.currentApplicant.mothersMaidenName = event.target.value;
     }
 
-    handleRoleChange(event) {
-        this.currentApplicant.role = event.target.value;
+    // Form Field Handlers - Tax Information
+    handleTaxIdTypeChange(event) {
+        this.currentApplicant.taxIdType = event.target.value;
+    }
+
+    handleTaxIdChange(event) {
+        this.currentApplicant.taxId = event.target.value;
+    }
+
+    // Form Field Handlers - Citizenship
+    handleUSCitizenChange(event) {
+        this.currentApplicant.isUSCitizen = event.target.value;
+        // Reset dependent fields
+        if (this.currentApplicant.isUSCitizen === 'Yes') {
+            this.currentApplicant.isUSResident = null;
+            this.currentApplicant.countryOfResidence = null;
+        }
+    }
+
+    handleUSResidentChange(event) {
+        this.currentApplicant.isUSResident = event.target.value;
+        // Reset dependent field
+        if (this.currentApplicant.isUSResident === 'Yes') {
+            this.currentApplicant.countryOfResidence = null;
+        }
+    }
+
+    handleCountryOfResidenceChange(event) {
+        this.currentApplicant.countryOfResidence = event.target.value;
+    }
+
+    // Form Field Handlers - Employment
+    handleEmployerChange(event) {
+        this.currentApplicant.employer = event.target.value;
+    }
+
+    handleOccupationChange(event) {
+        this.currentApplicant.occupation = event.target.value;
+    }
+
+    // Form Field Handlers - Organization Roles
+    handleOrganizationRoleChange(event) {
+        this.currentApplicant.organizationRole = event.target.value;
     }
 
     handleOwnershipPercentageChange(event) {
         this.currentApplicant.ownershipPercentage = event.target.value;
     }
 
-    handleMailingStreetChange(event) {
-        this.currentApplicant.mailingStreet = event.target.value;
+    handleControlPersonChange(event) {
+        this.currentApplicant.isControlPerson = event.target.value;
     }
 
-    handleMailingCityChange(event) {
-        this.currentApplicant.mailingCity = event.target.value;
+    handleRolesChange(event) {
+        this.currentApplicant.roles = event.target.value;
     }
 
-    handleMailingStateChange(event) {
-        this.currentApplicant.mailingState = event.target.value;
+    // Form Field Handlers - Address
+    handleAddressChange(event) {
+        const addressData = event.detail;
+        
+        // Handle both street and addressLine1 for robustness
+        this.currentApplicant.mailingStreetLine1 = addressData.street || addressData.addressLine1 || '';
+        this.currentApplicant.mailingCity = addressData.city || '';
+        this.currentApplicant.mailingState = addressData.province || '';
+        this.currentApplicant.mailingCountry = addressData.country || '';
+        this.currentApplicant.mailingPostalCode = addressData.postalCode || '';
     }
 
-    handleMailingPostalCodeChange(event) {
-        this.currentApplicant.mailingPostalCode = event.target.value;
+    handleMailingStreetLine2Change(event) {
+        this.currentApplicant.mailingStreetLine2 = event.target.value;
+    }
+
+    // Form Field Handlers - Contact Information
+    handleEmailChange(event) {
+        this.currentApplicant.email = event.target.value;
+    }
+
+    handleHomePhoneChange(event) {
+        this.currentApplicant.homePhone = event.target.value;
+    }
+
+    handleWorkPhoneChange(event) {
+        this.currentApplicant.workPhone = event.target.value;
+    }
+
+    handleMobilePhoneChange(event) {
+        this.currentApplicant.mobilePhone = event.target.value;
     }
 
     // Utility Methods
     getEmptyApplicant() {
         return {
+            id: null,
+            salutation: '',
             firstName: '',
+            middleName: '',
             lastName: '',
-            email: '',
-            phone: '',
+            suffix: '',
+            nickname: '',
             dateOfBirth: '',
-            ssn: '',
-            role: '',
+            mothersMaidenName: '',
+            taxIdType: '',
+            taxId: '',
+            isUSCitizen: '',
+            isUSResident: '',
+            countryOfResidence: '',
+            employer: '',
+            occupation: '',
+            organizationRole: '',
             ownershipPercentage: '',
-            mailingStreet: '',
+            isControlPerson: '',
+            roles: [],
+            identityDocuments: [],
+            mailingStreetLine1: '',
+            mailingStreetLine2: '',
             mailingCity: '',
             mailingState: '',
-            mailingPostalCode: ''
+            mailingPostalCode: '',
+            mailingCountry: '',
+            email: '',
+            homePhone: '',
+            workPhone: '',
+            mobilePhone: ''
+        };
+    }
+
+    getEmptyDocument() {
+        return {
+            uniqueId: null,
+            idType: '',
+            idNumber: '',
+            issuingAuthority: '',
+            issueDate: '',
+            expirationDate: '',
+            maskedIdNumber: ''
         };
     }
 
     validateCurrentApplicant() {
-        const required = ['firstName', 'lastName', 'email', 'phone', 'role'];
-        for (let field of required) {
-            if (!this.currentApplicant[field]) {
-                // Show toast or validation message
-                return false;
+        const messages = [];
+        
+        // Personal Identity validation
+        if (!this.currentApplicant.firstName) {
+            messages.push('First Name is required.');
+        }
+        if (!this.currentApplicant.lastName) {
+            messages.push('Last Name is required.');
+        }
+        
+        // Date of Birth validation (required + not future + 18+ years old)
+        if (!this.currentApplicant.dateOfBirth) {
+            messages.push('Date of Birth is required.');
+        } else {
+            if (this.validateFutureDate(this.currentApplicant.dateOfBirth)) {
+                messages.push('Date of Birth cannot be a future date.');
+            } else if (!this.validateMinimumAge(this.currentApplicant.dateOfBirth, 18)) {
+                messages.push('Applicant must be at least 18 years old.');
             }
         }
-        return true;
+        
+        if (!this.currentApplicant.taxIdType) {
+            messages.push('Tax ID Type is required.');
+        }
+        
+        // Tax ID validation (required + 9 digits only)
+        if (!this.currentApplicant.taxId) {
+            messages.push('Tax ID Number is required.');
+        } else if (!this.validateTaxIdFormat(this.currentApplicant.taxId)) {
+            messages.push('Tax ID must be 9 digits.');
+        }
+        
+        // Citizenship Status validation
+        if (!this.currentApplicant.isUSCitizen) {
+            messages.push('Is US Citizen is required.');
+        }
+        
+        // Conditional validation for Is US Resident
+        if (this.showUSResident && !this.currentApplicant.isUSResident) {
+            messages.push('Is US Resident is required when Is US Citizen is No.');
+        }
+        
+        // Conditional validation for Country of Residence
+        if (this.showCountryOfResidence && !this.currentApplicant.countryOfResidence) {
+            messages.push('Country of Residence is required when Is US Resident is No.');
+        }
+        
+        // Contact Information validation
+        if (!this.currentApplicant.email) {
+            messages.push('Email is required.');
+        } else if (!this.validateEmailFormat(this.currentApplicant.email)) {
+            messages.push('Email must be a valid email address.');
+        }
+        
+        if (!this.currentApplicant.mobilePhone) {
+            messages.push('Mobile Phone is required.');
+        } else if (!this.validatePhoneFormat(this.currentApplicant.mobilePhone)) {
+            messages.push('Mobile Phone must be a valid phone number (10 digits).');
+        }
+        
+        // Optional phone validation
+        if (this.currentApplicant.homePhone && !this.validatePhoneFormat(this.currentApplicant.homePhone)) {
+            messages.push('Home Phone must be a valid phone number (10 digits).');
+        }
+        if (this.currentApplicant.workPhone && !this.validatePhoneFormat(this.currentApplicant.workPhone)) {
+            messages.push('Work Phone must be a valid phone number (10 digits).');
+        }
+        
+        // Mailing Address validation
+        if (!this.currentApplicant.mailingStreetLine1) {
+            messages.push('Street Address Line 1 is required.');
+        }
+        if (!this.currentApplicant.mailingCity) {
+            messages.push('City is required.');
+        }
+        if (!this.currentApplicant.mailingState) {
+            messages.push('State is required.');
+        }
+        if (!this.currentApplicant.mailingPostalCode) {
+            messages.push('ZIP Code is required.');
+        } else if (!this.validateZipCodeFormat(this.currentApplicant.mailingPostalCode)) {
+            messages.push('ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX).');
+        }
+        
+        // Identity Documents validation (CIP Requirement: At least 1 ID required)
+        if (!this.currentApplicant.identityDocuments || this.currentApplicant.identityDocuments.length === 0) {
+            messages.push('⚠️ CIP Requirement: At least one government-issued ID must be provided.');
+        }
+        
+        return {
+            isValid: messages.length === 0,
+            messages: messages
+        };
+    }
+
+    validateCurrentDocument() {
+        const messages = [];
+        
+        if (!this.currentDocument.idType) {
+            messages.push('ID Type is required.');
+        }
+        if (!this.currentDocument.idNumber) {
+            messages.push('ID Number is required.');
+        }
+        if (!this.currentDocument.issuingAuthority) {
+            messages.push('Issuing Authority is required.');
+        }
+        
+        return {
+            isValid: messages.length === 0,
+            messages: messages
+        };
+    }
+
+    // Validation helper methods
+    validateTaxIdFormat(taxId) {
+        // Validate 9 digits only (allow masked with asterisks)
+        const digitsOnly = taxId.replace(/\D/g, '');
+        if (/^[*]{9}$/.test(taxId)) {
+            return true;
+        }
+        return digitsOnly.length === 9;
+    }
+    
+    validateFutureDate(dateString) {
+        const selectedDate = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate > today;
+    }
+    
+    validateMinimumAge(dateOfBirth, minimumAge) {
+        const dob = new Date(dateOfBirth);
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
+        
+        // Adjust age if birthday hasn't occurred this year
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+            return (age - 1) >= minimumAge;
+        }
+        return age >= minimumAge;
+    }
+    
+    validatePhoneFormat(phone) {
+        // Remove all non-digit characters
+        const digitsOnly = phone.replace(/\D/g, '');
+        // Must be 10 digits (US format)
+        return digitsOnly.length === 10;
+    }
+    
+    validateEmailFormat(email) {
+        // Basic email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(email);
+    }
+    
+    validateZipCodeFormat(zipCode) {
+        // Format: XXXXX or XXXXX-XXXX
+        const zipPattern = /^\d{5}(-\d{4})?$/;
+        return zipPattern.test(zipCode);
+    }
+
+    maskIdNumber(idNumber) {
+        if (!idNumber) return '';
+        const lastFour = idNumber.slice(-4);
+        return `***-**-${lastFour}`;
     }
 
     emitPayloadChange() {
@@ -144,6 +557,27 @@ export default class AdditionalApplicants extends LightningElement {
                 isDirty: true
             }
         }));
+    }
+
+    get todayDate() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return today.toISOString().split('T')[0];
+    }
+
+    // Computed Properties - Conditional Display
+    get showUSResident() {
+        return this.currentApplicant.isUSCitizen === 'No';
+    }
+
+    get showCountryOfResidence() {
+        return this.currentApplicant.isUSCitizen === 'No' && 
+               this.currentApplicant.isUSResident === 'No';
+    }
+
+    get hasIdentityDocuments() {
+        return this.currentApplicant.identityDocuments && 
+               this.currentApplicant.identityDocuments.length > 0;
     }
 
     // Getters
@@ -162,81 +596,163 @@ export default class AdditionalApplicants extends LightningElement {
     }
 
     get saveButtonLabel() {
-        return this.editingIndex >= 0 ? 'Update' : 'Add Applicant';
+        return this.editingIndex >= 0 ? 'Update Applicant' : 'Add Applicant';
     }
 
-    get roleOptions() {
+    get documentModalTitle() {
+        return this.editingDocumentId ? 'Edit Identity Document' : 'Add Identity Document';
+    }
+
+    get saveDocumentButtonLabel() {
+        return this.editingDocumentId ? 'Update' : 'Add';
+    }
+
+    // Picklist Options
+    get salutationOptions() {
         return [
-            { label: 'Beneficial Owner', value: 'Beneficial Owner' },
-            { label: 'Authorized Signer', value: 'Authorized Signer' },
-            { label: 'Co-Owner', value: 'Co-Owner' },
-            { label: 'Guarantor', value: 'Guarantor' },
-            { label: 'Power of Attorney', value: 'Power of Attorney' },
+            { label: 'Mr.', value: 'Mr.' },
+            { label: 'Mrs.', value: 'Mrs.' },
+            { label: 'Ms.', value: 'Ms.' },
+            { label: 'Dr.', value: 'Dr.' },
+            { label: 'Prof.', value: 'Prof.' }
+        ];
+    }
+
+    get suffixOptions() {
+        return [
+            { label: 'Jr.', value: 'Jr.' },
+            { label: 'Sr.', value: 'Sr.' },
+            { label: 'I', value: 'I' },
+            { label: 'II', value: 'II' },
+            { label: 'III', value: 'III' },
+            { label: 'IV', value: 'IV' }
+        ];
+    }
+
+    get taxIdTypeOptions() {
+        return [
+            { label: 'SSN', value: 'SSN' },
+            { label: 'EIN', value: 'EIN' },
+            { label: 'ITIN', value: 'ITIN' }
+        ];
+    }
+
+    get citizenshipOptions() {
+        return [
+            { label: 'Yes', value: 'Yes' },
+            { label: 'No', value: 'No' }
+        ];
+    }
+
+    get countryOptions() {
+        return [
+            { label: 'Canada', value: 'Canada' },
+            { label: 'Mexico', value: 'Mexico' },
+            { label: 'United Kingdom', value: 'United Kingdom' },
+            { label: 'Germany', value: 'Germany' },
+            { label: 'France', value: 'France' },
+            { label: 'Italy', value: 'Italy' },
+            { label: 'Spain', value: 'Spain' },
+            { label: 'Japan', value: 'Japan' },
+            { label: 'China', value: 'China' },
+            { label: 'India', value: 'India' },
+            { label: 'Brazil', value: 'Brazil' },
+            { label: 'Australia', value: 'Australia' },
+            { label: 'South Korea', value: 'South Korea' },
+            { label: 'Russia', value: 'Russia' },
+            { label: 'South Africa', value: 'South Africa' },
+            { label: 'Argentina', value: 'Argentina' },
+            { label: 'Netherlands', value: 'Netherlands' },
+            { label: 'Switzerland', value: 'Switzerland' },
+            { label: 'Sweden', value: 'Sweden' },
+            { label: 'Poland', value: 'Poland' },
+            { label: 'Belgium', value: 'Belgium' },
+            { label: 'Norway', value: 'Norway' },
+            { label: 'Austria', value: 'Austria' },
+            { label: 'Israel', value: 'Israel' },
             { label: 'Other', value: 'Other' }
         ];
     }
 
-    get stateOptions() {
+    get organizationRoleOptions() {
         return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' },
-            { label: 'Arizona', value: 'AZ' },
-            { label: 'Arkansas', value: 'AR' },
-            { label: 'California', value: 'CA' },
-            { label: 'Colorado', value: 'CO' },
-            { label: 'Connecticut', value: 'CT' },
-            { label: 'Delaware', value: 'DE' },
-            { label: 'Florida', value: 'FL' },
-            { label: 'Georgia', value: 'GA' },
-            { label: 'Hawaii', value: 'HI' },
-            { label: 'Idaho', value: 'ID' },
-            { label: 'Illinois', value: 'IL' },
-            { label: 'Indiana', value: 'IN' },
-            { label: 'Iowa', value: 'IA' },
-            { label: 'Kansas', value: 'KS' },
-            { label: 'Kentucky', value: 'KY' },
-            { label: 'Louisiana', value: 'LA' },
-            { label: 'Maine', value: 'ME' },
-            { label: 'Maryland', value: 'MD' },
-            { label: 'Massachusetts', value: 'MA' },
-            { label: 'Michigan', value: 'MI' },
-            { label: 'Minnesota', value: 'MN' },
-            { label: 'Mississippi', value: 'MS' },
-            { label: 'Missouri', value: 'MO' },
-            { label: 'Montana', value: 'MT' },
-            { label: 'Nebraska', value: 'NE' },
-            { label: 'Nevada', value: 'NV' },
-            { label: 'New Hampshire', value: 'NH' },
-            { label: 'New Jersey', value: 'NJ' },
-            { label: 'New Mexico', value: 'NM' },
-            { label: 'New York', value: 'NY' },
-            { label: 'North Carolina', value: 'NC' },
-            { label: 'North Dakota', value: 'ND' },
-            { label: 'Ohio', value: 'OH' },
-            { label: 'Oklahoma', value: 'OK' },
-            { label: 'Oregon', value: 'OR' },
-            { label: 'Pennsylvania', value: 'PA' },
-            { label: 'Rhode Island', value: 'RI' },
-            { label: 'South Carolina', value: 'SC' },
-            { label: 'South Dakota', value: 'SD' },
-            { label: 'Tennessee', value: 'TN' },
-            { label: 'Texas', value: 'TX' },
-            { label: 'Utah', value: 'UT' },
-            { label: 'Vermont', value: 'VT' },
-            { label: 'Virginia', value: 'VA' },
-            { label: 'Washington', value: 'WA' },
-            { label: 'West Virginia', value: 'WV' },
-            { label: 'Wisconsin', value: 'WI' },
-            { label: 'Wyoming', value: 'WY' }
+            { label: 'Partner', value: 'Partner' },
+            { label: 'Officer', value: 'Officer' },
+            { label: 'Director', value: 'Director' },
+            { label: 'Shareholder', value: 'Shareholder' },
+            { label: 'Other', value: 'Other' }
         ];
     }
 
+    get rolesOptions() {
+        return [
+            { label: 'Co-Applicant', value: 'Co-Applicant' },
+            { label: 'Authorized Signer', value: 'Authorized Signer' },
+            { label: 'Control Person', value: 'Control Person' },
+            { label: 'Guarantor', value: 'Guarantor' },
+            { label: 'ATM Holder', value: 'ATM Holder' },
+            { label: 'Administrator', value: 'Administrator' },
+            { label: 'Beneficial Owner', value: 'Beneficial Owner' },
+            { label: 'Bookkeeper', value: 'Bookkeeper' },
+            { label: 'Controller', value: 'Controller' },
+            { label: 'Custodian', value: 'Custodian' },
+            { label: 'Director', value: 'Director' },
+            { label: 'Employee', value: 'Employee' },
+            { label: 'Executive', value: 'Executive' },
+            { label: 'Fiduciary', value: 'Fiduciary' },
+            { label: 'General Partner', value: 'General Partner' },
+            { label: 'Limited Partner', value: 'Limited Partner' },
+            { label: 'Manager', value: 'Manager' },
+            { label: 'Member', value: 'Member' },
+            { label: 'Officer', value: 'Officer' },
+            { label: 'Owner', value: 'Owner' },
+            { label: 'President', value: 'President' },
+            { label: 'Secretary', value: 'Secretary' },
+            { label: 'Shareholder', value: 'Shareholder' },
+            { label: 'Signer', value: 'Signer' },
+            { label: 'Treasurer', value: 'Treasurer' },
+            { label: 'Trustee', value: 'Trustee' },
+            { label: 'Vice President', value: 'Vice President' }
+        ];
+    }
+
+    get idDocumentTypeOptions() {
+        return [
+            { label: 'Driver License', value: 'Driver License' },
+            { label: 'Passport', value: 'Passport' },
+            { label: 'State ID', value: 'State ID' },
+            { label: 'Military ID', value: 'Military ID' },
+            { label: 'Tribal ID', value: 'Tribal ID' }
+        ];
+    }
+
+
     // API Methods
     @api validate() {
-        // This step is optional, so always return valid
+        const messages = [];
+        
+        // Validate each applicant in the list
+        if (this.applicants && this.applicants.length > 0) {
+            this.applicants.forEach((applicant, index) => {
+                // Store current applicant temporarily to use validation logic
+                const previousApplicant = { ...this.currentApplicant };
+                this.currentApplicant = applicant;
+                
+                const validation = this.validateCurrentApplicant();
+                if (!validation.isValid) {
+                    validation.messages.forEach(message => {
+                        messages.push(`Applicant ${index + 1}: ${message}`);
+                    });
+                }
+                
+                // Restore previous applicant
+                this.currentApplicant = previousApplicant;
+            });
+        }
+        
         return {
-            isValid: true,
-            messages: []
+            isValid: messages.length === 0,
+            messages: messages
         };
     }
 
@@ -245,6 +761,10 @@ export default class AdditionalApplicants extends LightningElement {
         this.showModal = false;
         this.currentApplicant = {};
         this.editingIndex = -1;
+        this.showDocumentModal = false;
+        this.currentDocument = {};
+        this.editingDocumentId = null;
+        this.hasAppliedInitialValue = false;
         this.emitPayloadChange();
     }
 }

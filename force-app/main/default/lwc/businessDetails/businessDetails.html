@@ -84,9 +84,9 @@
                             label="Federal Tax ID (EIN)" 
                             value={taxId}
                             onchange={handleTaxIdChange}
-                            placeholder="XX-XXXXXXX"
-                            pattern="(\d{2}-\d{7}|\d{9}|[*]{9})"
-                            message-when-pattern-mismatch="Tax ID must be 9 digits in format XX-XXXXXXX"
+                            placeholder="9 digits"
+                            pattern="\d{9}|[*]{9}"
+                            message-when-pattern-mismatch="Tax ID must be 9 digits"
                             required>
                         </lightning-input>
                     </lightning-layout-item>
@@ -293,68 +293,34 @@
             </h3>
             <div class="slds-section__content slds-p-around_small">
                 <lightning-layout multiple-rows>
-                    <!-- Row 1: Street Address Line 1 -->
+                    <!-- Lightning Input Address Component with Autocomplete -->
                     <lightning-layout-item size="12" padding="horizontal-small">
-                        <lightning-input 
-                            label="Street Address Line 1" 
-                            value={businessStreetLine1}
-                            onchange={handleBusinessStreetLine1Change}
+                        <lightning-input-address
+                            address-label=""
+                            street-label="Street Address"
+                            city-label="City"
+                            province-label="State"
+                            country-label="Country"
+                            postal-code-label="ZIP Code"
+                            street={businessStreetLine1}
+                            city={businessCity}
+                            province={businessState}
+                            country={businessCountry}
+                            postal-code={businessPostalCode}
+                            show-address-lookup={showAddressLookup}
+                            onchange={handleAddressChange}
                             required>
-                        </lightning-input>
+                        </lightning-input-address>
                     </lightning-layout-item>
                     
-                    <!-- Row 2: Street Address Line 2 -->
+                    <!-- Row 2: Street Address Line 2 (separate field for Apt, Suite, etc.) -->
                     <lightning-layout-item size="12" padding="horizontal-small">
                         <lightning-input 
-                            label="Street Address Line 2" 
+                            label="Address Line 2 (Apt, Suite, Unit, Building)" 
                             value={businessStreetLine2}
                             onchange={handleBusinessStreetLine2Change}
-                            placeholder="Suite, Floor, Building (optional)">
+                            placeholder="Optional">
                         </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 3: City, State, ZIP -->
-                    <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
-                        <lightning-input 
-                            label="City" 
-                            value={businessCity}
-                            onchange={handleBusinessCityChange}
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
-                        <lightning-combobox
-                            label="State"
-                            value={businessState}
-                            options={stateOptions}
-                            onchange={handleBusinessStateChange}
-                            placeholder="Select state"
-                            required>
-                        </lightning-combobox>
-                    </lightning-layout-item>
-                    
-                    <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
-                        <lightning-input 
-                            label="ZIP Code" 
-                            value={businessPostalCode}
-                            onchange={handleBusinessPostalCodeChange}
-                            pattern="\d{5}(-\d{4})?"
-                            message-when-pattern-mismatch="ZIP Code must be 5 or 9 digits (XXXXX or XXXXX-XXXX)"
-                            placeholder="12345 or 12345-6789"
-                            required>
-                        </lightning-input>
-                    </lightning-layout-item>
-                    
-                    <!-- Row 4: Country -->
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-combobox
-                            label="Country"
-                            value={businessCountry}
-                            options={countryOptions}
-                            onchange={handleBusinessCountryChange}
-                            placeholder="Select country">
-                        </lightning-combobox>
                     </lightning-layout-item>
                 </lightning-layout>
             </div>

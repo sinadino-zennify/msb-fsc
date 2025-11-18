@@ -152,6 +152,19 @@ public with sharing class WizardPersistenceService {
             if (handler != null) {
                 System.debug('▶️ Executing handler for step: ' + stepDeveloperName);
                 PersistenceResponse handlerResponse = handler.handle(applicationId, payload, response);
+                
+                // Update ApplicationForm with StepKey__c (current step) for resume functionality
+                // This stores where the user left off in the application process
+                try {
+                    ApplicationForm appForm = [SELECT Id, StepKey__c FROM ApplicationForm WHERE Id = :applicationId WITH USER_MODE LIMIT 1];
+                    appForm.StepKey__c = stepDeveloperName;
+                    update as user appForm;
+                    System.debug('Updated ApplicationForm.StepKey__c = ' + stepDeveloperName + ' for resume functionality');
+                } catch (Exception stepKeyEx) {
+                    System.debug('WARNING: Could not update ApplicationForm.StepKey__c: ' + stepKeyEx.getMessage());
+                    // Don't fail the entire operation if StepKey update fails
+                }
+                
                 System.debug('╔════════════════════════════════════════════════════════════════════════════════');
                 System.debug('║ HANDLER RESPONSE');
                 System.debug('╠════════════════════════════════════════════════════════════════════════════════');
@@ -205,9 +218,10 @@ public with sharing class WizardPersistenceService {
         
         try {
             // Query for existing Applicant record (Type='Individual') for this ApplicationForm
+            // Include Is_US_Citizen__c and Is_US_Resident__c to ensure proper update
             Applicant applicant = null;
             List<Applicant> existingApplicants = [
-                SELECT Id, ApplicationFormId, Type
+                SELECT Id, ApplicationFormId, Type, Is_US_Citizen__c, Is_US_Resident__c
                 FROM Applicant
                 WHERE ApplicationFormId = :applicationId
                 AND Type = 'Individual'
@@ -222,6 +236,7 @@ public with sharing class WizardPersistenceService {
                 applicant = new Applicant();
                 applicant.ApplicationFormId = applicationId;
                 applicant.Type = 'Individual'; // Valid values: 'Individual' (PersonAccount) or 'Business' (Business Account)
+                applicant.Role__c = 'Primary Applicant'; // Default role for primary applicant (hidden from UI)
                 System.debug('Creating new Applicant (Individual)');
             }
             
@@ -231,11 +246,19 @@ public with sharing class WizardPersistenceService {
             applicant.MiddleName = (String) payload.get('middleName');
             applicant.LastName = (String) payload.get('lastName');
             applicant.Suffix = (String) payload.get('suffix');
+            applicant.Nickname__c = (String) payload.get('nickname');
+            applicant.Occupation__c = (String) payload.get('occupation');
+            applicant.Mothers_Maiden_Name__c = (String) payload.get('mothersMaidenName');
             
-            // Birth Date
+            // Birth Date - Add error handling for Date parsing
             String birthDateStr = (String) payload.get('birthDate');
             if (String.isNotBlank(birthDateStr)) {
-                applicant.BirthDate = Date.valueOf(birthDateStr);
+                try {
+                    applicant.BirthDate = Date.valueOf(birthDateStr.trim());
+                } catch (Exception e) {
+                    System.debug('Error parsing Birth Date: ' + birthDateStr + ' - ' + e.getMessage());
+                    applicant.BirthDate = null;
+                }
             } else {
                 applicant.BirthDate = null; // Clear the field if not provided
             }
@@ -243,6 +266,154 @@ public with sharing class WizardPersistenceService {
             // Tax ID
             applicant.Tax_ID__c = (String) payload.get('taxId');
             applicant.Tax_ID_Type__c = (String) payload.get('taxIdType');
+            
+            // Citizenship Status
+            // Convert "Yes"/"No" strings or Boolean values to Boolean for Checkbox fields
+            // Is_US_Citizen__c and Is_US_Resident__c are Checkbox (Boolean) fields
+            // CRITICAL: Always explicitly set these fields to ensure they are persisted during upsert
+            // Checkbox fields must be explicitly set to a Boolean value to be saved
+            Boolean isUSCitizenSet = false;
+            Object usCitizenObj = payload.get('isUSCitizen');
+            if (usCitizenObj != null) {
+                if (usCitizenObj instanceof Boolean) {
+                    applicant.Is_US_Citizen__c = (Boolean) usCitizenObj;
+                    isUSCitizenSet = true;
+                    System.debug('✅ Set Is_US_Citizen__c = ' + applicant.Is_US_Citizen__c + ' from Boolean payload value');
+                } else if (usCitizenObj instanceof String) {
+                    String usCitizenStr = (String) usCitizenObj;
+                    if (String.isNotBlank(usCitizenStr)) {
+                        applicant.Is_US_Citizen__c = 'Yes'.equalsIgnoreCase(usCitizenStr.trim());
+                        isUSCitizenSet = true;
+                        System.debug('✅ Set Is_US_Citizen__c = ' + applicant.Is_US_Citizen__c + ' from payload value: "' + usCitizenStr + '"');
+                    }
+                }
+            }
+            // If not set from payload, explicitly set based on existing value (for updates) or false (for new)
+            if (!isUSCitizenSet) {
+                if (applicant.Id != null && applicant.Is_US_Citizen__c != null) {
+                    // Preserve existing value for updates when not in payload
+                    System.debug('📌 Preserving existing Is_US_Citizen__c = ' + applicant.Is_US_Citizen__c + ' (not in payload)');
+                } else {
+                    // Explicitly set to false for new records or when existing value is null
+                    applicant.Is_US_Citizen__c = false;
+                    System.debug('✅ Set Is_US_Citizen__c = false (default for new/null)');
+                }
+            }
+            
+            Boolean isUSResidentSet = false;
+            Object usResidentObj = payload.get('isUSResident');
+            if (usResidentObj != null) {
+                if (usResidentObj instanceof Boolean) {
+                    applicant.Is_US_Resident__c = (Boolean) usResidentObj;
+                    isUSResidentSet = true;
+                    System.debug('✅ Set Is_US_Resident__c = ' + applicant.Is_US_Resident__c + ' from Boolean payload value');
+                } else if (usResidentObj instanceof String) {
+                    String usResidentStr = (String) usResidentObj;
+                    if (String.isNotBlank(usResidentStr)) {
+                        applicant.Is_US_Resident__c = 'Yes'.equalsIgnoreCase(usResidentStr.trim());
+                        isUSResidentSet = true;
+                        System.debug('✅ Set Is_US_Resident__c = ' + applicant.Is_US_Resident__c + ' from payload value: "' + usResidentStr + '"');
+                    }
+                }
+            }
+            // If not set from payload, explicitly set based on existing value (for updates) or false (for new)
+            if (!isUSResidentSet) {
+                if (applicant.Id != null && applicant.Is_US_Resident__c != null) {
+                    // Preserve existing value for updates when not in payload
+                    System.debug('📌 Preserving existing Is_US_Resident__c = ' + applicant.Is_US_Resident__c + ' (not in payload)');
+                } else {
+                    // Explicitly set to false for new records or when existing value is null
+                    applicant.Is_US_Resident__c = false;
+                    System.debug('✅ Set Is_US_Resident__c = false (default for new/null)');
+                }
+            }
+            
+            applicant.Country_Of_Residence__c = (String) payload.get('countryOfResidence');
+            
+            // Employment
+            applicant.Employer__c = (String) payload.get('employer');
+            
+            // Organization Roles
+            applicant.Organization_Role__c = (String) payload.get('organizationRole');
+            
+            // Is Control Person: Convert "Yes"/"No" strings to Boolean for Checkbox field
+            // Handle both String ("Yes"/"No") and Boolean types from JSON payload
+            Object isControlPersonObj = payload.get('isControlPerson');
+            if (isControlPersonObj != null) {
+                if (isControlPersonObj instanceof Boolean) {
+                    // This shouldn't happen if it's a Checkbox, but handle it anyway
+                    applicant.Is_Control_Person__c = (Boolean) isControlPersonObj ? 'Yes' : 'No';
+                } else if (isControlPersonObj instanceof String) {
+                    String isControlPersonStr = (String) isControlPersonObj;
+                    if (String.isNotBlank(isControlPersonStr)) {
+                        applicant.Is_Control_Person__c = isControlPersonStr.trim(); // Store as "Yes" or "No" for Picklist
+                    } else {
+                        applicant.Is_Control_Person__c = null;
+                    }
+                } else {
+                    applicant.Is_Control_Person__c = null;
+                }
+            } else {
+                applicant.Is_Control_Person__c = null;
+            }
+            
+            // Ownership Percentage: Convert whole number (50) to decimal (0.50) for Percent field
+            // User enters 50, we store as 0.50 (which displays as 50%)
+            Object ownershipPercentageObj = payload.get('ownershipPercentage');
+            if (ownershipPercentageObj != null) {
+                Decimal ownershipPercentage;
+                // Handle both String and Decimal types from JSON payload
+                if (ownershipPercentageObj instanceof String) {
+                    String ownershipPercentageStr = (String) ownershipPercentageObj;
+                    if (String.isNotBlank(ownershipPercentageStr)) {
+                        ownershipPercentage = Decimal.valueOf(ownershipPercentageStr);
+                    } else {
+                        ownershipPercentage = null;
+                    }
+                } else if (ownershipPercentageObj instanceof Decimal) {
+                    ownershipPercentage = (Decimal) ownershipPercentageObj;
+                } else if (ownershipPercentageObj instanceof Integer) {
+                    ownershipPercentage = Decimal.valueOf((Integer) ownershipPercentageObj);
+                } else if (ownershipPercentageObj instanceof Long) {
+                    ownershipPercentage = Decimal.valueOf((Long) ownershipPercentageObj);
+                } else {
+                    ownershipPercentage = null;
+                }
+                
+                if (ownershipPercentage != null) {
+                    // If value is > 1, assume it's a whole number (50) and convert to decimal (0.50)
+                    if (ownershipPercentage > 1) {
+                        applicant.Ownership_Percentage__c = ownershipPercentage / 100;
+                    } else {
+                        applicant.Ownership_Percentage__c = ownershipPercentage;
+                    }
+                } else {
+                    applicant.Ownership_Percentage__c = null;
+                }
+            } else {
+                applicant.Ownership_Percentage__c = null;
+            }
+            
+            // Roles__c is a MultiselectPicklist - expects semicolon-separated string
+            Object rolesObj = payload.get('roles');
+            if (rolesObj != null) {
+                if (rolesObj instanceof String) {
+                    applicant.Roles__c = String.isNotBlank((String) rolesObj) ? (String) rolesObj : null;
+                } else if (rolesObj instanceof List<Object>) {
+                    // Handle array format - convert to semicolon-separated string
+                    List<String> rolesList = new List<String>();
+                    for (Object role : (List<Object>) rolesObj) {
+                        if (role != null && String.isNotBlank(String.valueOf(role))) {
+                            rolesList.add(String.valueOf(role));
+                        }
+                    }
+                    applicant.Roles__c = rolesList.isEmpty() ? null : String.join(rolesList, ';');
+                } else {
+                    applicant.Roles__c = null;
+                }
+            } else {
+                applicant.Roles__c = null;
+            }
             
             // Contact Information
             applicant.Email = (String) payload.get('email');
@@ -256,37 +427,238 @@ public with sharing class WizardPersistenceService {
             applicant.Mailing_City__c = (String) payload.get('mailingCity');
             applicant.Mailing_State__c = (String) payload.get('mailingState');
             applicant.Mailing_Postal_Code__c = (String) payload.get('mailingPostalCode');
-            applicant.Mailing_Country__c = (String) payload.get('mailingCountry');
+            
+            // Normalize country name to match restricted picklist values
+            // Mailing_Country__c only accepts: USA, Canada, Mexico, Other
+            String mailingCountry = (String) payload.get('mailingCountry');
+            applicant.Mailing_Country__c = normalizeMailingCountry(mailingCountry);
             
             // Government ID
             applicant.Government_ID_Type__c = (String) payload.get('governmentIdType');
             applicant.Government_ID_Number__c = (String) payload.get('governmentIdNumber');
-            applicant.ID_Issuing_Country__c = (String) payload.get('idIssuingCountry');
+            
+            // Normalize ID Issuing Country to match restricted picklist values
+            // ID_Issuing_Country__c only accepts: USA, Canada, Mexico, Other
+            String idIssuingCountry = (String) payload.get('idIssuingCountry');
+            applicant.ID_Issuing_Country__c = normalizeMailingCountry(idIssuingCountry); // Same normalization logic
+            
             applicant.ID_Issuing_State__c = (String) payload.get('idIssuingState');
             
-            // ID Dates
+            // ID Dates - Add error handling for Date parsing
             String idIssueDateStr = (String) payload.get('idIssueDate');
             if (String.isNotBlank(idIssueDateStr)) {
-                applicant.ID_Issue_Date__c = Date.valueOf(idIssueDateStr);
+                try {
+                    applicant.ID_Issue_Date__c = Date.valueOf(idIssueDateStr.trim());
+                } catch (Exception e) {
+                    System.debug('Error parsing ID Issue Date: ' + idIssueDateStr + ' - ' + e.getMessage());
+                    applicant.ID_Issue_Date__c = null;
+                }
             } else {
                 applicant.ID_Issue_Date__c = null; // Clear the field if not provided
             }
             
             String idExpirationDateStr = (String) payload.get('idExpirationDate');
             if (String.isNotBlank(idExpirationDateStr)) {
-                applicant.ID_Expiration_Date__c = Date.valueOf(idExpirationDateStr);
+                try {
+                    applicant.ID_Expiration_Date__c = Date.valueOf(idExpirationDateStr.trim());
+                } catch (Exception e) {
+                    System.debug('Error parsing ID Expiration Date: ' + idExpirationDateStr + ' - ' + e.getMessage());
+                    applicant.ID_Expiration_Date__c = null;
+                }
             } else {
                 applicant.ID_Expiration_Date__c = null; // Clear the field if not provided
             }
             
-            // Upsert Applicant with CRUD/FLS checks
+            // Upsert Applicant with CRUD/FLS checks - MUST be done before Identity Documents
             System.debug('About to upsert Applicant (Person): ' + applicant);
             upsert as user applicant;
+            
+            // Verify Applicant was successfully saved and has an Id
+            if (applicant.Id == null) {
+                throw new AuraHandledException('Failed to save Applicant: Applicant Id is null after upsert');
+            }
+            
             System.debug('SUCCESS: Upserted Applicant with ID: ' + applicant.Id);
             
             response.savedIds.put('applicant', applicant.Id);
             response.savedIds.put('applicationForm', applicationId);
             System.debug('Response savedIds: ' + response.savedIds);
+            
+            // Handle Identity Documents (CIP Requirement) - AFTER Applicant is created
+            // This ensures applicant.Id is available for Applicant__c field on IdentityDocument
+            List<Object> identityDocumentsPayload = (List<Object>) payload.get('identityDocuments');
+            if (identityDocumentsPayload != null && !identityDocumentsPayload.isEmpty()) {
+                System.debug('Processing ' + identityDocumentsPayload.size() + ' identity documents for Applicant ID: ' + applicant.Id);
+                
+                // Get AccountId from ApplicationForm for RelatedLegalEntityId field
+                // IdentityDocument requires "Related Entity/Person" which must be an Account or PersonAccount
+                // Applications can only start from Opportunity, Account, or PersonAccount
+                // Since we're not creating PersonAccount or Business Account, we use the AccountId from ApplicationForm
+                Id accountId = null;
+                try {
+                    ApplicationForm appForm = [
+                        SELECT AccountId 
+                        FROM ApplicationForm 
+                        WHERE Id = :applicationId 
+                        WITH USER_MODE 
+                        LIMIT 1
+                    ];
+                    accountId = appForm.AccountId;
+                    System.debug('Retrieved AccountId from ApplicationForm: ' + accountId);
+                } catch (Exception appFormEx) {
+                    System.debug('Error querying ApplicationForm for AccountId: ' + appFormEx.getMessage());
+                    // Continue - will log error if AccountId is null when setting RelatedLegalEntityId
+                }
+                
+                // Query existing IdentityDocument records for this Applicant
+                // Applicant.Id must be set (verified above) before querying
+                List<IdentityDocument> existingDocs = new List<IdentityDocument>();
+                try {
+                    existingDocs = [
+                        SELECT Id, Name, IdDocumentType, IssuingAuthority, Issuing_Authority_State__c, 
+                               IssueDate, ExpirationDate, Applicant__c, RelatedLegalEntityId
+                        FROM IdentityDocument
+                        WHERE Applicant__c = :applicant.Id
+                        WITH USER_MODE
+                    ];
+                    System.debug('Found ' + existingDocs.size() + ' existing IdentityDocument records');
+                } catch (Exception queryEx) {
+                    System.debug('Error querying existing IdentityDocuments: ' + queryEx.getMessage());
+                    System.debug('Stack trace: ' + queryEx.getStackTraceString());
+                    // Continue with empty list - will create new documents
+                    existingDocs = new List<IdentityDocument>();
+                }
+                
+                Map<String, IdentityDocument> existingDocsMap = new Map<String, IdentityDocument>();
+                for (IdentityDocument doc : existingDocs) {
+                    existingDocsMap.put(doc.Name, doc);
+                }
+                
+                List<IdentityDocument> docsToUpsert = new List<IdentityDocument>();
+                Set<String> processedIdNumbers = new Set<String>();
+                
+                // Process each identity document from payload
+                for (Object docObj : identityDocumentsPayload) {
+                    // Convert Map<ANY,ANY> to Map<String,Object> safely
+                    // JSON deserialization sometimes returns Map<ANY,ANY> instead of Map<String,Object>
+                    Map<String, Object> docMap = new Map<String, Object>();
+                    Map<Object, Object> rawMap = (Map<Object, Object>) docObj;
+                    for (Object key : rawMap.keySet()) {
+                        docMap.put(String.valueOf(key), rawMap.get(key));
+                    }
+                    
+                    String idNumber = (String) docMap.get('idNumber');
+                    
+                    if (String.isBlank(idNumber)) {
+                        continue; // Skip if no ID number
+                    }
+                    
+                    processedIdNumbers.add(idNumber);
+                    
+                    IdentityDocument doc;
+                    if (existingDocsMap.containsKey(idNumber)) {
+                        // Update existing document
+                        doc = existingDocsMap.get(idNumber);
+                        System.debug('Updating existing IdentityDocument with Name: ' + idNumber);
+                        // Ensure Applicant__c is set (in case it wasn't before)
+                        if (doc.Applicant__c == null && applicant.Id != null) {
+                            doc.Applicant__c = applicant.Id;
+                        }
+                        // Ensure RelatedLegalEntityId is set (required field)
+                        if (doc.RelatedLegalEntityId == null && accountId != null) {
+                            doc.RelatedLegalEntityId = accountId;
+                        }
+                    } else {
+                        // Create new document - Applicant must be saved first (verified above)
+                        doc = new IdentityDocument();
+                        doc.Name = idNumber; // ID Number stored in Name field
+                        doc.Applicant__c = applicant.Id; // Link to Applicant (Id must be set after upsert)
+                        // RelatedLegalEntityId is required - must reference Account or PersonAccount
+                        // We use AccountId from ApplicationForm (applications can only start from Opportunity/Account/PersonAccount)
+                        if (accountId != null) {
+                            doc.RelatedLegalEntityId = accountId;
+                            System.debug('Creating new IdentityDocument with Name: ' + idNumber + ', Applicant__c: ' + applicant.Id + ', RelatedLegalEntityId: ' + accountId);
+                        } else {
+                            System.debug('WARNING: AccountId is null - RelatedLegalEntityId will be null. This may cause validation error.');
+                        }
+                    }
+                    
+                    // Map fields from payload to IdentityDocument
+                    doc.IdDocumentType = (String) docMap.get('idType');
+                    String issuingAuthorityFull = (String) docMap.get('issuingAuthority');
+                    
+                    // Parse issuing authority to extract state and country
+                    // Format expected: "State, Country" (e.g., "CA, USA", "NY, USA")
+                    // IssuingAuthority should contain only the Country
+                    // Issuing_Authority_State__c should contain only the State
+                    if (String.isNotBlank(issuingAuthorityFull)) {
+                        String[] parts = issuingAuthorityFull.split(',');
+                        if (parts.size() > 1) {
+                            // Has both state and country: "CA, USA"
+                            String state = parts[0].trim(); // First part is the state
+                            String country = parts[1].trim(); // Second part is the country
+                            doc.Issuing_Authority_State__c = state;
+                            doc.IssuingAuthority = country; // Store only country in IssuingAuthority
+                            System.debug('Parsed Issuing Authority: "' + issuingAuthorityFull + '" -> State: "' + state + '", Country: "' + country + '"');
+                        } else if (parts.size() == 1) {
+                            // Only one part - assume it's the country if no comma
+                            String value = parts[0].trim();
+                            doc.IssuingAuthority = value; // Store as country
+                            doc.Issuing_Authority_State__c = null; // No state provided
+                            System.debug('Issuing Authority has no comma - storing as country only: "' + value + '"');
+                        }
+                    } else {
+                        doc.IssuingAuthority = null;
+                        doc.Issuing_Authority_State__c = null;
+                    }
+                    
+                    // Parse dates
+                    String issueDateStr = (String) docMap.get('issueDate');
+                    if (String.isNotBlank(issueDateStr)) {
+                        doc.IssueDate = Date.valueOf(issueDateStr);
+                    }
+                    
+                    String expirationDateStr = (String) docMap.get('expirationDate');
+                    if (String.isNotBlank(expirationDateStr)) {
+                        doc.ExpirationDate = Date.valueOf(expirationDateStr);
+                    }
+                    
+                    docsToUpsert.add(doc);
+                }
+                
+                // Upsert identity documents
+                if (!docsToUpsert.isEmpty()) {
+                    try {
+                        upsert as user docsToUpsert;
+                        System.debug('Upserted ' + docsToUpsert.size() + ' IdentityDocument records');
+                        
+                        // Add IDs to response
+                        List<Id> docIds = new List<Id>();
+                        for (IdentityDocument doc : docsToUpsert) {
+                            docIds.add(doc.Id);
+                        }
+                        response.savedIds.put('identityDocuments', String.join(docIds, ','));
+                    } catch (Exception upsertEx) {
+                        System.debug('Error upserting IdentityDocuments: ' + upsertEx.getMessage());
+                        System.debug('Stack trace: ' + upsertEx.getStackTraceString());
+                        // Re-throw with more context
+                        throw new AuraHandledException('Failed to save Identity Documents: ' + upsertEx.getMessage());
+                    }
+                }
+                
+                // Delete removed documents (documents that exist but weren't in the payload)
+                List<IdentityDocument> docsToDelete = new List<IdentityDocument>();
+                for (IdentityDocument existingDoc : existingDocs) {
+                    if (!processedIdNumbers.contains(existingDoc.Name)) {
+                        docsToDelete.add(existingDoc);
+                    }
+                }
+                
+                if (!docsToDelete.isEmpty()) {
+                    delete as user docsToDelete;
+                    System.debug('Deleted ' + docsToDelete.size() + ' removed IdentityDocument records');
+                }
+            }
             
             System.debug('--- upsertApplicantStep END (Success) ---');
             return response;
@@ -426,7 +798,9 @@ public with sharing class WizardPersistenceService {
             applicant.Business_City__c = (String) payload.get('businessCity');
             applicant.Business_State__c = (String) payload.get('businessState');
             applicant.Business_Postal_Code__c = (String) payload.get('businessPostalCode');
-            applicant.Business_Country__c = (String) payload.get('businessCountry');
+            // Business Country: Normalize to match restricted picklist values (USA, CAN, MEX)
+            String businessCountry = (String) payload.get('businessCountry');
+            applicant.Business_Country__c = normalizeBusinessCountry(businessCountry);
             
             // Financial & Operational fields
             Object annualRevObj = payload.get('annualRevenue');
@@ -504,13 +878,370 @@ public with sharing class WizardPersistenceService {
     }
     
     private static PersistenceResponse upsertAdditionalStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
-        // Simulate successful persistence for additional applicants step
+        System.debug('--- upsertAdditionalStep START ---');
+        System.debug('ApplicationId: ' + applicationId);
+        System.debug('Payload: ' + JSON.serializePretty(payload));
+        
+        try {
+            // Extract applicants array from payload
+            List<Object> applicantsPayload = (List<Object>) payload.get('applicants');
+            
+            if (applicantsPayload == null || applicantsPayload.isEmpty()) {
+                System.debug('No additional applicants in payload. Returning success.');
         response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            System.debug('Processing ' + applicantsPayload.size() + ' additional applicants');
+            
+            // Query existing additional applicants for this ApplicationForm (Type != 'Individual' or Role != 'Primary Applicant')
+            Map<String, Applicant> existingApplicantsMap = new Map<String, Applicant>();
+            List<Applicant> existingApplicants = [
+                SELECT Id, ApplicationFormId, FirstName, LastName, MiddleName, Email, 
+                       Is_US_Citizen__c, Is_US_Resident__c
+                FROM Applicant
+                WHERE ApplicationFormId = :applicationId
+                AND (Type != 'Individual' OR Role__c != 'Primary Applicant')
+                WITH USER_MODE
+            ];
+            
+            // Map existing applicants by email (as unique identifier)
+            for (Applicant existing : existingApplicants) {
+                if (String.isNotBlank(existing.Email)) {
+                    existingApplicantsMap.put(existing.Email.toLowerCase(), existing);
+                }
+            }
+            
+            List<Applicant> applicantsToUpsert = new List<Applicant>();
+            List<Id> applicantIds = new List<Id>();
+            
+            // Process each applicant in the payload
+            for (Object applicantObj : applicantsPayload) {
+                // Convert Map<ANY,ANY> to Map<String,Object> safely
+                // JSON deserialization sometimes returns Map<ANY,ANY> instead of Map<String,Object>
+                Map<String, Object> applicantPayload = new Map<String, Object>();
+                Map<Object, Object> rawMap = (Map<Object, Object>) applicantObj;
+                for (Object key : rawMap.keySet()) {
+                    applicantPayload.put(String.valueOf(key), rawMap.get(key));
+                }
+                
+                // Determine if this is an update or insert based on email
+                String email = (String) applicantPayload.get('email');
+                Applicant applicant;
+                
+                if (String.isNotBlank(email) && existingApplicantsMap.containsKey(email.toLowerCase())) {
+                    applicant = existingApplicantsMap.get(email.toLowerCase());
+                    System.debug('Found existing Applicant with email: ' + email);
+                } else {
+                    applicant = new Applicant();
+                    applicant.ApplicationFormId = applicationId;
+                    // NOTE: We do NOT set Type or Role__c here - let the user control these
+                    System.debug('Creating new Applicant for email: ' + email);
+                }
+                
+                // Personal Identity fields
+                applicant.Salutation = (String) applicantPayload.get('salutation');
+                applicant.FirstName = (String) applicantPayload.get('firstName');
+                applicant.MiddleName = (String) applicantPayload.get('middleName');
+                applicant.LastName = (String) applicantPayload.get('lastName');
+                applicant.Suffix = (String) applicantPayload.get('suffix');
+                applicant.Nickname__c = (String) applicantPayload.get('nickname');
+                
+                // Date of Birth
+                String dobStr = (String) applicantPayload.get('dateOfBirth');
+                if (String.isNotBlank(dobStr)) {
+                    try {
+                        applicant.BirthDate = Date.valueOf(dobStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing dateOfBirth: ' + e.getMessage());
+                    }
+                }
+                
+                applicant.Mothers_Maiden_Name__c = (String) applicantPayload.get('mothersMaidenName');
+                
+                // Tax ID
+                applicant.Tax_ID__c = (String) applicantPayload.get('taxId');
+                applicant.Tax_ID_Type__c = (String) applicantPayload.get('taxIdType');
+                
+                // Citizenship Status - same Boolean conversion logic as primary applicant
+                Boolean isUSCitizenSet = false;
+                Object usCitizenObj = applicantPayload.get('isUSCitizen');
+                if (usCitizenObj != null) {
+                    if (usCitizenObj instanceof Boolean) {
+                        applicant.Is_US_Citizen__c = (Boolean) usCitizenObj;
+                        isUSCitizenSet = true;
+                    } else if (usCitizenObj instanceof String) {
+                        String usCitizenStr = (String) usCitizenObj;
+                        if (String.isNotBlank(usCitizenStr)) {
+                            applicant.Is_US_Citizen__c = 'Yes'.equalsIgnoreCase(usCitizenStr.trim());
+                            isUSCitizenSet = true;
+                        }
+                    }
+                }
+                if (!isUSCitizenSet && applicant.Id == null) {
+                    applicant.Is_US_Citizen__c = false;
+                }
+                
+                Boolean isUSResidentSet = false;
+                Object usResidentObj = applicantPayload.get('isUSResident');
+                if (usResidentObj != null) {
+                    if (usResidentObj instanceof Boolean) {
+                        applicant.Is_US_Resident__c = (Boolean) usResidentObj;
+                        isUSResidentSet = true;
+                    } else if (usResidentObj instanceof String) {
+                        String usResidentStr = (String) usResidentObj;
+                        if (String.isNotBlank(usResidentStr)) {
+                            applicant.Is_US_Resident__c = 'Yes'.equalsIgnoreCase(usResidentStr.trim());
+                            isUSResidentSet = true;
+                        }
+                    }
+                }
+                if (!isUSResidentSet && applicant.Id == null) {
+                    applicant.Is_US_Resident__c = false;
+                }
+                
+                applicant.Country_Of_Residence__c = (String) applicantPayload.get('countryOfResidence');
+                
+                // Employment
+                applicant.Employer__c = (String) applicantPayload.get('employer');
+                applicant.Occupation__c = (String) applicantPayload.get('occupation');
+                
+                // Organization Roles
+                applicant.Organization_Role__c = (String) applicantPayload.get('organizationRole');
+                
+                // Is Control Person: Picklist value (Yes/No)
+                applicant.Is_Control_Person__c = (String) applicantPayload.get('isControlPerson');
+                
+                // Ownership Percentage: Same conversion logic as primary
+                Object ownershipObj = applicantPayload.get('ownershipPercentage');
+                if (ownershipObj != null) {
+                    Decimal ownershipPercentage;
+                    if (ownershipObj instanceof String) {
+                        ownershipPercentage = Decimal.valueOf((String) ownershipObj);
+                    } else if (ownershipObj instanceof Integer) {
+                        ownershipPercentage = Decimal.valueOf((Integer) ownershipObj);
+                    } else if (ownershipObj instanceof Long) {
+                        ownershipPercentage = Decimal.valueOf((Long) ownershipObj);
+                    } else if (ownershipObj instanceof Decimal) {
+                        ownershipPercentage = (Decimal) ownershipObj;
+                    } else {
+                        ownershipPercentage = null;
+                    }
+                    
+                    if (ownershipPercentage != null && ownershipPercentage > 1) {
+                        ownershipPercentage = ownershipPercentage / 100;
+                    }
+                    applicant.Ownership_Percentage__c = ownershipPercentage;
+                }
+                
+                // Roles (Multi-select picklist): Handle both String and List<Object>
+                Object rolesObj = applicantPayload.get('roles');
+                if (rolesObj != null) {
+                    if (rolesObj instanceof String) {
+                        applicant.Roles__c = (String) rolesObj;
+                    } else if (rolesObj instanceof List<Object>) {
+                        List<String> rolesList = new List<String>();
+                        for (Object roleItem : (List<Object>) rolesObj) {
+                            rolesList.add(String.valueOf(roleItem));
+                        }
+                        applicant.Roles__c = String.join(rolesList, ';');
+                    }
+                }
+                
+                // Government ID
+                String idIssuingCountry = (String) applicantPayload.get('idIssuingCountry');
+                applicant.ID_Issuing_Country__c = normalizeMailingCountry(idIssuingCountry);
+                applicant.ID_Issuing_State__c = (String) applicantPayload.get('idIssuingState');
+                
+                // ID Dates
+                String idIssueDateStr = (String) applicantPayload.get('idIssueDate');
+                if (String.isNotBlank(idIssueDateStr)) {
+                    try {
+                        applicant.ID_Issue_Date__c = Date.valueOf(idIssueDateStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing idIssueDate: ' + e.getMessage());
+                    }
+                }
+                
+                String idExpirationDateStr = (String) applicantPayload.get('idExpirationDate');
+                if (String.isNotBlank(idExpirationDateStr)) {
+                    try {
+                        applicant.ID_Expiration_Date__c = Date.valueOf(idExpirationDateStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing idExpirationDate: ' + e.getMessage());
+                    }
+                }
+                
+                // Mailing Address
+                applicant.Mailing_Street_Line_1__c = (String) applicantPayload.get('mailingStreetLine1');
+                applicant.Mailing_Street_Line_2__c = (String) applicantPayload.get('mailingStreetLine2');
+                applicant.Mailing_City__c = (String) applicantPayload.get('mailingCity');
+                applicant.Mailing_State__c = (String) applicantPayload.get('mailingState');
+                applicant.Mailing_Postal_Code__c = (String) applicantPayload.get('mailingPostalCode');
+                
+                String mailingCountry = (String) applicantPayload.get('mailingCountry');
+                applicant.Mailing_Country__c = normalizeMailingCountry(mailingCountry);
+                
+                // Contact Information
+                applicant.Email = (String) applicantPayload.get('email');
+                applicant.Home_Phone__c = (String) applicantPayload.get('homePhone');
+                applicant.Work_Phone__c = (String) applicantPayload.get('workPhone');
+                applicant.Mobile_Phone__c = (String) applicantPayload.get('mobilePhone');
+                // Note: Preferred_Contact_Method__c field doesn't exist on Applicant object
+                
+                applicantsToUpsert.add(applicant);
+            }
+            
+            // Upsert all applicants
+            if (!applicantsToUpsert.isEmpty()) {
+                System.debug('Upserting ' + applicantsToUpsert.size() + ' additional applicants');
+                upsert applicantsToUpsert;
+                
+                // Collect applicant IDs
+                for (Applicant app : applicantsToUpsert) {
+                    applicantIds.add(app.Id);
+                }
+                
+                response.savedIds.put('applicants', String.join(applicantIds, ','));
+                System.debug('Upserted additional applicants with IDs: ' + applicantIds);
+            }
+            
+            // Now process Identity Documents for each applicant
+            for (Integer i = 0; i < applicantsPayload.size(); i++) {
+                Map<String, Object> applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                Applicant applicant = applicantsToUpsert[i];
+                
+                List<Object> identityDocumentsPayload = (List<Object>) applicantPayload.get('identityDocuments');
+                if (identityDocumentsPayload != null && !identityDocumentsPayload.isEmpty()) {
+                    processIdentityDocuments(applicant.Id, applicationId, identityDocumentsPayload);
+                }
+            }
+            
+            response.savedIds.put('applicationForm', applicationId);
+            
+        } catch (Exception e) {
+            System.debug('ERROR in upsertAdditionalStep: ' + e.getMessage());
+            System.debug('Exception Type: ' + e.getTypeName());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            response.success = false;
+            response.messages.add(new ErrorMessage('ADDITIONAL_APPLICANTS_ERROR', 'Failed to save additional applicants: ' + e.getMessage(), null));
+        }
         
-        // Log the payload for debugging
-        System.debug('Additional step payload: ' + JSON.serialize(payload));
-        
+        System.debug('--- upsertAdditionalStep END ---');
         return response;
+    }
+    
+    // Helper method to process identity documents (reused from upsertApplicantStep)
+    private static void processIdentityDocuments(Id applicantId, Id applicationId, List<Object> identityDocumentsPayload) {
+        System.debug('Processing ' + identityDocumentsPayload.size() + ' identity documents for Applicant: ' + applicantId);
+        
+        // Get AccountId from ApplicationForm for RelatedLegalEntityId field
+        Id accountId = null;
+        try {
+            ApplicationForm appForm = [
+                SELECT AccountId 
+                FROM ApplicationForm 
+                WHERE Id = :applicationId 
+                WITH USER_MODE 
+                LIMIT 1
+            ];
+            accountId = appForm.AccountId;
+            System.debug('Retrieved AccountId from ApplicationForm: ' + accountId);
+        } catch (Exception appFormEx) {
+            System.debug('Error querying ApplicationForm for AccountId: ' + appFormEx.getMessage());
+        }
+        
+        // Query existing identity documents for this applicant
+        List<IdentityDocument> existingDocs = [
+            SELECT Id, Name, IdDocumentType, IssuingAuthority, Issuing_Authority_State__c, 
+                   IssueDate, ExpirationDate, Applicant__c, RelatedLegalEntityId
+            FROM IdentityDocument
+            WHERE Applicant__c = :applicantId
+            WITH USER_MODE
+        ];
+        
+        Map<String, IdentityDocument> existingDocsMap = new Map<String, IdentityDocument>();
+        for (IdentityDocument existingDoc : existingDocs) {
+            existingDocsMap.put(existingDoc.Name, existingDoc);
+        }
+        
+        List<IdentityDocument> docsToUpsert = new List<IdentityDocument>();
+        
+        for (Object docObj : identityDocumentsPayload) {
+            Map<String, Object> docMap;
+            
+            if (docObj instanceof Map<Object, Object>) {
+                docMap = new Map<String, Object>();
+                for (Object key : ((Map<Object, Object>) docObj).keySet()) {
+                    docMap.put(String.valueOf(key), ((Map<Object, Object>) docObj).get(key));
+                }
+            } else {
+                docMap = (Map<String, Object>) docObj;
+            }
+            
+            String idNumber = (String) docMap.get('idNumber');
+            if (String.isBlank(idNumber)) {
+                continue;
+            }
+            
+            IdentityDocument doc;
+            if (existingDocsMap.containsKey(idNumber)) {
+                doc = existingDocsMap.get(idNumber);
+                if (doc.Applicant__c == null && applicantId != null) {
+                    doc.Applicant__c = applicantId;
+                }
+                if (doc.RelatedLegalEntityId == null && accountId != null) {
+                    doc.RelatedLegalEntityId = accountId;
+                }
+            } else {
+                doc = new IdentityDocument();
+                doc.Name = idNumber;
+                doc.Applicant__c = applicantId;
+                if (accountId != null) {
+                    doc.RelatedLegalEntityId = accountId;
+                }
+            }
+            
+            doc.IdDocumentType = (String) docMap.get('idType');
+            String issuingAuthorityFull = (String) docMap.get('issuingAuthority');
+            
+            if (String.isNotBlank(issuingAuthorityFull)) {
+                String[] parts = issuingAuthorityFull.split(',');
+                if (parts.size() > 0) {
+                    String state = parts[0].trim();
+                    doc.Issuing_Authority_State__c = state;
+                }
+                if (parts.size() > 1) {
+                    String country = parts[1].trim();
+                    doc.IssuingAuthority = country;
+                }
+            }
+            
+            String issueDateStr = (String) docMap.get('issueDate');
+            if (String.isNotBlank(issueDateStr)) {
+                try {
+                    doc.IssueDate = Date.valueOf(issueDateStr);
+                } catch (Exception e) {
+                    System.debug('Error parsing issueDate: ' + e.getMessage());
+                }
+            }
+            
+            String expirationDateStr = (String) docMap.get('expirationDate');
+            if (String.isNotBlank(expirationDateStr)) {
+                try {
+                    doc.ExpirationDate = Date.valueOf(expirationDateStr);
+                } catch (Exception e) {
+                    System.debug('Error parsing expirationDate: ' + e.getMessage());
+                }
+            }
+            
+            docsToUpsert.add(doc);
+        }
+        
+        if (!docsToUpsert.isEmpty()) {
+            System.debug('Upserting ' + docsToUpsert.size() + ' identity documents');
+            upsert docsToUpsert;
+        }
     }
     
     private static PersistenceResponse upsertServicesStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
@@ -553,6 +1284,8 @@ public with sharing class WizardPersistenceService {
         
         // Generate unique DAO Application ID
         app.DAOApplicationId__c = 'DAO-' + System.currentTimeMillis();
+        
+        // StepKey__c will be set in upsertStep method after ApplicationForm is created
         
         // Set context lookups based on the record the wizard was launched from
         if (contextRecordId != null) {
@@ -618,6 +1351,98 @@ public with sharing class WizardPersistenceService {
             System.debug('Error fetching Account details: ' + e.getMessage());
             return null;
         }
+    }
+    
+    /**
+     * Normalizes country names to match restricted picklist values for Mailing_Country__c
+     * Valid picklist values: USA, Canada, Mexico, Other
+     * @param countryName The country name from the address component (e.g., "United States", "US", etc.)
+     * @return The normalized country value that matches the picklist API value
+     */
+    private static String normalizeMailingCountry(String countryName) {
+        if (String.isBlank(countryName)) {
+            return null;
+        }
+        
+        String normalized = countryName.trim();
+        
+        // Map common country name variations to picklist values
+        // Mailing_Country__c only accepts: USA, Canada, Mexico, Other
+        if (normalized.equalsIgnoreCase('United States') || 
+            normalized.equalsIgnoreCase('US') || 
+            normalized.equalsIgnoreCase('U.S.') ||
+            normalized.equalsIgnoreCase('U.S.A.') ||
+            normalized.equalsIgnoreCase('United States of America')) {
+            return 'USA';
+        }
+        
+        if (normalized.equalsIgnoreCase('Canada') || 
+            normalized.equalsIgnoreCase('CA') ||
+            normalized.equalsIgnoreCase('CAN')) {
+            return 'Canada';
+        }
+        
+        if (normalized.equalsIgnoreCase('Mexico') || 
+            normalized.equalsIgnoreCase('MX') ||
+            normalized.equalsIgnoreCase('MEX')) {
+            return 'Mexico';
+        }
+        
+        // If it's one of the valid values, return the exact API value
+        if (normalized.equalsIgnoreCase('USA')) {
+            return 'USA';
+        }
+        if (normalized.equalsIgnoreCase('Canada')) {
+            return 'Canada';
+        }
+        if (normalized.equalsIgnoreCase('Mexico')) {
+            return 'Mexico';
+        }
+        if (normalized.equalsIgnoreCase('Other')) {
+            return 'Other';
+        }
+        
+        // For any other country not in the picklist, default to "Other"
+        return 'Other';
+    }
+    
+    /**
+     * Normalizes country names to match restricted picklist values for Business_Country__c
+     * Valid picklist values: USA, CAN, MEX
+     * @param countryName The country name from the address component (e.g., "United States", "US", etc.)
+     * @return The normalized country value that matches the picklist API value
+     */
+    private static String normalizeBusinessCountry(String countryName) {
+        if (String.isBlank(countryName)) {
+            return null;
+        }
+        
+        String normalized = countryName.trim();
+        
+        // Map common country name variations to picklist values
+        // Business_Country__c only accepts: USA, CAN, MEX
+        if (normalized.equalsIgnoreCase('United States') || 
+            normalized.equalsIgnoreCase('US') || 
+            normalized.equalsIgnoreCase('U.S.') ||
+            normalized.equalsIgnoreCase('U.S.A.') ||
+            normalized.equalsIgnoreCase('United States of America') ||
+            normalized.equalsIgnoreCase('USA')) {
+            return 'USA';
+        }
+        
+        if (normalized.equalsIgnoreCase('Canada') || 
+            normalized.equalsIgnoreCase('CA') ||
+            normalized.equalsIgnoreCase('CAN')) {
+            return 'CAN';
+        }
+        
+        if (normalized.equalsIgnoreCase('Mexico') || 
+            normalized.equalsIgnoreCase('MX') ||
+            normalized.equalsIgnoreCase('MEX')) {
+            return 'MEX';
+        }
+        
+        return normalized; // Return as-is if no mapping found
     }
     
 }
