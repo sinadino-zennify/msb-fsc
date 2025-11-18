@@ -876,13 +876,364 @@ public with sharing class WizardPersistenceService {
     }
     
     private static PersistenceResponse upsertAdditionalStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
-        // Simulate successful persistence for additional applicants step
+        System.debug('--- upsertAdditionalStep START ---');
+        System.debug('ApplicationId: ' + applicationId);
+        System.debug('Payload: ' + JSON.serializePretty(payload));
+        
+        try {
+            // Extract applicants array from payload
+            List<Object> applicantsPayload = (List<Object>) payload.get('applicants');
+            
+            if (applicantsPayload == null || applicantsPayload.isEmpty()) {
+                System.debug('No additional applicants in payload. Returning success.');
         response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            System.debug('Processing ' + applicantsPayload.size() + ' additional applicants');
+            
+            // Query existing additional applicants for this ApplicationForm (Type != 'Individual' or Role != 'Primary Applicant')
+            Map<String, Applicant> existingApplicantsMap = new Map<String, Applicant>();
+            List<Applicant> existingApplicants = [
+                SELECT Id, ApplicationFormId, FirstName, LastName, MiddleName, Email, 
+                       Is_US_Citizen__c, Is_US_Resident__c
+                FROM Applicant
+                WHERE ApplicationFormId = :applicationId
+                AND (Type != 'Individual' OR Role__c != 'Primary Applicant')
+                WITH USER_MODE
+            ];
+            
+            // Map existing applicants by email (as unique identifier)
+            for (Applicant existing : existingApplicants) {
+                if (String.isNotBlank(existing.Email)) {
+                    existingApplicantsMap.put(existing.Email.toLowerCase(), existing);
+                }
+            }
+            
+            List<Applicant> applicantsToUpsert = new List<Applicant>();
+            List<Id> applicantIds = new List<Id>();
+            
+            // Process each applicant in the payload
+            for (Object applicantObj : applicantsPayload) {
+                Map<String, Object> applicantPayload = (Map<String, Object>) applicantObj;
+                
+                // Determine if this is an update or insert based on email
+                String email = (String) applicantPayload.get('email');
+                Applicant applicant;
+                
+                if (String.isNotBlank(email) && existingApplicantsMap.containsKey(email.toLowerCase())) {
+                    applicant = existingApplicantsMap.get(email.toLowerCase());
+                    System.debug('Found existing Applicant with email: ' + email);
+                } else {
+                    applicant = new Applicant();
+                    applicant.ApplicationFormId = applicationId;
+                    // NOTE: We do NOT set Type or Role__c here - let the user control these
+                    System.debug('Creating new Applicant for email: ' + email);
+                }
+                
+                // Personal Identity fields
+                applicant.Salutation = (String) applicantPayload.get('salutation');
+                applicant.FirstName = (String) applicantPayload.get('firstName');
+                applicant.MiddleName = (String) applicantPayload.get('middleName');
+                applicant.LastName = (String) applicantPayload.get('lastName');
+                applicant.Suffix = (String) applicantPayload.get('suffix');
+                applicant.Nickname__c = (String) applicantPayload.get('nickname');
+                
+                // Date of Birth
+                String dobStr = (String) applicantPayload.get('dateOfBirth');
+                if (String.isNotBlank(dobStr)) {
+                    try {
+                        applicant.BirthDate = Date.valueOf(dobStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing dateOfBirth: ' + e.getMessage());
+                    }
+                }
+                
+                applicant.Mothers_Maiden_Name__c = (String) applicantPayload.get('mothersMaidenName');
+                
+                // Tax ID
+                applicant.Tax_ID__c = (String) applicantPayload.get('taxId');
+                applicant.Tax_ID_Type__c = (String) applicantPayload.get('taxIdType');
+                
+                // Citizenship Status - same Boolean conversion logic as primary applicant
+                Boolean isUSCitizenSet = false;
+                Object usCitizenObj = applicantPayload.get('isUSCitizen');
+                if (usCitizenObj != null) {
+                    if (usCitizenObj instanceof Boolean) {
+                        applicant.Is_US_Citizen__c = (Boolean) usCitizenObj;
+                        isUSCitizenSet = true;
+                    } else if (usCitizenObj instanceof String) {
+                        String usCitizenStr = (String) usCitizenObj;
+                        if (String.isNotBlank(usCitizenStr)) {
+                            applicant.Is_US_Citizen__c = 'Yes'.equalsIgnoreCase(usCitizenStr.trim());
+                            isUSCitizenSet = true;
+                        }
+                    }
+                }
+                if (!isUSCitizenSet && applicant.Id == null) {
+                    applicant.Is_US_Citizen__c = false;
+                }
+                
+                Boolean isUSResidentSet = false;
+                Object usResidentObj = applicantPayload.get('isUSResident');
+                if (usResidentObj != null) {
+                    if (usResidentObj instanceof Boolean) {
+                        applicant.Is_US_Resident__c = (Boolean) usResidentObj;
+                        isUSResidentSet = true;
+                    } else if (usResidentObj instanceof String) {
+                        String usResidentStr = (String) usResidentObj;
+                        if (String.isNotBlank(usResidentStr)) {
+                            applicant.Is_US_Resident__c = 'Yes'.equalsIgnoreCase(usResidentStr.trim());
+                            isUSResidentSet = true;
+                        }
+                    }
+                }
+                if (!isUSResidentSet && applicant.Id == null) {
+                    applicant.Is_US_Resident__c = false;
+                }
+                
+                applicant.Country_Of_Residence__c = (String) applicantPayload.get('countryOfResidence');
+                
+                // Employment
+                applicant.Employer__c = (String) applicantPayload.get('employer');
+                applicant.Occupation__c = (String) applicantPayload.get('occupation');
+                
+                // Organization Roles
+                applicant.Organization_Role__c = (String) applicantPayload.get('organizationRole');
+                
+                // Is Control Person: Picklist value (Yes/No)
+                applicant.Is_Control_Person__c = (String) applicantPayload.get('isControlPerson');
+                
+                // Ownership Percentage: Same conversion logic as primary
+                Object ownershipObj = applicantPayload.get('ownershipPercentage');
+                if (ownershipObj != null) {
+                    Decimal ownershipPercentage;
+                    if (ownershipObj instanceof String) {
+                        ownershipPercentage = Decimal.valueOf((String) ownershipObj);
+                    } else if (ownershipObj instanceof Integer) {
+                        ownershipPercentage = Decimal.valueOf((Integer) ownershipObj);
+                    } else if (ownershipObj instanceof Long) {
+                        ownershipPercentage = Decimal.valueOf((Long) ownershipObj);
+                    } else if (ownershipObj instanceof Decimal) {
+                        ownershipPercentage = (Decimal) ownershipObj;
+                    } else {
+                        ownershipPercentage = null;
+                    }
+                    
+                    if (ownershipPercentage != null && ownershipPercentage > 1) {
+                        ownershipPercentage = ownershipPercentage / 100;
+                    }
+                    applicant.Ownership_Percentage__c = ownershipPercentage;
+                }
+                
+                // Roles (Multi-select picklist): Handle both String and List<Object>
+                Object rolesObj = applicantPayload.get('roles');
+                if (rolesObj != null) {
+                    if (rolesObj instanceof String) {
+                        applicant.Roles__c = (String) rolesObj;
+                    } else if (rolesObj instanceof List<Object>) {
+                        List<String> rolesList = new List<String>();
+                        for (Object roleItem : (List<Object>) rolesObj) {
+                            rolesList.add(String.valueOf(roleItem));
+                        }
+                        applicant.Roles__c = String.join(rolesList, ';');
+                    }
+                }
+                
+                // Government ID
+                String idIssuingCountry = (String) applicantPayload.get('idIssuingCountry');
+                applicant.ID_Issuing_Country__c = normalizeMailingCountry(idIssuingCountry);
+                applicant.ID_Issuing_State__c = (String) applicantPayload.get('idIssuingState');
+                
+                // ID Dates
+                String idIssueDateStr = (String) applicantPayload.get('idIssueDate');
+                if (String.isNotBlank(idIssueDateStr)) {
+                    try {
+                        applicant.ID_Issue_Date__c = Date.valueOf(idIssueDateStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing idIssueDate: ' + e.getMessage());
+                    }
+                }
+                
+                String idExpirationDateStr = (String) applicantPayload.get('idExpirationDate');
+                if (String.isNotBlank(idExpirationDateStr)) {
+                    try {
+                        applicant.ID_Expiration_Date__c = Date.valueOf(idExpirationDateStr);
+                    } catch (Exception e) {
+                        System.debug('Error parsing idExpirationDate: ' + e.getMessage());
+                    }
+                }
+                
+                // Mailing Address
+                applicant.Mailing_Street_Line_1__c = (String) applicantPayload.get('mailingStreetLine1');
+                applicant.Mailing_Street_Line_2__c = (String) applicantPayload.get('mailingStreetLine2');
+                applicant.Mailing_City__c = (String) applicantPayload.get('mailingCity');
+                applicant.Mailing_State__c = (String) applicantPayload.get('mailingState');
+                applicant.Mailing_Postal_Code__c = (String) applicantPayload.get('mailingPostalCode');
+                
+                String mailingCountry = (String) applicantPayload.get('mailingCountry');
+                applicant.Mailing_Country__c = normalizeMailingCountry(mailingCountry);
+                
+                // Contact Information
+                applicant.Email = (String) applicantPayload.get('email');
+                applicant.Home_Phone__c = (String) applicantPayload.get('homePhone');
+                applicant.Work_Phone__c = (String) applicantPayload.get('workPhone');
+                applicant.Mobile_Phone__c = (String) applicantPayload.get('mobilePhone');
+                // Note: Preferred_Contact_Method__c field doesn't exist on Applicant object
+                
+                applicantsToUpsert.add(applicant);
+            }
+            
+            // Upsert all applicants
+            if (!applicantsToUpsert.isEmpty()) {
+                System.debug('Upserting ' + applicantsToUpsert.size() + ' additional applicants');
+                upsert applicantsToUpsert;
+                
+                // Collect applicant IDs
+                for (Applicant app : applicantsToUpsert) {
+                    applicantIds.add(app.Id);
+                }
+                
+                response.savedIds.put('applicants', String.join(applicantIds, ','));
+                System.debug('Upserted additional applicants with IDs: ' + applicantIds);
+            }
+            
+            // Now process Identity Documents for each applicant
+            for (Integer i = 0; i < applicantsPayload.size(); i++) {
+                Map<String, Object> applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                Applicant applicant = applicantsToUpsert[i];
+                
+                List<Object> identityDocumentsPayload = (List<Object>) applicantPayload.get('identityDocuments');
+                if (identityDocumentsPayload != null && !identityDocumentsPayload.isEmpty()) {
+                    processIdentityDocuments(applicant.Id, applicationId, identityDocumentsPayload);
+                }
+            }
+            
+            response.savedIds.put('applicationForm', applicationId);
+            
+        } catch (Exception e) {
+            System.debug('ERROR in upsertAdditionalStep: ' + e.getMessage());
+            System.debug('Exception Type: ' + e.getTypeName());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            response.success = false;
+            response.messages.add(new ErrorMessage('ADDITIONAL_APPLICANTS_ERROR', 'Failed to save additional applicants: ' + e.getMessage(), null));
+        }
         
-        // Log the payload for debugging
-        System.debug('Additional step payload: ' + JSON.serialize(payload));
-        
+        System.debug('--- upsertAdditionalStep END ---');
         return response;
+    }
+    
+    // Helper method to process identity documents (reused from upsertApplicantStep)
+    private static void processIdentityDocuments(Id applicantId, Id applicationId, List<Object> identityDocumentsPayload) {
+        System.debug('Processing ' + identityDocumentsPayload.size() + ' identity documents for Applicant: ' + applicantId);
+        
+        // Get AccountId from ApplicationForm for RelatedLegalEntityId field
+        Id accountId = null;
+        try {
+            ApplicationForm appForm = [
+                SELECT AccountId 
+                FROM ApplicationForm 
+                WHERE Id = :applicationId 
+                WITH USER_MODE 
+                LIMIT 1
+            ];
+            accountId = appForm.AccountId;
+            System.debug('Retrieved AccountId from ApplicationForm: ' + accountId);
+        } catch (Exception appFormEx) {
+            System.debug('Error querying ApplicationForm for AccountId: ' + appFormEx.getMessage());
+        }
+        
+        // Query existing identity documents for this applicant
+        List<IdentityDocument> existingDocs = [
+            SELECT Id, Name, IdDocumentType, IssuingAuthority, Issuing_Authority_State__c, 
+                   IssueDate, ExpirationDate, Applicant__c, RelatedLegalEntityId
+            FROM IdentityDocument
+            WHERE Applicant__c = :applicantId
+            WITH USER_MODE
+        ];
+        
+        Map<String, IdentityDocument> existingDocsMap = new Map<String, IdentityDocument>();
+        for (IdentityDocument existingDoc : existingDocs) {
+            existingDocsMap.put(existingDoc.Name, existingDoc);
+        }
+        
+        List<IdentityDocument> docsToUpsert = new List<IdentityDocument>();
+        
+        for (Object docObj : identityDocumentsPayload) {
+            Map<String, Object> docMap;
+            
+            if (docObj instanceof Map<Object, Object>) {
+                docMap = new Map<String, Object>();
+                for (Object key : ((Map<Object, Object>) docObj).keySet()) {
+                    docMap.put(String.valueOf(key), ((Map<Object, Object>) docObj).get(key));
+                }
+            } else {
+                docMap = (Map<String, Object>) docObj;
+            }
+            
+            String idNumber = (String) docMap.get('idNumber');
+            if (String.isBlank(idNumber)) {
+                continue;
+            }
+            
+            IdentityDocument doc;
+            if (existingDocsMap.containsKey(idNumber)) {
+                doc = existingDocsMap.get(idNumber);
+                if (doc.Applicant__c == null && applicantId != null) {
+                    doc.Applicant__c = applicantId;
+                }
+                if (doc.RelatedLegalEntityId == null && accountId != null) {
+                    doc.RelatedLegalEntityId = accountId;
+                }
+            } else {
+                doc = new IdentityDocument();
+                doc.Name = idNumber;
+                doc.Applicant__c = applicantId;
+                if (accountId != null) {
+                    doc.RelatedLegalEntityId = accountId;
+                }
+            }
+            
+            doc.IdDocumentType = (String) docMap.get('idType');
+            String issuingAuthorityFull = (String) docMap.get('issuingAuthority');
+            
+            if (String.isNotBlank(issuingAuthorityFull)) {
+                String[] parts = issuingAuthorityFull.split(',');
+                if (parts.size() > 0) {
+                    String state = parts[0].trim();
+                    doc.Issuing_Authority_State__c = state;
+                }
+                if (parts.size() > 1) {
+                    String country = parts[1].trim();
+                    doc.IssuingAuthority = country;
+                }
+            }
+            
+            String issueDateStr = (String) docMap.get('issueDate');
+            if (String.isNotBlank(issueDateStr)) {
+                try {
+                    doc.IssueDate = Date.valueOf(issueDateStr);
+                } catch (Exception e) {
+                    System.debug('Error parsing issueDate: ' + e.getMessage());
+                }
+            }
+            
+            String expirationDateStr = (String) docMap.get('expirationDate');
+            if (String.isNotBlank(expirationDateStr)) {
+                try {
+                    doc.ExpirationDate = Date.valueOf(expirationDateStr);
+                } catch (Exception e) {
+                    System.debug('Error parsing expirationDate: ' + e.getMessage());
+                }
+            }
+            
+            docsToUpsert.add(doc);
+        }
+        
+        if (!docsToUpsert.isEmpty()) {
+            System.debug('Upserting ' + docsToUpsert.size() + ' identity documents');
+            upsert docsToUpsert;
+        }
     }
     
     private static PersistenceResponse upsertServicesStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {

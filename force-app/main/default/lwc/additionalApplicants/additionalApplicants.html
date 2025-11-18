@@ -1,3 +1,9 @@
+<!-- 
+🔴 AI AGENTS: READ FIRST - /docs/01-foundation/data-model.md for correct object names
+✅ Correct: ApplicationForm, Applicant, Account (Business), FinancialAccount
+❌ Wrong: Application__c, Applicant__c, Loan__c, Business_Relationship__c
+-->
+
 <template>
     <div class="additional-applicants">
         <h2 class="slds-text-heading_medium slds-m-bottom_medium">Additional Applicants</h2>
@@ -26,7 +32,9 @@
                                             <span class="slds-text-heading_small slds-truncate">{applicant.firstName} {applicant.lastName}</span>
                                         </h2>
                                         <div class="slds-m-top_xxx-small badge-container">
-                                            <span class="slds-badge slds-badge_lightest role-badge">{applicant.role}</span>
+                                            <template if:true={applicant.role}>
+                                                <span class="slds-badge slds-badge_lightest role-badge">{applicant.role}</span>
+                                            </template>
                                             <template if:true={applicant.ownershipPercentage}>
                                                 <span class="slds-badge slds-theme_success slds-m-left_xx-small ownership-badge">
                                                     <lightning-icon icon-name="utility:percent" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
@@ -48,7 +56,7 @@
                                     <div class="info-item">
                                         <div class="slds-grid slds-grid_vertical-align-center">
                                             <lightning-icon icon-name="utility:phone_portrait" size="x-small" class="slds-m-right_x-small info-icon"></lightning-icon>
-                                            <span class="slds-text-body_small slds-truncate" title={applicant.phone}>{applicant.phone}</span>
+                                            <span class="slds-text-body_small slds-truncate" title={applicant.mobilePhone}>{applicant.mobilePhone}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -103,8 +111,8 @@
 
         <!-- Modal -->
         <template if:true={showModal}>
-            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-                <div class="slds-modal__container">
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large" aria-modal="true">
+                <div class="slds-modal__container" style="max-width: 1200px;">
                     <header class="slds-modal__header">
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
                                 title="Close" onclick={handleCloseModal} aria-label="Close modal">
@@ -114,124 +122,593 @@
                         <h2 class="slds-modal__title slds-hyphenate">{modalTitle}</h2>
                     </header>
                     
+                    <div class="slds-modal__content slds-p-around_medium" style="max-height: 70vh; overflow-y: auto;">
+                        
+                        <!-- Personal Identity Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Personal Identity">Personal Identity</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Salutation, First Name, Middle Name -->
+                                    <lightning-layout-item size="12" medium-device-size="2" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Salutation"
+                                            value={currentApplicant.salutation}
+                                            options={salutationOptions}
+                                            onchange={handleSalutationChange}
+                                            placeholder="Select">
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="First Name" 
+                                            value={currentApplicant.firstName}
+                                            onchange={handleFirstNameChange}
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Middle Name" 
+                                            value={currentApplicant.middleName}
+                                            onchange={handleMiddleNameChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: Last Name, Suffix -->
+                                    <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Last Name" 
+                                            value={currentApplicant.lastName}
+                                            onchange={handleLastNameChange}
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="2" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Suffix"
+                                            value={currentApplicant.suffix}
+                                            options={suffixOptions}
+                                            onchange={handleSuffixChange}
+                                            placeholder="Select">
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Nickname" 
+                                            value={currentApplicant.nickname}
+                                            onchange={handleNicknameChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 3: Date of Birth, Mother's Maiden Name -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="date"
+                                            label="Date of Birth" 
+                                            value={currentApplicant.dateOfBirth}
+                                            onchange={handleDateOfBirthChange}
+                                            max={todayDate}
+                                            message-when-range-overflow="Date of Birth cannot be a future date"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Mother's Maiden Name" 
+                                            value={currentApplicant.mothersMaidenName}
+                                            onchange={handleMothersMaidenNameChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Tax Information Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Tax Information">Tax Information</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Tax ID Type, Tax ID -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Tax ID Type"
+                                            value={currentApplicant.taxIdType}
+                                            options={taxIdTypeOptions}
+                                            onchange={handleTaxIdTypeChange}
+                                            placeholder="Select type"
+                                            required>
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Tax ID (SSN/EIN/ITIN)" 
+                                            value={currentApplicant.taxId}
+                                            onchange={handleTaxIdChange}
+                                            placeholder="XXX-XX-XXXX"
+                                            pattern="\d{3}-\d{2}-\d{4}|\d{2}-\d{7}"
+                                            message-when-pattern-mismatch="SSN must be XXX-XX-XXXX or EIN must be XX-XXXXXXX"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Citizenship Status Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Citizenship Status">Citizenship Status</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Is US Citizen -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Is US Citizen"
+                                            value={currentApplicant.isUSCitizen}
+                                            options={citizenshipOptions}
+                                            onchange={handleUSCitizenChange}
+                                            placeholder="Select"
+                                            required>
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: Is US Resident (conditional - shown when Is US Citizen = No) -->
+                                    <template if:true={showUSResident}>
+                                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                            <lightning-combobox
+                                                label="Is US Resident"
+                                                value={currentApplicant.isUSResident}
+                                                options={citizenshipOptions}
+                                                onchange={handleUSResidentChange}
+                                                placeholder="Select"
+                                                required={showUSResident}>
+                                            </lightning-combobox>
+                                        </lightning-layout-item>
+                                    </template>
+                                    
+                                    <!-- Row 3: Country of Residence (conditional) -->
+                                    <template if:true={showCountryOfResidence}>
+                                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                            <lightning-combobox
+                                                label="Country of Residence"
+                                                value={currentApplicant.countryOfResidence}
+                                                options={countryOptions}
+                                                onchange={handleCountryOfResidenceChange}
+                                                placeholder="Select country"
+                                                required={showCountryOfResidence}>
+                                            </lightning-combobox>
+                                        </lightning-layout-item>
+                                    </template>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Government ID Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Government ID">Government ID</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: ID Issuing Country, ID Issuing State -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="ID Issuing Country" 
+                                            value={currentApplicant.idIssuingCountry}
+                                            onchange={handleIdIssuingCountryChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="ID Issuing State" 
+                                            value={currentApplicant.idIssuingState}
+                                            onchange={handleIdIssuingStateChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: ID Issue Date, ID Expiration Date -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="date"
+                                            label="ID Issue Date" 
+                                            value={currentApplicant.idIssueDate}
+                                            onchange={handleIdIssueDateChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="date"
+                                            label="ID Expiration Date" 
+                                            value={currentApplicant.idExpirationDate}
+                                            onchange={handleIdExpirationDateChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Employment Information Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Employment Information">Employment Information</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Employer, Occupation -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Employer" 
+                                            value={currentApplicant.employer}
+                                            onchange={handleEmployerChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Occupation" 
+                                            value={currentApplicant.occupation}
+                                            onchange={handleOccupationChange}>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Organization Roles Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Organization Roles">Organization Roles</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Organization Role, Ownership Percentage -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Organization Role"
+                                            value={currentApplicant.organizationRole}
+                                            options={organizationRoleOptions}
+                                            onchange={handleOrganizationRoleChange}
+                                            placeholder="Select role">
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="number"
+                                            label="Ownership Percentage" 
+                                            value={currentApplicant.ownershipPercentage}
+                                            onchange={handleOwnershipPercentageChange}
+                                            min="0"
+                                            max="100"
+                                            step="0.01">
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: Is Control Person -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-combobox
+                                            label="Is Control Person"
+                                            value={currentApplicant.isControlPerson}
+                                            options={citizenshipOptions}
+                                            onchange={handleControlPersonChange}
+                                            placeholder="Select">
+                                        </lightning-combobox>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 3: Roles (Multi-select) -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-dual-listbox
+                                            label="Roles"
+                                            source-label="Available Roles"
+                                            selected-label="Selected Roles"
+                                            options={rolesOptions}
+                                            value={currentApplicant.roles}
+                                            onchange={handleRolesChange}>
+                                        </lightning-dual-listbox>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Identity Documents Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Identity Documents">Identity Documents * (CIP Requirement)</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <!-- CIP Requirement Banner -->
+                                <div class="slds-notify slds-notify_alert slds-theme_warning slds-theme_alert-texture slds-m-bottom_small" role="alert">
+                                    <span class="slds-assistive-text">warning</span>
+                                    <h2>
+                                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small" title="Warning">
+                                            <lightning-icon icon-name="utility:warning" size="small" variant="warning" alternative-text="Warning"></lightning-icon>
+                                            <span class="slds-assistive-text">Warning</span>
+                                        </span>
+                                        CIP Requirement: At least one government-issued ID must be provided
+                                    </h2>
+                                </div>
+                                <!-- Identity Documents Table -->
+                                <template if:true={hasIdentityDocuments}>
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-bottom_small">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="ID Type">ID Type</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="ID Number">ID Number</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Issuing Authority">Issuing Authority</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Issue Date">Issue Date</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Expiration Date">Expiration Date</div>
+                                                </th>
+                                                <th scope="col" style="width: 3.25rem;">
+                                                    <span class="slds-assistive-text">Actions</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={currentApplicant.identityDocuments} for:item="doc">
+                                                <tr key={doc.uniqueId} class="slds-hint-parent">
+                                                    <td data-label="ID Type">
+                                                        <div class="slds-truncate" title={doc.idType}>{doc.idType}</div>
+                                                    </td>
+                                                    <td data-label="ID Number">
+                                                        <div class="slds-truncate" title={doc.maskedIdNumber}>{doc.maskedIdNumber}</div>
+                                                    </td>
+                                                    <td data-label="Issuing Authority">
+                                                        <div class="slds-truncate" title={doc.issuingAuthority}>{doc.issuingAuthority}</div>
+                                                    </td>
+                                                    <td data-label="Issue Date">
+                                                        <div class="slds-truncate" title={doc.issueDate}>{doc.issueDate}</div>
+                                                    </td>
+                                                    <td data-label="Expiration Date">
+                                                        <div class="slds-truncate" title={doc.expirationDate}>{doc.expirationDate}</div>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-button-menu 
+                                                            alternative-text="Show actions" 
+                                                            icon-size="x-small" 
+                                                            variant="border-filled"
+                                                            menu-alignment="right">
+                                                            <lightning-menu-item 
+                                                                label="Edit" 
+                                                                value={doc.uniqueId} 
+                                                                icon-name="utility:edit"
+                                                                onselect={handleEditDocument}>
+                                                            </lightning-menu-item>
+                                                            <lightning-menu-item 
+                                                                label="Delete" 
+                                                                value={doc.uniqueId} 
+                                                                icon-name="utility:delete"
+                                                                onselect={handleDeleteDocument}>
+                                                            </lightning-menu-item>
+                                                        </lightning-button-menu>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </template>
+                                
+                                <!-- Add ID Button -->
+                                <lightning-button 
+                                    variant="neutral" 
+                                    label="Add ID" 
+                                    icon-name="utility:add"
+                                    onclick={handleAddDocument}
+                                    class="slds-m-top_small">
+                                </lightning-button>
+                            </div>
+                        </div>
+
+                        <!-- Mailing Address Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Mailing Address">Mailing Address</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Lightning Input Address Component with Autocomplete -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-input-address
+                                            address-label=""
+                                            street-label="Street Address"
+                                            city-label="City"
+                                            province-label="State"
+                                            country-label="Country"
+                                            postal-code-label="ZIP Code"
+                                            street={currentApplicant.mailingStreetLine1}
+                                            city={currentApplicant.mailingCity}
+                                            province={currentApplicant.mailingState}
+                                            country={currentApplicant.mailingCountry}
+                                            postal-code={currentApplicant.mailingPostalCode}
+                                            show-address-lookup={showAddressLookup}
+                                            onchange={handleAddressChange}
+                                            required>
+                                        </lightning-input-address>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: Street Address Line 2 (separate field for Apt, Suite, etc.) -->
+                                    <lightning-layout-item size="12" padding="horizontal-small">
+                                        <lightning-input 
+                                            label="Address Line 2 (Apt, Suite, Unit, Building)" 
+                                            value={currentApplicant.mailingStreetLine2}
+                                            onchange={handleMailingStreetLine2Change}
+                                            placeholder="Optional">
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information Section -->
+                        <div class="slds-section slds-is-open slds-m-bottom_medium">
+                            <h3 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" title="Contact Information">Contact Information</span>
+                            </h3>
+                            <div class="slds-section__content slds-p-around_small">
+                                <lightning-layout multiple-rows>
+                                    <!-- Row 1: Email, Home Phone -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="email"
+                                            label="Email" 
+                                            value={currentApplicant.email}
+                                            onchange={handleEmailChange}
+                                            message-when-type-mismatch="Please enter a valid email address"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="tel"
+                                            label="Home Phone" 
+                                            value={currentApplicant.homePhone}
+                                            onchange={handleHomePhoneChange}
+                                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                                            placeholder="555-555-5555">
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <!-- Row 2: Work Phone, Mobile Phone -->
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="tel"
+                                            label="Work Phone" 
+                                            value={currentApplicant.workPhone}
+                                            onchange={handleWorkPhoneChange}
+                                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                                            placeholder="555-555-5555">
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                    
+                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                        <lightning-input 
+                                            type="tel"
+                                            label="Mobile Phone" 
+                                            value={currentApplicant.mobilePhone}
+                                            onchange={handleMobilePhoneChange}
+                                            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
+                                            message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
+                                            placeholder="555-555-5555"
+                                            required>
+                                        </lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <footer class="slds-modal__footer">
+                        <lightning-button 
+                            variant="neutral" 
+                            label="Cancel" 
+                            onclick={handleCloseModal}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+                        <lightning-button 
+                            variant="brand" 
+                            label={saveButtonLabel} 
+                            onclick={handleSaveApplicant}>
+                        </lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Identity Document Modal -->
+        <template if:true={showDocumentModal}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open" aria-modal="true">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" 
+                                title="Close" onclick={handleCloseDocumentModal} aria-label="Close modal">
+                            <lightning-icon icon-name="utility:close" size="small" alternative-text="Close"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 class="slds-modal__title slds-hyphenate">{documentModalTitle}</h2>
+                    </header>
+                    
                     <div class="slds-modal__content slds-p-around_medium">
                         <lightning-layout multiple-rows>
-                            <!-- Row 1: Name and Role -->
-                            <lightning-layout-item size="6" padding="horizontal-small">
-                                <lightning-input 
-                                    label="First Name" 
-                                    value={currentApplicant.firstName}
-                                    onchange={handleFirstNameChange}
-                                    required>
-                                </lightning-input>
-                            </lightning-layout-item>
-                            
-                            <lightning-layout-item size="6" padding="horizontal-small">
-                                <lightning-input 
-                                    label="Last Name" 
-                                    value={currentApplicant.lastName}
-                                    onchange={handleLastNameChange}
-                                    required>
-                                </lightning-input>
-                            </lightning-layout-item>
-
-                            <!-- Row 2: Role and Ownership -->
-                            <lightning-layout-item size="6" padding="horizontal-small">
+                            <!-- ID Type -->
+                            <lightning-layout-item size="12" padding="horizontal-small">
                                 <lightning-combobox
-                                    label="Role"
-                                    value={currentApplicant.role}
-                                    options={roleOptions}
-                                    onchange={handleRoleChange}
-                                    placeholder="Select role"
+                                    label="ID Type"
+                                    value={currentDocument.idType}
+                                    options={idDocumentTypeOptions}
+                                    onchange={handleDocumentFieldChange}
+                                    data-field="idType"
+                                    placeholder="Select ID type"
                                     required>
                                 </lightning-combobox>
                             </lightning-layout-item>
-
-                            <lightning-layout-item size="6" padding="horizontal-small">
-                                <lightning-input 
-                                    type="number"
-                                    label="Ownership Percentage" 
-                                    value={currentApplicant.ownershipPercentage}
-                                    onchange={handleOwnershipPercentageChange}
-                                    min="0"
-                                    max="100"
-                                    step="0.01"
-                                    formatter="percent-fixed">
-                                </lightning-input>
-                            </lightning-layout-item>
                             
-                            <!-- Row 3: Contact Information -->
-                            <lightning-layout-item size="6" padding="horizontal-small">
+                            <!-- ID Number -->
+                            <lightning-layout-item size="12" padding="horizontal-small">
                                 <lightning-input 
-                                    type="email"
-                                    label="Email" 
-                                    value={currentApplicant.email}
-                                    onchange={handleEmailChange}
+                                    label="ID Number" 
+                                    value={currentDocument.idNumber}
+                                    onchange={handleDocumentFieldChange}
+                                    data-field="idNumber"
                                     required>
                                 </lightning-input>
                             </lightning-layout-item>
                             
-                            <lightning-layout-item size="6" padding="horizontal-small">
+                            <!-- Issuing Authority -->
+                            <lightning-layout-item size="12" padding="horizontal-small">
                                 <lightning-input 
-                                    type="tel"
-                                    label="Phone" 
-                                    value={currentApplicant.phone}
-                                    onchange={handlePhoneChange}
-                                    required>
+                                    label="Issuing Authority (State, Country)" 
+                                    value={currentDocument.issuingAuthority}
+                                    onchange={handleDocumentFieldChange}
+                                    data-field="issuingAuthority"
+                                    placeholder="e.g., CA, USA">
                                 </lightning-input>
                             </lightning-layout-item>
                             
-                            <!-- Row 4: Personal Details -->
+                            <!-- Issue Date -->
                             <lightning-layout-item size="6" padding="horizontal-small">
                                 <lightning-input 
                                     type="date"
-                                    label="Date of Birth" 
-                                    value={currentApplicant.dateOfBirth}
-                                    onchange={handleDateOfBirthChange}>
+                                    label="Issue Date" 
+                                    value={currentDocument.issueDate}
+                                    onchange={handleDocumentFieldChange}
+                                    data-field="issueDate">
                                 </lightning-input>
                             </lightning-layout-item>
                             
+                            <!-- Expiration Date -->
                             <lightning-layout-item size="6" padding="horizontal-small">
                                 <lightning-input 
-                                    label="Social Security Number" 
-                                    value={currentApplicant.ssn}
-                                    onchange={handleSsnChange}
-                                    placeholder="XXX-XX-XXXX">
-                                </lightning-input>
-                            </lightning-layout-item>
-                            
-                            <!-- Row 5: Address -->
-                            <lightning-layout-item size="12" padding="horizontal-small">
-                                <lightning-input 
-                                    label="Street Address" 
-                                    value={currentApplicant.mailingStreet}
-                                    onchange={handleMailingStreetChange}>
-                                </lightning-input>
-                            </lightning-layout-item>
-                            
-                            <lightning-layout-item size="4" padding="horizontal-small">
-                                <lightning-input 
-                                    label="City" 
-                                    value={currentApplicant.mailingCity}
-                                    onchange={handleMailingCityChange}>
-                                </lightning-input>
-                            </lightning-layout-item>
-                            
-                            <lightning-layout-item size="4" padding="horizontal-small">
-                                <lightning-combobox
-                                    label="State"
-                                    value={currentApplicant.mailingState}
-                                    options={stateOptions}
-                                    onchange={handleMailingStateChange}
-                                    placeholder="Select state">
-                                </lightning-combobox>
-                            </lightning-layout-item>
-                            
-                            <lightning-layout-item size="4" padding="horizontal-small">
-                                <lightning-input 
-                                    label="ZIP Code" 
-                                    value={currentApplicant.mailingPostalCode}
-                                    onchange={handleMailingPostalCodeChange}>
+                                    type="date"
+                                    label="Expiration Date" 
+                                    value={currentDocument.expirationDate}
+                                    onchange={handleDocumentFieldChange}
+                                    data-field="expirationDate">
                                 </lightning-input>
                             </lightning-layout-item>
                         </lightning-layout>
@@ -239,9 +716,15 @@
                     
                     <footer class="slds-modal__footer">
                         <lightning-button 
+                            variant="neutral" 
+                            label="Cancel" 
+                            onclick={handleCloseDocumentModal}
+                            class="slds-m-right_x-small">
+                        </lightning-button>
+                        <lightning-button 
                             variant="brand" 
-                            label={saveButtonLabel} 
-                            onclick={handleSaveApplicant}>
+                            label={saveDocumentButtonLabel} 
+                            onclick={handleSaveDocument}>
                         </lightning-button>
                     </footer>
                 </div>
