@@ -635,13 +635,11 @@ export default class ApplicantDetails extends LightningElement {
             messages.push('Tax ID Type is required.');
         }
         
-        // Tax ID validation (required + format based on type)
+        // Tax ID validation (required + 9 digits only)
         if (!this.taxId) {
             messages.push('Tax ID Number is required.');
-        } else if (this.taxIdType === 'SSN' && !this.validateSSNFormat(this.taxId)) {
-            messages.push('SSN must be 9 digits in format XXX-XX-XXXX.');
-        } else if (this.taxIdType === 'EIN' && !this.validateEINFormat(this.taxId)) {
-            messages.push('EIN must be 9 digits in format XX-XXXXXXX.');
+        } else if (!this.validateTaxIdFormat(this.taxId)) {
+            messages.push('Tax ID must be 9 digits.');
         }
         
         // Contact Information validation
@@ -693,16 +691,13 @@ export default class ApplicantDetails extends LightningElement {
     }
     
     // Validation helper methods
-    validateSSNFormat(ssn) {
-        // Format: XXX-XX-XXXX (9 digits total)
-        const ssnPattern = /^\d{3}-\d{2}-\d{4}$/;
-        return ssnPattern.test(ssn);
-    }
-    
-    validateEINFormat(ein) {
-        // Format: XX-XXXXXXX (9 digits total)
-        const einPattern = /^\d{2}-\d{7}$/;
-        return einPattern.test(ein);
+    validateTaxIdFormat(taxId) {
+        // Validate 9 digits only (allow masked with asterisks)
+        const digitsOnly = taxId.replace(/\D/g, '');
+        if (/^[*]{9}$/.test(taxId)) {
+            return true;
+        }
+        return digitsOnly.length === 9;
     }
     
     validateFutureDate(dateString) {

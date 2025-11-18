@@ -798,7 +798,9 @@ public with sharing class WizardPersistenceService {
             applicant.Business_City__c = (String) payload.get('businessCity');
             applicant.Business_State__c = (String) payload.get('businessState');
             applicant.Business_Postal_Code__c = (String) payload.get('businessPostalCode');
-            applicant.Business_Country__c = (String) payload.get('businessCountry');
+            // Business Country: Normalize to match restricted picklist values (USA, CAN, MEX)
+            String businessCountry = (String) payload.get('businessCountry');
+            applicant.Business_Country__c = normalizeBusinessCountry(businessCountry);
             
             // Financial & Operational fields
             Object annualRevObj = payload.get('annualRevenue');
@@ -915,7 +917,13 @@ public with sharing class WizardPersistenceService {
             
             // Process each applicant in the payload
             for (Object applicantObj : applicantsPayload) {
-                Map<String, Object> applicantPayload = (Map<String, Object>) applicantObj;
+                // Convert Map<ANY,ANY> to Map<String,Object> safely
+                // JSON deserialization sometimes returns Map<ANY,ANY> instead of Map<String,Object>
+                Map<String, Object> applicantPayload = new Map<String, Object>();
+                Map<Object, Object> rawMap = (Map<Object, Object>) applicantObj;
+                for (Object key : rawMap.keySet()) {
+                    applicantPayload.put(String.valueOf(key), rawMap.get(key));
+                }
                 
                 // Determine if this is an update or insert based on email
                 String email = (String) applicantPayload.get('email');
@@ -1396,6 +1404,45 @@ public with sharing class WizardPersistenceService {
         
         // For any other country not in the picklist, default to "Other"
         return 'Other';
+    }
+    
+    /**
+     * Normalizes country names to match restricted picklist values for Business_Country__c
+     * Valid picklist values: USA, CAN, MEX
+     * @param countryName The country name from the address component (e.g., "United States", "US", etc.)
+     * @return The normalized country value that matches the picklist API value
+     */
+    private static String normalizeBusinessCountry(String countryName) {
+        if (String.isBlank(countryName)) {
+            return null;
+        }
+        
+        String normalized = countryName.trim();
+        
+        // Map common country name variations to picklist values
+        // Business_Country__c only accepts: USA, CAN, MEX
+        if (normalized.equalsIgnoreCase('United States') || 
+            normalized.equalsIgnoreCase('US') || 
+            normalized.equalsIgnoreCase('U.S.') ||
+            normalized.equalsIgnoreCase('U.S.A.') ||
+            normalized.equalsIgnoreCase('United States of America') ||
+            normalized.equalsIgnoreCase('USA')) {
+            return 'USA';
+        }
+        
+        if (normalized.equalsIgnoreCase('Canada') || 
+            normalized.equalsIgnoreCase('CA') ||
+            normalized.equalsIgnoreCase('CAN')) {
+            return 'CAN';
+        }
+        
+        if (normalized.equalsIgnoreCase('Mexico') || 
+            normalized.equalsIgnoreCase('MX') ||
+            normalized.equalsIgnoreCase('MEX')) {
+            return 'MEX';
+        }
+        
+        return normalized; // Return as-is if no mapping found
     }
     
 }

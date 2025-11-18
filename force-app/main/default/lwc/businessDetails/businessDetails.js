@@ -83,6 +83,9 @@ export default class BusinessDetails extends LightningElement {
     businessPostalCode;
     businessCountry;
 
+    // Address Lookup Configuration
+    showAddressLookup = true;
+
     // Event Handlers
     handleBusinessNameChange(event) {
         this.businessName = event.target.value;
@@ -311,33 +314,26 @@ export default class BusinessDetails extends LightningElement {
     }
 
 
-    handleBusinessStreetLine1Change(event) {
-        this.businessStreetLine1 = event.target.value;
+    // Event Handlers - Business Address
+    // Handle lightning-input-address change (auto-populates street, city, province, country, postalCode)
+    handleAddressChange(event) {
+        // lightning-input-address provides address object with all fields
+        // When show-address-lookup is enabled, selecting from autocomplete populates all fields
+        const address = event.detail;
+        
+        // Update individual fields from the address object
+        // Support both 'street' and 'addressLine1' field names
+        this.businessStreetLine1 = address.street || address.addressLine1 || '';
+        this.businessCity = address.city || '';
+        this.businessState = address.province || ''; // province = state in US
+        this.businessCountry = address.country || '';
+        this.businessPostalCode = address.postalCode || '';
+        
         this.emitPayloadChange();
     }
 
     handleBusinessStreetLine2Change(event) {
         this.businessStreetLine2 = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleBusinessCountryChange(event) {
-        this.businessCountry = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleBusinessCityChange(event) {
-        this.businessCity = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleBusinessStateChange(event) {
-        this.businessState = event.target.value;
-        this.emitPayloadChange();
-    }
-
-    handleBusinessPostalCodeChange(event) {
-        this.businessPostalCode = event.target.value;
         this.emitPayloadChange();
     }
 
@@ -603,11 +599,11 @@ export default class BusinessDetails extends LightningElement {
             messages.push('Business Type is required.');
         }
         
-        // Tax ID validation (required + format)
+        // Tax ID validation (required + 9 digits only)
         if (!this.taxId) {
             messages.push('Federal Tax ID (EIN) is required.');
         } else if (!this.validateTaxIdFormat(this.taxId)) {
-            messages.push('Federal Tax ID must be 9 digits in format XX-XXXXXXX.');
+            messages.push('Federal Tax ID must be 9 digits.');
         }
         
         // Date Established validation (required + not future)

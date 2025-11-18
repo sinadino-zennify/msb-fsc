@@ -51,19 +51,58 @@
         const tag = el.tagName;
         try {
             if (tag === 'LIGHTNING-INPUT' || tag === 'LIGHTNING-TEXTAREA') {
-                el.value = value;
-                fire(el, 'input');
-                fire(el, 'change');
+                // Access the underlying input element in shadow DOM
+                const input = el.shadowRoot?.querySelector('input') || el.shadowRoot?.querySelector('textarea');
+                if (input) {
+                    // Set value on both the Lightning component and native input
+                    el.value = value;
+                    input.value = value;
+                    // Fire input event first (Lightning components listen for this)
+                    input.dispatchEvent(new Event('input', { bubbles: true, composed: true, cancelable: true }));
+                    // Use setTimeout to ensure Lightning component processes the input event
+                    setTimeout(() => {
+                        // Then fire change event
+                        const changeEvent = new Event('change', { bubbles: true, composed: true, cancelable: true });
+                        input.dispatchEvent(changeEvent);
+                        // Also fire change on the Lightning component itself
+                        el.dispatchEvent(new CustomEvent('change', { 
+                            bubbles: true, 
+                            composed: true,
+                            detail: { value }
+                        }));
+                    }, 0);
+                } else {
+                    // Fallback: set value and fire events on component
+                    el.value = value;
+                    fire(el, 'input');
+                    setTimeout(() => fire(el, 'change'), 0);
+                }
                 return true;
             }
             if (tag === 'LIGHTNING-COMBOBOX') {
+                // For combobox, set value first
                 el.value = value;
-                fire(el, 'change', { value });
+                // Then fire change event with detail.value after a tick
+                setTimeout(() => {
+                    const changeEvent = new CustomEvent('change', { 
+                        bubbles: true, 
+                        composed: true, 
+                        detail: { value } 
+                    });
+                    el.dispatchEvent(changeEvent);
+                }, 0);
                 return true;
             }
             if (tag === 'LIGHTNING-RADIO-GROUP') {
                 el.value = value;
-                fire(el, 'change', { value });
+                setTimeout(() => {
+                    const changeEvent = new CustomEvent('change', { 
+                        bubbles: true, 
+                        composed: true, 
+                        detail: { value } 
+                    });
+                    el.dispatchEvent(changeEvent);
+                }, 0);
                 return true;
             }
         } catch (err) {
@@ -125,6 +164,15 @@
         return el.getAttribute('aria-label') || '';
     };
 
+    // Separate business account type from other fields
+    // Setting it triggers clearAllFields() which would wipe other values
+    const businessAccountTypeValue = DATA['business account'];
+    const otherFields = { ...DATA };
+    delete otherFields['business account'];
+
+    // First, set all fields EXCEPT business account type
+    const businessAccountTypeElements = [];
+    
     candidates.forEach(el => {
         const context = contextFor(el);
         if (context !== 'business') {
@@ -139,7 +187,14 @@
             return;
         }
         
-        const value = DATA[normLabel];
+        // Skip business account type for now - handle it separately at the end
+        if (normLabel === 'business account') {
+            businessAccountTypeElements.push(el);
+            state.skipped++;
+            return;
+        }
+        
+        const value = otherFields[normLabel];
         
         if (value == null) {
             state.unmatched.push({ label: rawLabel, normalized: normLabel, tag: el.tagName });
@@ -152,6 +207,37 @@
             state.skipped++;
         }
     });
+
+    // Now set business account type LAST, after all other fields are populated
+    // This ensures clearAllFields() runs first (if needed), then we populate everything
+    if (businessAccountTypeValue && businessAccountTypeElements.length > 0) {
+        // Wait a bit to ensure all other field changes have been processed
+        setTimeout(() => {
+            businessAccountTypeElements.forEach(el => {
+                if (setVal(el, businessAccountTypeValue, 'business account')) {
+                    state.filled++;
+                } else {
+                    state.skipped++;
+                }
+            });
+            // After business account type is set, re-populate all fields to ensure they persist
+            setTimeout(() => {
+                candidates.forEach(el => {
+                    const context = contextFor(el);
+                    if (context !== 'business') return;
+                    
+                    const rawLabel = labelOf(el);
+                    const normLabel = normalize(rawLabel);
+                    if (!normLabel || normLabel === 'business account') return;
+                    
+                    const value = otherFields[normLabel];
+                    if (value != null) {
+                        setVal(el, value, normLabel);
+                    }
+                });
+            }, 100);
+        }, 50);
+    }
 
     const helper = {
         logLabels: () => {

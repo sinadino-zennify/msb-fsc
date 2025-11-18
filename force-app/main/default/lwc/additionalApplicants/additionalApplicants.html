@@ -33,7 +33,7 @@
                                         </h2>
                                         <div class="slds-m-top_xxx-small badge-container">
                                             <template if:true={applicant.role}>
-                                                <span class="slds-badge slds-badge_lightest role-badge">{applicant.role}</span>
+                                            <span class="slds-badge slds-badge_lightest role-badge">{applicant.role}</span>
                                             </template>
                                             <template if:true={applicant.ownershipPercentage}>
                                                 <span class="slds-badge slds-theme_success slds-m-left_xx-small ownership-badge">
@@ -130,7 +130,7 @@
                                 <span class="slds-truncate slds-p-horizontal_small" title="Personal Identity">Personal Identity</span>
                             </h3>
                             <div class="slds-section__content slds-p-around_small">
-                                <lightning-layout multiple-rows>
+                        <lightning-layout multiple-rows>
                                     <!-- Row 1: Salutation, First Name, Middle Name -->
                                     <lightning-layout-item size="12" medium-device-size="2" padding="horizontal-small">
                                         <lightning-combobox
@@ -143,14 +143,14 @@
                                     </lightning-layout-item>
                                     
                                     <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
-                                        <lightning-input 
-                                            label="First Name" 
-                                            value={currentApplicant.firstName}
-                                            onchange={handleFirstNameChange}
-                                            required>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
+                                <lightning-input 
+                                    label="First Name" 
+                                    value={currentApplicant.firstName}
+                                    onchange={handleFirstNameChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                                         <lightning-input 
                                             label="Middle Name" 
@@ -161,14 +161,14 @@
                                     
                                     <!-- Row 2: Last Name, Suffix -->
                                     <lightning-layout-item size="12" medium-device-size="4" padding="horizontal-small">
-                                        <lightning-input 
-                                            label="Last Name" 
-                                            value={currentApplicant.lastName}
-                                            onchange={handleLastNameChange}
-                                            required>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
+                                <lightning-input 
+                                    label="Last Name" 
+                                    value={currentApplicant.lastName}
+                                    onchange={handleLastNameChange}
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+
                                     <lightning-layout-item size="12" medium-device-size="2" padding="horizontal-small">
                                         <lightning-combobox
                                             label="Suffix"
@@ -235,9 +235,9 @@
                                             label="Tax ID (SSN/EIN/ITIN)" 
                                             value={currentApplicant.taxId}
                                             onchange={handleTaxIdChange}
-                                            placeholder="XXX-XX-XXXX"
-                                            pattern="\d{3}-\d{2}-\d{4}|\d{2}-\d{7}"
-                                            message-when-pattern-mismatch="SSN must be XXX-XX-XXXX or EIN must be XX-XXXXXXX"
+                                            placeholder="9 digits"
+                                            pattern="\d{9}|[*]{9}"
+                                            message-when-pattern-mismatch="Tax ID must be 9 digits"
                                             required>
                                         </lightning-input>
                                     </lightning-layout-item>
@@ -254,16 +254,16 @@
                                 <lightning-layout multiple-rows>
                                     <!-- Row 1: Is US Citizen -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-combobox
+                                <lightning-combobox
                                             label="Is US Citizen"
                                             value={currentApplicant.isUSCitizen}
                                             options={citizenshipOptions}
                                             onchange={handleUSCitizenChange}
                                             placeholder="Select"
-                                            required>
-                                        </lightning-combobox>
-                                    </lightning-layout-item>
-                                    
+                                    required>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+
                                     <!-- Row 2: Is US Resident (conditional - shown when Is US Citizen = No) -->
                                     <template if:true={showUSResident}>
                                         <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
@@ -291,52 +291,6 @@
                                             </lightning-combobox>
                                         </lightning-layout-item>
                                     </template>
-                                </lightning-layout>
-                            </div>
-                        </div>
-
-                        <!-- Government ID Section -->
-                        <div class="slds-section slds-is-open slds-m-bottom_medium">
-                            <h3 class="slds-section__title slds-theme_shade">
-                                <span class="slds-truncate slds-p-horizontal_small" title="Government ID">Government ID</span>
-                            </h3>
-                            <div class="slds-section__content slds-p-around_small">
-                                <lightning-layout multiple-rows>
-                                    <!-- Row 1: ID Issuing Country, ID Issuing State -->
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            label="ID Issuing Country" 
-                                            value={currentApplicant.idIssuingCountry}
-                                            onchange={handleIdIssuingCountryChange}>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            label="ID Issuing State" 
-                                            value={currentApplicant.idIssuingState}
-                                            onchange={handleIdIssuingStateChange}>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
-                                    <!-- Row 2: ID Issue Date, ID Expiration Date -->
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            type="date"
-                                            label="ID Issue Date" 
-                                            value={currentApplicant.idIssueDate}
-                                            onchange={handleIdIssueDateChange}>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            type="date"
-                                            label="ID Expiration Date" 
-                                            value={currentApplicant.idExpirationDate}
-                                            onchange={handleIdExpirationDateChange}>
-                                        </lightning-input>
-                                    </lightning-layout-item>
                                 </lightning-layout>
                             </div>
                         </div>
@@ -387,17 +341,17 @@
                                     </lightning-layout-item>
                                     
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            type="number"
-                                            label="Ownership Percentage" 
-                                            value={currentApplicant.ownershipPercentage}
-                                            onchange={handleOwnershipPercentageChange}
-                                            min="0"
-                                            max="100"
+                                <lightning-input 
+                                    type="number"
+                                    label="Ownership Percentage" 
+                                    value={currentApplicant.ownershipPercentage}
+                                    onchange={handleOwnershipPercentageChange}
+                                    min="0"
+                                    max="100"
                                             step="0.01">
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
                                     <!-- Row 2: Is Control Person -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                                         <lightning-combobox
@@ -570,16 +524,16 @@
                                 <lightning-layout multiple-rows>
                                     <!-- Row 1: Email, Home Phone -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            type="email"
-                                            label="Email" 
-                                            value={currentApplicant.email}
-                                            onchange={handleEmailChange}
+                                <lightning-input 
+                                    type="email"
+                                    label="Email" 
+                                    value={currentApplicant.email}
+                                    onchange={handleEmailChange}
                                             message-when-type-mismatch="Please enter a valid email address"
-                                            required>
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
+                                    required>
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                                         <lightning-input 
                                             type="tel"
@@ -594,19 +548,19 @@
                                     
                                     <!-- Row 2: Work Phone, Mobile Phone -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            type="tel"
+                                <lightning-input 
+                                    type="tel"
                                             label="Work Phone" 
                                             value={currentApplicant.workPhone}
                                             onchange={handleWorkPhoneChange}
                                             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}|\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{10}"
                                             message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
                                             placeholder="555-555-5555">
-                                        </lightning-input>
-                                    </lightning-layout-item>
-                                    
+                                </lightning-input>
+                            </lightning-layout-item>
+                            
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
+                                <lightning-input 
                                             type="tel"
                                             label="Mobile Phone" 
                                             value={currentApplicant.mobilePhone}
@@ -615,7 +569,7 @@
                                             message-when-pattern-mismatch="Phone must be 10 digits (e.g., 555-555-5555)"
                                             placeholder="555-555-5555"
                                             required>
-                                        </lightning-input>
+                                </lightning-input>
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </div>

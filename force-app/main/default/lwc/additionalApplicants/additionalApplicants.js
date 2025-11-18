@@ -271,23 +271,6 @@ export default class AdditionalApplicants extends LightningElement {
         this.currentApplicant.countryOfResidence = event.target.value;
     }
 
-    // Form Field Handlers - Government ID
-    handleIdIssuingCountryChange(event) {
-        this.currentApplicant.idIssuingCountry = event.target.value;
-    }
-
-    handleIdIssuingStateChange(event) {
-        this.currentApplicant.idIssuingState = event.target.value;
-    }
-
-    handleIdIssueDateChange(event) {
-        this.currentApplicant.idIssueDate = event.target.value;
-    }
-
-    handleIdExpirationDateChange(event) {
-        this.currentApplicant.idExpirationDate = event.target.value;
-    }
-
     // Form Field Handlers - Employment
     handleEmployerChange(event) {
         this.currentApplicant.employer = event.target.value;
@@ -364,10 +347,6 @@ export default class AdditionalApplicants extends LightningElement {
             isUSCitizen: '',
             isUSResident: '',
             countryOfResidence: '',
-            idIssuingCountry: '',
-            idIssuingState: '',
-            idIssueDate: '',
-            idExpirationDate: '',
             employer: '',
             occupation: '',
             organizationRole: '',
@@ -426,13 +405,11 @@ export default class AdditionalApplicants extends LightningElement {
             messages.push('Tax ID Type is required.');
         }
         
-        // Tax ID validation (required + format based on type)
+        // Tax ID validation (required + 9 digits only)
         if (!this.currentApplicant.taxId) {
             messages.push('Tax ID Number is required.');
-        } else if (this.currentApplicant.taxIdType === 'SSN' && !this.validateSSNFormat(this.currentApplicant.taxId)) {
-            messages.push('SSN must be 9 digits in format XXX-XX-XXXX.');
-        } else if (this.currentApplicant.taxIdType === 'EIN' && !this.validateEINFormat(this.currentApplicant.taxId)) {
-            messages.push('EIN must be 9 digits in format XX-XXXXXXX.');
+        } else if (!this.validateTaxIdFormat(this.currentApplicant.taxId)) {
+            messages.push('Tax ID must be 9 digits.');
         }
         
         // Citizenship Status validation
@@ -518,16 +495,13 @@ export default class AdditionalApplicants extends LightningElement {
     }
 
     // Validation helper methods
-    validateSSNFormat(ssn) {
-        // Format: XXX-XX-XXXX (9 digits total)
-        const ssnPattern = /^\d{3}-\d{2}-\d{4}$/;
-        return ssnPattern.test(ssn);
-    }
-    
-    validateEINFormat(ein) {
-        // Format: XX-XXXXXXX (9 digits total)
-        const einPattern = /^\d{2}-\d{7}$/;
-        return einPattern.test(ein);
+    validateTaxIdFormat(taxId) {
+        // Validate 9 digits only (allow masked with asterisks)
+        const digitsOnly = taxId.replace(/\D/g, '');
+        if (/^[*]{9}$/.test(taxId)) {
+            return true;
+        }
+        return digitsOnly.length === 9;
     }
     
     validateFutureDate(dateString) {
