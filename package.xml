@@ -1,23 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!-- ============================================ -->
+    <!-- MSB WIZARD APPLICATION - DEPLOYMENT MANIFEST -->
+    <!-- ============================================ -->
+    <!-- 
+    This package.xml defines the metadata components for the 
+    DAO Wizard Application to be deployed to scratch orgs.
+    
+    DEPLOYMENT ORDER:
+    1. Create scratch org with FinancialServicesUser:10
+    2. Deploy placeholder Insurance objects (Claim__c, etc.)
+    3. Install FSC package (04t6g000008av3UAAQ)
+    4. Install FSC Extension (04t1E000001Iql5)
+    5. Assign FSC Permission Sets (see fsc-scratch-org-setup.md)
+    6. Deploy this package.xml
+    
+    USAGE:
+    sf project deploy start --manifest package.xml --target-org msb-scratch --wait 30
+    
+    NOTES:
+    - All component names are explicitly listed (no wildcards)
+    - Product2 excludes standard fields requiring Revenue Cloud
+    - Custom metadata records are individually specified
+    - See docs/04-implementation/setup-instructions/fsc-scratch-org-setup.md
+    -->
+    
+    <!-- ============================================ -->
+    <!-- CUSTOM OBJECTS                               -->
+    <!-- ============================================ -->
     <types>
         <members>ApplicationForm</members>
-        <name>CustomObject</name>
+        <members>Applicant</members>
+        <members>IdentityDocument</members>
+        <members>ApplicationFormProduct</members>
+        <members>Wizard_Step__mdt</members>
+        <members>Account</members> 
+        <members>NAICS__c</members> 
+        <members>Product2</members> 
+        <name>CustomObject</name> 
     </types>
-    <!-- <types>
-        <members>Wizard_Step__mdt.*</members>
-        <name>CustomMetadata</name>
+    
+    <!-- ============================================ -->
+    <!-- GLOBAL VALUE SETS                            -->
+    <!-- ============================================ -->
+    <types>
+        <members>COCC_Majors</members>
+        <members>US_States</members>
+        <name>GlobalValueSet</name>
     </types>
+    
+    <!-- ============================================ -->
+    <!-- APEX CLASSES                                 -->
+    <!-- ============================================ -->
     <types>
         <members>WizardConfigService</members>
-        <members>WizardConfigServiceTest</members>
         <members>WizardPersistenceService</members>
-        <members>WizardPersistenceServiceTest</members>
+        <members>WizardDataService</members>
+        <members>ProductSelectionController</members>
         <name>ApexClass</name>
     </types>
+    
+    <!-- ============================================ -->
+    <!-- LIGHTNING WEB COMPONENTS                     -->
+    <!-- ============================================ -->
     <types>
-        <members>daoWizardContainer</members>
-        <members>daoWizardStepRouter</members>
+        <!-- Wizard Step Components -->
         <members>applicantDetails</members>
         <members>businessDetails</members>
         <members>additionalApplicants</members>
@@ -25,8 +72,60 @@
         <members>additionalServices</members>
         <members>documentUpload</members>
         <members>reviewAndSubmit</members>
+        
+        <!-- Supporting Components -->
+        <members>productCart</members>
+        <members>fundingAmountModal</members>
         <members>openDaoWizardAction</members>
+        
+        <!-- Container Components -->
+        <members>daoWizardStepRouter</members>
+        <members>daoWizardContainer</members>
+        
         <name>LightningComponentBundle</name>
-    </types> -->
+    </types>
+    
+    <!-- ============================================ -->
+    <!-- FLEXIPAGES (LIGHTNING RECORD PAGES)          -->
+    <!-- ============================================ -->
+    <types>
+        <members>Application_Form_Record_Page3</members>
+        <members>Applicant_Record_Page</members>
+        <members>Identity_Document_Record_Page</members>
+        <members>DAO_Wizard_Container</members>
+        <members>ClientRecordPageBusiness</members>
+        <name>FlexiPage</name>
+    </types>
+    
+    <!-- ============================================ -->
+    <!-- CUSTOM METADATA RECORDS                      -->
+    <!-- ============================================ -->
+    <types>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Additional</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Applicant</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Business</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Documents</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Product</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Review</members>
+        <members>Wizard_Step__mdt.DAO_Business_InBranch_Services</members>
+        <name>CustomMetadata</name>
+    </types>
+    
+    <!-- ============================================ -->
+    <!-- PERMISSION SETS                              -->
+    <!-- ============================================ -->
+    <types>
+        <members>DAO_Wizard_User</members>
+        <name>PermissionSet</name>
+    </types>
+    
+    <!-- ============================================ -->
+    <!-- CUSTOM APPLICATIONS                          -->
+    <!-- ============================================ -->
+    <types>
+        <members>DAO_Wizard_Container</members>
+        <name>CustomApplication</name>
+    </types>
+    
     <version>65.0</version>
 </Package>
