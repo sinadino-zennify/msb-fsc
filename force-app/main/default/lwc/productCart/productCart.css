@@ -1,0 +1,23 @@
+.product-cart {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-items {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.cart-item {
+    background: #fafaf9;
+    border-left: 3px solid #0176d3;
+    transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+    background: #f3f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

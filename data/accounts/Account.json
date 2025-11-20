@@ -1,0 +1,62 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef1"
+            },
+            "Name": "Zenn Consultancy",
+            "Phone": "88878955614",
+            "Website": "https://www.tim.com",
+            "Industry": "Consulting",
+            "AnnualRevenue": 150000
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef2"
+            },
+            "Name": "Zenn Labs LLC"
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef3"
+            },
+            "Name": "TechStart Inc",
+            "Phone": "5559876543",
+            "Industry": "Software",
+            "AnnualRevenue": 2500000
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef4"
+            },
+            "Name": "Global Retail LLC",
+            "Phone": "5554567890",
+            "Industry": "Retail",
+            "AnnualRevenue": 10000000
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef5"
+            },
+            "Name": "Acme Corporation",
+            "Phone": "5551234567",
+            "Industry": "Technology",
+            "AnnualRevenue": 5000000
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef6"
+            },
+            "Name": "PPE Inc",
+            "Type": "Other",
+            "Phone": "8885556325",
+            "Website": "www.ppe.com"
+        }
+    ]
+}

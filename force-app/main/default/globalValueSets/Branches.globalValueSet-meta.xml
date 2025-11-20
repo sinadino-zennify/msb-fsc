@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>1</fullName>
+        <default>false</default>
+        <label>Main Street Bank</label>
+    </customValue>
+    <customValue>
+        <fullName>2</fullName>
+        <default>false</default>
+        <label>Marlborough</label>
+    </customValue>
+    <customValue>
+        <fullName>201</fullName>
+        <default>false</default>
+        <label>Ayer</label>
+    </customValue>
+    <customValue>
+        <fullName>202</fullName>
+        <default>false</default>
+        <label>Hudson</label>
+    </customValue>
+    <customValue>
+        <fullName>206</fullName>
+        <default>false</default>
+        <label>Northborough</label>
+    </customValue>
+    <customValue>
+        <fullName>207</fullName>
+        <default>false</default>
+        <label>Pepperell</label>
+    </customValue>
+    <customValue>
+        <fullName>208</fullName>
+        <default>false</default>
+        <label>Southborough</label>
+    </customValue>
+    <customValue>
+        <fullName>211</fullName>
+        <default>false</default>
+        <label>Electronic Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Float</fullName>
+        <default>false</default>
+        <label>Float</label>
+    </customValue>
+    <customValue>
+        <fullName>Marlborough - 2nd Floor</fullName>
+        <default>false</default>
+        <label>Marlborough - 2nd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Marlborough - 3rd Floor</fullName>
+        <default>false</default>
+        <label>Marlborough - 3rd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Ayer - 2nd Floor</fullName>
+        <default>false</default>
+        <label>Ayer - 2nd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Ayer - 3rd Floor</fullName>
+        <default>false</default>
+        <label>Ayer - 3rd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>26 Forest St - Operations Center</fullName>
+        <default>false</default>
+        <label>26 Forest St - Operations Center</label>
+    </customValue>
+    <customValue>
+        <fullName>101 Federal St - Commercial Banking Center Boston</fullName>
+        <default>false</default>
+        <label>101 Federal St - Commercial Banking Center Boston</label>
+    </customValue>
+    <customValue>
+        <fullName>446 Main St - Commercial Banking Center Worcester</fullName>
+        <default>false</default>
+        <label>446 Main St - Commercial Banking Center Worcester</label>
+    </customValue>
+    <customValue>
+        <fullName>212</fullName>
+        <default>false</default>
+        <label>Cannabanking</label>
+    </customValue>
+    <customValue>
+        <fullName>210</fullName>
+        <default>false</default>
+        <label>Commercial Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>989</fullName>
+        <default>false</default>
+        <label>Consumer Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>213</fullName>
+        <default>false</default>
+        <label>Deposit Operations</label>
+    </customValue>
+    <customValue>
+        <fullName>216</fullName>
+        <default>false</default>
+        <label>Loan Servicing</label>
+    </customValue>
+    <customValue>
+        <fullName>8458</fullName>
+        <default>false</default>
+        <label>Relationship Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Remote</fullName>
+        <default>false</default>
+        <label>Remote</label>
+    </customValue>
+    <customValue>
+        <fullName>988</fullName>
+        <default>false</default>
+        <label>Residential Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>8377</fullName>
+        <default>false</default>
+        <label>Treasury Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>8622</fullName>
+        <default>false</default>
+        <label>SOLD</label>
+    </customValue>
+    <customValue>
+        <fullName>135</fullName>
+        <default>false</default>
+        <label>COCC</label>
+    </customValue>
+    <customValue>
+        <fullName>9313</fullName>
+        <default>false</default>
+        <label>Cash Management</label>
+    </customValue>
+    <customValue>
+        <fullName>209</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Sudbury Farms Market</label>
+    </customValue>
+    <customValue>
+        <fullName>205</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Marlborough Post Road</label>
+    </customValue>
+    <customValue>
+        <fullName>204</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Lunenburg</label>
+    </customValue>
+    <customValue>
+        <fullName>203</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Littleton</label>
+    </customValue>
+    <customValue>
+        <fullName>Branch 2</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Branch 2</label>
+    </customValue>
+    <customValue>
+        <fullName>Branch 1</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Branch 1</label>
+    </customValue>
+    <description>Customer-facing branches and Bank locations where the API value matches the branch code from COCC.</description>
+    <masterLabel>Branches</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

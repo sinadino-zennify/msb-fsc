@@ -1,0 +1,26 @@
+{
+  "orgName": "MSB Scratch Org",
+  "edition": "Enterprise",
+  "country": "US",
+  "language": "en_US",
+  "features": [
+    "PersonAccounts",
+    "ContactsToMultipleAccounts",
+    "ServiceCloud",
+    "Communities",
+    "FinancialServicesUser:10",
+    "DebugApex",
+    "StateAndCountryPicklist",
+    "Knowledge"
+  ],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "knowledgeSettings": {
+      "enableKnowledge": true,
+      "defaultLanguage": "en_US",
+      "enableLightningKnowledge": true
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>IL01</fullName>
+        <default>false</default>
+        <label>Collateral</label>
+    </customValue>
+    <customValue>
+        <fullName>IL02</fullName>
+        <default>false</default>
+        <label>Install Auto</label>
+    </customValue>
+    <customValue>
+        <fullName>IL04</fullName>
+        <default>false</default>
+        <label>Install Unsecured</label>
+    </customValue>
+    <customValue>
+        <fullName>IL03</fullName>
+        <default>false</default>
+        <label>Install TLC</label>
+    </customValue>
+    <customValue>
+        <fullName>IL05</fullName>
+        <default>false</default>
+        <label>Mass Save HEAT &gt; 25K</label>
+    </customValue>
+    <customValue>
+        <fullName>IL06</fullName>
+        <default>false</default>
+        <label>Install Mass Save Heat Unsecur</label>
+    </customValue>
+    <customValue>
+        <fullName>IL07</fullName>
+        <default>false</default>
+        <label>Overdraft Protection</label>
+    </customValue>
+    <masterLabel>COCC Minors CNS</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

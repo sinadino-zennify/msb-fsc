@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Financial_Outcome_Pending__c</fullName>
+    <defaultValue>false</defaultValue>
+    <inlineHelpText>Check this box if the ultimate financial outcome of this incident is not yet settled (i.e. if there are still pending insurance claims or if recoveries are expected within the current fiscal year)</inlineHelpText>
+    <label>Financial Outcome Pending</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

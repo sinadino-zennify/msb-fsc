@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>CD03</fullName>
+        <default>false</default>
+        <label>CD03 - 3 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD06</fullName>
+        <default>false</default>
+        <label>CD06 - 6 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD12</fullName>
+        <default>false</default>
+        <label>CD12 - 12 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD18</fullName>
+        <default>false</default>
+        <label>CD18 - 18 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD24</fullName>
+        <default>false</default>
+        <label>CD24 - 24 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD36</fullName>
+        <default>false</default>
+        <label>CD36 - 36 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD48</fullName>
+        <default>false</default>
+        <label>CD48 - 48 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD60</fullName>
+        <default>false</default>
+        <label>CD60 - 60 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CI07</fullName>
+        <default>false</default>
+        <label>CI07 - Ach Manager Exposure</label>
+    </customValue>
+    <customValue>
+        <fullName>CK04</fullName>
+        <default>false</default>
+        <label>CK04 - Main Street Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK05</fullName>
+        <default>false</default>
+        <label>CK05 - Consumer Index Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK15</fullName>
+        <default>false</default>
+        <label>CK15 - BankOn Main Street Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK20</fullName>
+        <default>false</default>
+        <label>CK20 - Main Street Interest Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK21</fullName>
+        <default>false</default>
+        <label>CK21 - Main Street IOLTA Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK22</fullName>
+        <default>false</default>
+        <label>CK22 - Main Street NonProfit Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK23</fullName>
+        <default>false</default>
+        <label>CK23 - Nonprofit Analysis Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK24</fullName>
+        <default>false</default>
+        <label>CK24 - Main Street Checking Preferred</label>
+    </customValue>
+    <customValue>
+        <fullName>CK25</fullName>
+        <default>false</default>
+        <label>CK25 - Internal Accounts</label>
+    </customValue>
+    <customValue>
+        <fullName>CK26</fullName>
+        <default>false</default>
+        <label>CK26 - ACH Loan Payment</label>
+    </customValue>
+    <customValue>
+        <fullName>CK50</fullName>
+        <default>false</default>
+        <label>CK50 - Neighborhood Rewards Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK70</fullName>
+        <default>false</default>
+        <label>CK70 - Business Index Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK71</fullName>
+        <default>false</default>
+        <label>CK71 - Zescrow Holding</label>
+    </customValue>
+    <customValue>
+        <fullName>CK72</fullName>
+        <default>false</default>
+        <label>CK72 - DESA Master Account</label>
+    </customValue>
+    <customValue>
+        <fullName>CK73</fullName>
+        <default>false</default>
+        <label>CK73 - Main Street Business Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK74</fullName>
+        <default>false</default>
+        <label>CK74 - Main Street Bus Prem Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK75</fullName>
+        <default>false</default>
+        <label>CK75 - Homegrown Payroll Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK76</fullName>
+        <default>false</default>
+        <label>CK76 - Main Street Bus Int Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK77</fullName>
+        <default>false</default>
+        <label>CK77 - Homegrown Premium Int Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK78</fullName>
+        <default>false</default>
+        <label>CK78 - Main Street Corporate Analysis</label>
+    </customValue>
+    <customValue>
+        <fullName>CK79</fullName>
+        <default>false</default>
+        <label>CK79 - Grass Roots Premium Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK81</fullName>
+        <default>false</default>
+        <label>CK81 - Seedling Business Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK92</fullName>
+        <default>false</default>
+        <label>CK92 - Homegrown Analysis Account</label>
+    </customValue>
+    <customValue>
+        <fullName>CM01</fullName>
+        <default>false</default>
+        <label>CM01 - Constr Industrial Rev Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM02</fullName>
+        <default>false</default>
+        <label>CM02 - Construction</label>
+    </customValue>
+    <customValue>
+        <fullName>CM04</fullName>
+        <default>false</default>
+        <label>CM04 - Constr Res 1-4</label>
+    </customValue>
+    <customValue>
+        <fullName>CM06</fullName>
+        <default>false</default>
+        <label>CM06 - Town of Ayer</label>
+    </customValue>
+    <customValue>
+        <fullName>CM08</fullName>
+        <default>false</default>
+        <label>CM08 - Guidance LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>CM09</fullName>
+        <default>false</default>
+        <label>CM09 - Industrial Revenue Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM11</fullName>
+        <default>false</default>
+        <label>CM11 - Install Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>CM12</fullName>
+        <default>false</default>
+        <label>CM12 - Install SBA PPP</label>
+    </customValue>
+    <customValue>
+        <fullName>CM13</fullName>
+        <default>false</default>
+        <label>CM13 - Letter of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>CM14</fullName>
+        <default>false</default>
+        <label>CM14 - LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>CM16</fullName>
+        <default>false</default>
+        <label>CM16 - MTG Adj</label>
+    </customValue>
+    <customValue>
+        <fullName>CM17</fullName>
+        <default>false</default>
+        <label>CM17 - Mtg Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>CM18</fullName>
+        <default>false</default>
+        <label>CM18 - Overdraft Protection</label>
+    </customValue>
+    <customValue>
+        <fullName>CM19</fullName>
+        <default>false</default>
+        <label>CM19 - Tax Exempt Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM20</fullName>
+        <default>false</default>
+        <label>CM20 - MEDC</label>
+    </customValue>
+    <customValue>
+        <fullName>CM22</fullName>
+        <default>false</default>
+        <label>CM22 - LOC Online Adv</label>
+    </customValue>
+    <customValue>
+        <fullName>DEF3</fullName>
+        <default>false</default>
+        <label>DEF3 - Default Home Equity - LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>IL01</fullName>
+        <default>false</default>
+        <label>IL01 - Collateral</label>
+    </customValue>
+    <customValue>
+        <fullName>IL02</fullName>
+        <default>false</default>
+        <label>IL02 - Install Auto</label>
+    </customValue>
+    <customValue>
+        <fullName>IL03</fullName>
+        <default>false</default>
+        <label>IL03 - Install TLC</label>
+    </customValue>
+    <customValue>
+        <fullName>IL04</fullName>
+        <default>false</default>
+        <label>IL04 - Install Unsecured</label>
+    </customValue>
+    <customValue>
+        <fullName>IL05</fullName>
+        <default>false</default>
+        <label>IL05 - Mass Save HEAT &gt; 25K</label>
+    </customValue>
+    <customValue>
+        <fullName>IL06</fullName>
+        <default>false</default>
+        <label>IL06 - Install Mass Save Heat Unsecur</label>
+    </customValue>
+    <customValue>
+        <fullName>IL07</fullName>
+        <default>false</default>
+        <label>IL07 - Overdraft Protection</label>
+    </customValue>
+    <customValue>
+        <fullName>IR06</fullName>
+        <default>false</default>
+        <label>IR06 - IRA 6 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR12</fullName>
+        <default>false</default>
+        <label>IR12 - IRA 12 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR18</fullName>
+        <default>false</default>
+        <label>IR18 - IRA 18 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR24</fullName>
+        <default>false</default>
+        <label>IR24 - IRA 24 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR36</fullName>
+        <default>false</default>
+        <label>IR36 - IRA 36 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR48</fullName>
+        <default>false</default>
+        <label>IR48 - IRA 48 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR60</fullName>
+        <default>false</default>
+        <label>IR60 - IRA 60 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>MG01</fullName>
+        <default>false</default>
+        <label>MG01 - Adj</label>
+    </customValue>
+    <customValue>
+        <fullName>MG02</fullName>
+        <default>false</default>
+        <label>MG02 - Adj 1st Time</label>
+    </customValue>
+    <customValue>
+        <fullName>MG03</fullName>
+        <default>false</default>
+        <label>MG03 - Adj 1st Time Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG04</fullName>
+        <default>false</default>
+        <label>MG04 - Adj Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>MG05</fullName>
+        <default>false</default>
+        <label>MG05 - Adj Freddie</label>
+    </customValue>
+    <customValue>
+        <fullName>MG06</fullName>
+        <default>false</default>
+        <label>MG06 - Adj Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG07</fullName>
+        <default>false</default>
+        <label>MG07 - Bank of Rhode Island</label>
+    </customValue>
+    <customValue>
+        <fullName>MG08</fullName>
+        <default>false</default>
+        <label>MG08 - Svc Released LIP</label>
+    </customValue>
+    <customValue>
+        <fullName>MG09</fullName>
+        <default>false</default>
+        <label>MG09 - Cambridge Trust</label>
+    </customValue>
+    <customValue>
+        <fullName>MG10</fullName>
+        <default>false</default>
+        <label>MG10 - Construction</label>
+    </customValue>
+    <customValue>
+        <fullName>MG11</fullName>
+        <default>false</default>
+        <label>MG11 - Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>MG12</fullName>
+        <default>false</default>
+        <label>MG12 - Fixed Escrow First</label>
+    </customValue>
+    <customValue>
+        <fullName>MG13</fullName>
+        <default>false</default>
+        <label>MG13 - Fixed FNMA</label>
+    </customValue>
+    <customValue>
+        <fullName>MG14</fullName>
+        <default>false</default>
+        <label>MG14 - Fixed Freddie</label>
+    </customValue>
+    <customValue>
+        <fullName>MG15</fullName>
+        <default>false</default>
+        <label>MG15 - Fixed Held for Sale</label>
+    </customValue>
+    <customValue>
+        <fullName>MG16</fullName>
+        <default>false</default>
+        <label>MG16 - Fixed Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG17</fullName>
+        <default>false</default>
+        <label>MG17 - Fixed Purchased</label>
+    </customValue>
+    <customValue>
+        <fullName>MG18</fullName>
+        <default>false</default>
+        <label>MG18 - Fixed Purchased Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG19</fullName>
+        <default>false</default>
+        <label>MG19 - HELOC</label>
+    </customValue>
+    <customValue>
+        <fullName>MG20</fullName>
+        <default>false</default>
+        <label>MG20 - HELOC Bridge</label>
+    </customValue>
+    <customValue>
+        <fullName>MG21</fullName>
+        <default>false</default>
+        <label>MG21 - HELOC Investor</label>
+    </customValue>
+    <customValue>
+        <fullName>MG22</fullName>
+        <default>false</default>
+        <label>MG22 - HELOC TLC</label>
+    </customValue>
+    <customValue>
+        <fullName>MG23</fullName>
+        <default>false</default>
+        <label>MG23 - HELOC TLC Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG24</fullName>
+        <default>false</default>
+        <label>MG24 - Mass Housing</label>
+    </customValue>
+    <customValue>
+        <fullName>MG25</fullName>
+        <default>false</default>
+        <label>MG25 - Install Mass Save Heat Secured</label>
+    </customValue>
+    <customValue>
+        <fullName>MG26</fullName>
+        <default>false</default>
+        <label>MG26 - Mobile Home Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>MG27</fullName>
+        <default>false</default>
+        <label>MG27 - Second</label>
+    </customValue>
+    <customValue>
+        <fullName>MG28</fullName>
+        <default>false</default>
+        <label>MG28 - HELOC in Repayment</label>
+    </customValue>
+    <customValue>
+        <fullName>MG29</fullName>
+        <default>false</default>
+        <label>MG29 - Svc Released LIP Second</label>
+    </customValue>
+    <customValue>
+        <fullName>ML01</fullName>
+        <default>false</default>
+        <label>ML01 - CML Masterline</label>
+    </customValue>
+    <customValue>
+        <fullName>ML02</fullName>
+        <default>false</default>
+        <label>ML02 - MTG Masterline</label>
+    </customValue>
+    <customValue>
+        <fullName>QR06</fullName>
+        <default>false</default>
+        <label>QR06 - DNU Qwickrate 06 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR12</fullName>
+        <default>false</default>
+        <label>QR12 - DNU Qwickrate 12 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR18</fullName>
+        <default>false</default>
+        <label>QR18 - DNU Qwickrate 18 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR24</fullName>
+        <default>false</default>
+        <label>QR24 - DNU Qwickrate 24 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>SV30</fullName>
+        <default>false</default>
+        <label>SV30 - Main Street Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>SV31</fullName>
+        <default>false</default>
+        <label>SV31 - Main Street Premium MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV35</fullName>
+        <default>false</default>
+        <label>SV35 - BankOn Main Street Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV36</fullName>
+        <default>false</default>
+        <label>SV36 - Consumer Index MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV38</fullName>
+        <default>false</default>
+        <label>SV38 - EERA Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV42</fullName>
+        <default>false</default>
+        <label>SV42 - Holiday Club Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV45</fullName>
+        <default>false</default>
+        <label>SV45 - Municipal Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV46</fullName>
+        <default>false</default>
+        <label>SV46 - Main Street Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV52</fullName>
+        <default>false</default>
+        <label>SV52 - IRA Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>SV82</fullName>
+        <default>false</default>
+        <label>SV82 - DESA Business Sub Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV83</fullName>
+        <default>false</default>
+        <label>SV83 - DESA Consumer Sub Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV85</fullName>
+        <default>false</default>
+        <label>SV85 - Main Street Business Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV86</fullName>
+        <default>false</default>
+        <label>SV86 - Holdback Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV95</fullName>
+        <default>false</default>
+        <label>SV95 - Main Street Business MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV96</fullName>
+        <default>false</default>
+        <label>SV96 - Main Street Bus Premium MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV97</fullName>
+        <default>false</default>
+        <label>SV97 - Homegrown Business MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV98</fullName>
+        <default>false</default>
+        <label>SV98 - Business Index MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>CD07</fullName>
+        <default>false</default>
+        <label>CD07 - 7 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD09</fullName>
+        <default>false</default>
+        <label>CD09 - 7 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CS12</fullName>
+        <default>false</default>
+        <label>CS12 - Online Only 12Month CD Special</label>
+    </customValue>
+    <customValue>
+        <fullName>IR09</fullName>
+        <default>false</default>
+        <label>IR09 - IRA 9 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR07</fullName>
+        <default>false</default>
+        <label>IR07 - IRA 7 Month CD</label>
+    </customValue>
+    <masterLabel>COCC Minors</masterLabel>
+    <sorted>true</sorted>
+</GlobalValueSet>

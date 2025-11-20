@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>SV30</fullName>
+        <default>false</default>
+        <label>Main Street Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>SV31</fullName>
+        <default>false</default>
+        <label>Main Street Premium MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV38</fullName>
+        <default>false</default>
+        <label>EERA Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV42</fullName>
+        <default>false</default>
+        <label>Holiday Club Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV45</fullName>
+        <default>false</default>
+        <label>Municipal Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV46</fullName>
+        <default>false</default>
+        <label>Main Street Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV97</fullName>
+        <default>false</default>
+        <label>Homegrown Business MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV52</fullName>
+        <default>false</default>
+        <label>IRA Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>SV95</fullName>
+        <default>false</default>
+        <label>Main Street Business MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV96</fullName>
+        <default>false</default>
+        <label>Main Street Bus Premium MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV85</fullName>
+        <default>false</default>
+        <label>Main Street Business Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SV82</fullName>
+        <default>false</default>
+        <label>DESA Business Sub Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV83</fullName>
+        <default>false</default>
+        <label>DESA Consumer Sub Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV86</fullName>
+        <default>false</default>
+        <label>Holdback Account</label>
+    </customValue>
+    <customValue>
+        <fullName>SV98</fullName>
+        <default>false</default>
+        <label>Business Index MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV36</fullName>
+        <default>false</default>
+        <label>Consumer Index MMDA</label>
+    </customValue>
+    <customValue>
+        <fullName>SV35</fullName>
+        <default>false</default>
+        <label>BankOn Main Street Savings</label>
+    </customValue>
+    <masterLabel>COCC Minors SAV</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

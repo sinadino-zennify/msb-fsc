@@ -1108,7 +1108,20 @@ public with sharing class WizardPersistenceService {
             
             // Now process Identity Documents for each applicant
             for (Integer i = 0; i < applicantsPayload.size(); i++) {
-                Map<String, Object> applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                // Safely convert the applicant payload from Map<ANY,ANY> to Map<String, Object>
+                Map<String, Object> applicantPayload;
+                try {
+                    // Try direct cast first
+                    applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                } catch (TypeException e) {
+                    // If direct cast fails, manually convert
+                    applicantPayload = new Map<String, Object>();
+                    Map<Object, Object> rawMap = (Map<Object, Object>) applicantsPayload[i];
+                    for (Object key : rawMap.keySet()) {
+                        applicantPayload.put(String.valueOf(key), rawMap.get(key));
+                    }
+                }
+                
                 Applicant applicant = applicantsToUpsert[i];
                 
                 List<Object> identityDocumentsPayload = (List<Object>) applicantPayload.get('identityDocuments');
@@ -1170,13 +1183,19 @@ public with sharing class WizardPersistenceService {
         for (Object docObj : identityDocumentsPayload) {
             Map<String, Object> docMap;
             
-            if (docObj instanceof Map<Object, Object>) {
-                docMap = new Map<String, Object>();
-                for (Object key : ((Map<Object, Object>) docObj).keySet()) {
-                    docMap.put(String.valueOf(key), ((Map<Object, Object>) docObj).get(key));
-                }
-            } else {
+            // Safely convert Map<ANY,ANY> or Map<Object, Object> to Map<String, Object>
+            // JSON deserialization can return Map<ANY,ANY> which cannot be directly cast
+            try {
+                // Try direct cast first (works for Map<String, Object>)
                 docMap = (Map<String, Object>) docObj;
+            } catch (TypeException e) {
+                // If cast fails, manually convert by iterating through keys
+                docMap = new Map<String, Object>();
+                // Handle both Map<Object, Object> and Map<ANY,ANY>
+                Map<Object, Object> rawMap = (Map<Object, Object>) docObj;
+                for (Object key : rawMap.keySet()) {
+                    docMap.put(String.valueOf(key), rawMap.get(key));
+                }
             }
             
             String idNumber = (String) docMap.get('idNumber');

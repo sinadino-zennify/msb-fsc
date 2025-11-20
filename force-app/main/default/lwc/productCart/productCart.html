@@ -1,0 +1,82 @@
+<template>
+    <div class="product-cart slds-card slds-p-around_medium">
+        <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+            <h3 class="slds-text-heading_small">
+                <lightning-icon icon-name="standard:product" size="small" class="slds-m-right_x-small"></lightning-icon>
+                Selected Products ({cartItemCount})
+            </h3>
+            <template if:true={hasItems}>
+                <lightning-button
+                    label="Clear All"
+                    onclick={handleClearAll}
+                    variant="destructive-text"
+                    class="slds-text-body_small">
+                </lightning-button>
+            </template>
+        </div>
+        
+        <template if:false={hasItems}>
+            <div class="slds-text-align_center slds-p-vertical_large">
+                <lightning-icon icon-name="utility:cart" size="large" class="slds-icon-text-default"></lightning-icon>
+                <p class="slds-text-body_regular slds-text-color_weak slds-m-top_small">
+                    No products added yet. Select products above to add them to your cart.
+                </p>
+            </div>
+        </template>
+        
+        <template if:true={hasItems}>
+            <div class="cart-items">
+                <template for:each={cartItems} for:item="item">
+                    <div key={item.productId} class="cart-item slds-box slds-box_x-small slds-m-bottom_small">
+                        <div class="slds-grid slds-grid_align-spread">
+                            <div class="slds-col slds-size_10-of-12">
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <div class="slds-col slds-size_1-of-12">
+                                        <lightning-icon 
+                                            icon-name={item.categoryIcon} 
+                                            size="small"
+                                            class="slds-m-right_small">
+                                        </lightning-icon>
+                                    </div>
+                                    <div class="slds-col slds-size_11-of-12">
+                                        <p class="slds-text-body_regular slds-text-title slds-truncate">
+                                            <strong>{item.productName}</strong>
+                                        </p>
+                                        <p class="slds-text-body_small slds-text-color_weak">
+                                            {item.category} • {item.formattedAmount}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_2-of-12 slds-text-align_right">
+                                <lightning-button-icon
+                                    icon-name="utility:edit"
+                                    alternative-text="Edit"
+                                    title="Edit funding amount"
+                                    onclick={handleEdit}
+                                    data-product-id={item.productId}
+                                    class="slds-m-right_xx-small">
+                                </lightning-button-icon>
+                                <lightning-button-icon
+                                    icon-name="utility:close"
+                                    alternative-text="Remove"
+                                    title="Remove from cart"
+                                    variant="bare"
+                                    onclick={handleRemove}
+                                    data-product-id={item.productId}>
+                                </lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            
+            <div class="slds-border_top slds-p-top_small slds-m-top_small">
+                <div class="slds-grid slds-grid_align-spread">
+                    <p class="slds-text-body_regular"><strong>Total Initial Funding:</strong></p>
+                    <p class="slds-text-body_regular"><strong>{totalFunding}</strong></p>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

@@ -38,7 +38,7 @@
                                             <template if:true={applicant.ownershipPercentage}>
                                                 <span class="slds-badge slds-theme_success slds-m-left_xx-small ownership-badge">
                                                     <lightning-icon icon-name="utility:percent" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
-                                                    {applicant.ownershipPercentage}%
+                                                    {applicant.formattedOwnershipPercentage}
                                                 </span>
                                             </template>
                                         </div>
@@ -312,11 +312,13 @@
                                     </lightning-layout-item>
                                     
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
-                                            label="Occupation" 
+                                        <lightning-combobox
+                                            label="Occupation"
                                             value={currentApplicant.occupation}
-                                            onchange={handleOccupationChange}>
-                                        </lightning-input>
+                                            options={occupationOptions}
+                                            onchange={handleOccupationChange}
+                                            placeholder="Select occupation">
+                                        </lightning-combobox>
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </div>
