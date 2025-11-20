@@ -18,7 +18,8 @@ export default class AdditionalApplicants extends LightningElement {
         if (val && val.applicants && !this.hasAppliedInitialValue) {
             this.applicants = val.applicants.map((app, index) => ({
                 ...app,
-                id: app.id || `applicant-${Date.now()}-${index}`
+                id: app.id || `applicant-${Date.now()}-${index}`,
+                formattedOwnershipPercentage: this.formatOwnershipPercentage(app.ownershipPercentage)
             }));
             this.hasAppliedInitialValue = true;
         }
@@ -81,16 +82,18 @@ export default class AdditionalApplicants extends LightningElement {
             });
         }
         
-        // Also run our custom validation
-        const validation = this.validateCurrentApplicant();
-        
-        if (validation.isValid && allValid) {
+        // If native validation passes, save the applicant
+        // Field-level errors are automatically shown by reportValidity()
+        if (allValid) {
             const applicantToSave = { ...this.currentApplicant };
             
             // Ensure ID exists
             if (!applicantToSave.id) {
                 applicantToSave.id = `applicant-${Date.now()}`;
             }
+
+            // Format ownership percentage for display
+            applicantToSave.formattedOwnershipPercentage = this.formatOwnershipPercentage(applicantToSave.ownershipPercentage);
 
             if (this.editingIndex >= 0) {
                 // Edit existing
@@ -103,17 +106,8 @@ export default class AdditionalApplicants extends LightningElement {
             this.applicants = [...this.applicants]; // Trigger reactivity
             this.handleCloseModal();
             this.emitPayloadChange();
-        } else {
-            // Show validation errors
-            validation.messages.forEach(message => {
-                // eslint-disable-next-line no-console
-                console.error(message);
-            });
-            // Dispatch error event to show in UI
-            this.dispatchEvent(new CustomEvent('validationerror', {
-                detail: { messages: validation.messages }
-            }));
         }
+        // If validation fails, errors are automatically shown on the fields
     }
 
     handleDeleteApplicant(event) {
@@ -499,7 +493,7 @@ export default class AdditionalApplicants extends LightningElement {
         // Validate 9 digits only (allow masked with asterisks)
         const digitsOnly = taxId.replace(/\D/g, '');
         if (/^[*]{9}$/.test(taxId)) {
-            return true;
+        return true;
         }
         return digitsOnly.length === 9;
     }
@@ -548,6 +542,13 @@ export default class AdditionalApplicants extends LightningElement {
         if (!idNumber) return '';
         const lastFour = idNumber.slice(-4);
         return `***-**-${lastFour}`;
+    }
+
+    formatOwnershipPercentage(ownershipPercentage) {
+        if (!ownershipPercentage) return '';
+        // Remove any existing % sign and return just the number
+        const numStr = String(ownershipPercentage).replace(/%/g, '').trim();
+        return numStr;
     }
 
     emitPayloadChange() {
@@ -615,6 +616,17 @@ export default class AdditionalApplicants extends LightningElement {
             { label: 'Ms.', value: 'Ms.' },
             { label: 'Dr.', value: 'Dr.' },
             { label: 'Prof.', value: 'Prof.' }
+        ];
+    }
+
+    get occupationOptions() {
+        return [
+            { label: 'Employed', value: 'Employed' },
+            { label: 'Self-Employed', value: 'Self-Employed' },
+            { label: 'Retired', value: 'Retired' },
+            { label: 'Student', value: 'Student' },
+            { label: 'Unemployed', value: 'Unemployed' },
+            { label: 'Other', value: 'Other' }
         ];
     }
 

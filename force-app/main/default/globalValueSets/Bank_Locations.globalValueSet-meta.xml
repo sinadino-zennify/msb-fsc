@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Marlborough Branch</fullName>
+        <default>false</default>
+        <label>Marlborough Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Ayer Branch</fullName>
+        <default>false</default>
+        <label>Ayer Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Hudson Branch</fullName>
+        <default>false</default>
+        <label>Hudson Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Pepperell Branch</fullName>
+        <default>false</default>
+        <label>Pepperell Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Northborough Branch</fullName>
+        <default>false</default>
+        <label>Northborough Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Southborough Branch</fullName>
+        <default>false</default>
+        <label>Southborough Branch</label>
+    </customValue>
+    <customValue>
+        <fullName>Marlborough - 2nd Floor</fullName>
+        <default>false</default>
+        <label>Marlborough - 2nd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Marlborough - 3rd Floor</fullName>
+        <default>false</default>
+        <label>Marlborough - 3rd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Ayer - 2nd Floor</fullName>
+        <default>false</default>
+        <label>Ayer - 2nd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>Ayer - 3rd Floor</fullName>
+        <default>false</default>
+        <label>Ayer - 3rd Floor</label>
+    </customValue>
+    <customValue>
+        <fullName>26 Forest St - Operations Center</fullName>
+        <default>false</default>
+        <label>26 Forest St - Operations Center</label>
+    </customValue>
+    <customValue>
+        <fullName>101 Federal St - Commercial Banking Center Boston</fullName>
+        <default>false</default>
+        <label>101 Federal St - Commercial Banking Center Boston</label>
+    </customValue>
+    <customValue>
+        <fullName>446 Main St - Commercial Banking Center Worcester</fullName>
+        <default>false</default>
+        <label>446 Main St - Commercial Banking Center Worcester</label>
+    </customValue>
+    <customValue>
+        <fullName>Remote</fullName>
+        <default>false</default>
+        <label>Remote</label>
+    </customValue>
+    <description>List of all bank physical locations (including customer-facing branches and office space) as well as an option for remote workers.</description>
+    <masterLabel>Bank Locations</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

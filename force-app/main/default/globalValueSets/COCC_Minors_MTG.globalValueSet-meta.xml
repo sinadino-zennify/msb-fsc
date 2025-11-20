@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>DEF3</fullName>
+        <default>false</default>
+        <label>Default Home Equity - LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>MG22</fullName>
+        <default>false</default>
+        <label>HELOC TLC</label>
+    </customValue>
+    <customValue>
+        <fullName>MG21</fullName>
+        <default>false</default>
+        <label>HELOC Investor</label>
+    </customValue>
+    <customValue>
+        <fullName>MG04</fullName>
+        <default>false</default>
+        <label>Adj Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>MG05</fullName>
+        <default>false</default>
+        <label>Adj Freddie</label>
+    </customValue>
+    <customValue>
+        <fullName>MG06</fullName>
+        <default>false</default>
+        <label>Adj Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG17</fullName>
+        <default>false</default>
+        <label>Fixed Purchased</label>
+    </customValue>
+    <customValue>
+        <fullName>MG18</fullName>
+        <default>false</default>
+        <label>Fixed Purchased Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG19</fullName>
+        <default>false</default>
+        <label>HELOC</label>
+    </customValue>
+    <customValue>
+        <fullName>MG20</fullName>
+        <default>false</default>
+        <label>HELOC Bridge</label>
+    </customValue>
+    <customValue>
+        <fullName>MG10</fullName>
+        <default>false</default>
+        <label>Construction</label>
+    </customValue>
+    <customValue>
+        <fullName>MG11</fullName>
+        <default>false</default>
+        <label>Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>MG23</fullName>
+        <default>false</default>
+        <label>HELOC TLC Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG09</fullName>
+        <default>false</default>
+        <label>Cambridge Trust</label>
+    </customValue>
+    <customValue>
+        <fullName>MG12</fullName>
+        <default>false</default>
+        <label>Fixed Escrow First</label>
+    </customValue>
+    <customValue>
+        <fullName>MG13</fullName>
+        <default>false</default>
+        <label>Fixed FNMA</label>
+    </customValue>
+    <customValue>
+        <fullName>MG02</fullName>
+        <default>false</default>
+        <label>Adj 1st Time</label>
+    </customValue>
+    <customValue>
+        <fullName>MG14</fullName>
+        <default>false</default>
+        <label>Fixed Freddie</label>
+    </customValue>
+    <customValue>
+        <fullName>MG15</fullName>
+        <default>false</default>
+        <label>Fixed Held for Sale</label>
+    </customValue>
+    <customValue>
+        <fullName>MG16</fullName>
+        <default>false</default>
+        <label>Fixed Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG24</fullName>
+        <default>false</default>
+        <label>Mass Housing</label>
+    </customValue>
+    <customValue>
+        <fullName>MG25</fullName>
+        <default>false</default>
+        <label>Install Mass Save Heat Secured</label>
+    </customValue>
+    <customValue>
+        <fullName>MG26</fullName>
+        <default>false</default>
+        <label>Mobile Home Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>MG27</fullName>
+        <default>false</default>
+        <label>Second</label>
+    </customValue>
+    <customValue>
+        <fullName>MG01</fullName>
+        <default>false</default>
+        <label>Adj</label>
+    </customValue>
+    <customValue>
+        <fullName>MG03</fullName>
+        <default>false</default>
+        <label>Adj 1st Time Jumbo</label>
+    </customValue>
+    <customValue>
+        <fullName>MG07</fullName>
+        <default>false</default>
+        <label>Bank of Rhode Island</label>
+    </customValue>
+    <customValue>
+        <fullName>MG08</fullName>
+        <default>false</default>
+        <label>Svc Released LIP</label>
+    </customValue>
+    <customValue>
+        <fullName>MG28</fullName>
+        <default>false</default>
+        <label>HELOC in Repayment</label>
+    </customValue>
+    <customValue>
+        <fullName>MG29</fullName>
+        <default>false</default>
+        <label>Svc Released LIP Second</label>
+    </customValue>
+    <masterLabel>COCC Minors MTG</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

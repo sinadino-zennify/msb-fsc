@@ -1,0 +1,67 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef1"
+            },
+            "Description__c": "Construction",
+            "Code__c": "23",
+            "Name": "Construction"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef2"
+            },
+            "Description__c": "Professional, Scientific, and Technical Services",
+            "Code__c": "54",
+            "Name": "Professional, Scientific, and Technical Services"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef3"
+            },
+            "Description__c": "Agriculture, Forestry, Fishing and Hunting",
+            "Code__c": "11",
+            "Name": "Agriculture, Forestry, Fishing and Hunting"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef4"
+            },
+            "Description__c": "Retail Trade",
+            "Code__c": "44-45",
+            "Name": "Retail Trade"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef5"
+            },
+            "Description__c": "Finance and Insurance",
+            "Code__c": "52",
+            "Name": "Finance and Insurance"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef6"
+            },
+            "Description__c": "Health Care and Social Assistance",
+            "Code__c": "62",
+            "Name": "Health Care and Social Assistance"
+        },
+        {
+            "attributes": {
+                "type": "NAICS__c",
+                "referenceId": "NAICS__cRef7"
+            },
+            "Description__c": "Accommodation and Food Services",
+            "Code__c": "72",
+            "Name": "Accommodation and Food Services"
+        }
+    ]
+}

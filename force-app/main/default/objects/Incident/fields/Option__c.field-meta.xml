@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Option__c</fullName>
+    <defaultValue>&quot;N/A&quot;</defaultValue>
+    <label>Option</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Sub_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bank-Owned</fullName>
+                <default>false</default>
+                <label>Bank-Owned</label>
+            </value>
+            <value>
+                <fullName>Personal Device with Bank Access</fullName>
+                <default>false</default>
+                <label>Personal Device with Bank Access</label>
+            </value>
+            <value>
+                <fullName>External</fullName>
+                <default>false</default>
+                <label>External</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>N/A</fullName>
+                <default>false</default>
+                <label>N/A</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Facial Recognition</controllingFieldValue>
+            <controllingFieldValue>Email Scam</controllingFieldValue>
+            <controllingFieldValue>Fingerprint</controllingFieldValue>
+            <controllingFieldValue>Other Scam</controllingFieldValue>
+            <controllingFieldValue>External</controllingFieldValue>
+            <controllingFieldValue>N/A</controllingFieldValue>
+            <controllingFieldValue>Wire</controllingFieldValue>
+            <controllingFieldValue>Zelle</controllingFieldValue>
+            <controllingFieldValue>General</controllingFieldValue>
+            <controllingFieldValue>Endorsement</controllingFieldValue>
+            <controllingFieldValue>ATM Deposit</controllingFieldValue>
+            <controllingFieldValue>Email</controllingFieldValue>
+            <controllingFieldValue>Teams</controllingFieldValue>
+            <controllingFieldValue>Mailing</controllingFieldValue>
+            <controllingFieldValue>Dropbox</controllingFieldValue>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <controllingFieldValue>Surface/Laptop</controllingFieldValue>
+            <controllingFieldValue>Hard Token</controllingFieldValue>
+            <controllingFieldValue>Username/Password</controllingFieldValue>
+            <controllingFieldValue>Mobile Deposit</controllingFieldValue>
+            <controllingFieldValue>MFA</controllingFieldValue>
+            <controllingFieldValue>Romance Scam</controllingFieldValue>
+            <valueName>N/A</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>ACH</controllingFieldValue>
+            <valueName>External</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>ACH</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cell Phone</controllingFieldValue>
+            <valueName>Bank-Owned</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cell Phone</controllingFieldValue>
+            <valueName>Personal Device with Bank Access</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

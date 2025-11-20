@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>Cannabanking</fullName>
+        <default>false</default>
+        <label>Cannabanking</label>
+    </customValue>
+    <customValue>
+        <fullName>Cash Management</fullName>
+        <default>false</default>
+        <label>Cash Management</label>
+    </customValue>
+    <customValue>
+        <fullName>Commercial Lending</fullName>
+        <default>false</default>
+        <label>Commercial Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>Consumer Lending</fullName>
+        <default>false</default>
+        <label>Consumer Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>Deposit Operations</fullName>
+        <default>false</default>
+        <label>Deposit Operations</label>
+    </customValue>
+    <customValue>
+        <fullName>Executive</fullName>
+        <default>false</default>
+        <label>Executive</label>
+    </customValue>
+    <customValue>
+        <fullName>Facilities</fullName>
+        <default>false</default>
+        <label>Facilities</label>
+    </customValue>
+    <customValue>
+        <fullName>Finance</fullName>
+        <default>false</default>
+        <label>Finance</label>
+    </customValue>
+    <customValue>
+        <fullName>Human Resources</fullName>
+        <default>false</default>
+        <label>Human Resources</label>
+    </customValue>
+    <customValue>
+        <fullName>Innovation Initiatives</fullName>
+        <default>false</default>
+        <label>Innovation Initiatives</label>
+    </customValue>
+    <customValue>
+        <fullName>IT</fullName>
+        <default>false</default>
+        <label>IT</label>
+    </customValue>
+    <customValue>
+        <fullName>Learning &amp; Development</fullName>
+        <default>false</default>
+        <label>Learning &amp; Development</label>
+    </customValue>
+    <customValue>
+        <fullName>Loan Servicing</fullName>
+        <default>false</default>
+        <label>Loan Servicing</label>
+    </customValue>
+    <customValue>
+        <fullName>Marketing</fullName>
+        <default>false</default>
+        <label>Marketing</label>
+    </customValue>
+    <customValue>
+        <fullName>Relationship Banking</fullName>
+        <default>false</default>
+        <label>Relationship Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Residential Lending</fullName>
+        <default>false</default>
+        <label>Residential Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>Retail Banking</fullName>
+        <default>false</default>
+        <label>Retail Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Risk/Compliance</fullName>
+        <default>false</default>
+        <label>Risk/Compliance</label>
+    </customValue>
+    <customValue>
+        <fullName>Salesforce</fullName>
+        <default>false</default>
+        <label>Salesforce</label>
+    </customValue>
+    <customValue>
+        <fullName>Small Business Lending</fullName>
+        <default>false</default>
+        <label>Small Business Lending</label>
+    </customValue>
+    <customValue>
+        <fullName>Video Connect/Electronic Banking</fullName>
+        <default>false</default>
+        <label>Video Connect/Electronic Banking</label>
+    </customValue>
+    <description>List of all Bank departments, front and back office.</description>
+    <masterLabel>Bank Departments</masterLabel>
+    <sorted>true</sorted>
+</GlobalValueSet>

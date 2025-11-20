@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>CM20</fullName>
+        <default>false</default>
+        <label>MEDC</label>
+    </customValue>
+    <customValue>
+        <fullName>CI07</fullName>
+        <default>false</default>
+        <label>Ach Manager Exposure</label>
+    </customValue>
+    <customValue>
+        <fullName>CM04</fullName>
+        <default>false</default>
+        <label>Constr Res 1-4</label>
+    </customValue>
+    <customValue>
+        <fullName>CM09</fullName>
+        <default>false</default>
+        <label>Industrial Revenue Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM06</fullName>
+        <default>false</default>
+        <label>Town of Ayer</label>
+    </customValue>
+    <customValue>
+        <fullName>CM13</fullName>
+        <default>false</default>
+        <label>Letter of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>CM14</fullName>
+        <default>false</default>
+        <label>LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>CM08</fullName>
+        <default>false</default>
+        <label>Guidance LOC</label>
+    </customValue>
+    <customValue>
+        <fullName>CM11</fullName>
+        <default>false</default>
+        <label>Install Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>CM12</fullName>
+        <default>false</default>
+        <label>Install SBA PPP</label>
+    </customValue>
+    <customValue>
+        <fullName>CM16</fullName>
+        <default>false</default>
+        <label>MTG Adj</label>
+    </customValue>
+    <customValue>
+        <fullName>CM19</fullName>
+        <default>false</default>
+        <label>Tax Exempt Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM17</fullName>
+        <default>false</default>
+        <label>Mtg Fixed</label>
+    </customValue>
+    <customValue>
+        <fullName>CM18</fullName>
+        <default>false</default>
+        <label>Overdraft Protection</label>
+    </customValue>
+    <customValue>
+        <fullName>CM22</fullName>
+        <default>false</default>
+        <label>LOC Online Adv</label>
+    </customValue>
+    <customValue>
+        <fullName>CM01</fullName>
+        <default>false</default>
+        <label>Constr Industrial Rev Bond</label>
+    </customValue>
+    <customValue>
+        <fullName>CM02</fullName>
+        <default>false</default>
+        <label>Construction</label>
+    </customValue>
+    <masterLabel>COCC Minors CML</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>CD03</fullName>
+        <default>false</default>
+        <label>3 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD06</fullName>
+        <default>false</default>
+        <label>6 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD12</fullName>
+        <default>false</default>
+        <label>12 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD18</fullName>
+        <default>false</default>
+        <label>18 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD24</fullName>
+        <default>false</default>
+        <label>24 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD36</fullName>
+        <default>false</default>
+        <label>36 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD48</fullName>
+        <default>false</default>
+        <label>48 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CD60</fullName>
+        <default>false</default>
+        <label>60 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR06</fullName>
+        <default>false</default>
+        <label>IRA 6 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR12</fullName>
+        <default>false</default>
+        <label>IRA 12 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR18</fullName>
+        <default>false</default>
+        <label>IRA 18 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR24</fullName>
+        <default>false</default>
+        <label>IRA 24 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR36</fullName>
+        <default>false</default>
+        <label>IRA 36 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR48</fullName>
+        <default>false</default>
+        <label>IRA 48 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>IR60</fullName>
+        <default>false</default>
+        <label>IRA 60 Month CD</label>
+    </customValue>
+    <customValue>
+        <fullName>QR06</fullName>
+        <default>false</default>
+        <label>DNU Qwickrate 06 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR12</fullName>
+        <default>false</default>
+        <label>DNU Qwickrate 12 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR18</fullName>
+        <default>false</default>
+        <label>DNU Qwickrate 18 Month</label>
+    </customValue>
+    <customValue>
+        <fullName>QR24</fullName>
+        <default>false</default>
+        <label>DNU Qwickrate 24 Month</label>
+    </customValue>
+    <masterLabel>COCC Minors TD</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <!-- All Quick Actions (including Lightning Component Actions) -->
     <types>
-        <members>ApplicationForm</members>
-        <name>CustomObject</name>
-    </types>
-    <!-- <types>
-        <members>Wizard_Step__mdt.*</members>
-        <name>CustomMetadata</name>
+        <members>DAO_Wizard_Access</members>
+        <name>PermissionSet</name>
     </types>
     <types>
-        <members>WizardConfigService</members>
-        <members>WizardConfigServiceTest</members>
-        <members>WizardPersistenceService</members>
-        <members>WizardPersistenceServiceTest</members>
-        <name>ApexClass</name>
+        <members>NAICS__c</members>
+        <name>CustomTab</name>
     </types>
-    <types>
-        <members>daoWizardContainer</members>
-        <members>daoWizardStepRouter</members>
-        <members>applicantDetails</members>
-        <members>businessDetails</members>
-        <members>additionalApplicants</members>
-        <members>productSelection</members>
-        <members>additionalServices</members>
-        <members>documentUpload</members>
-        <members>reviewAndSubmit</members>
-        <members>openDaoWizardAction</members>
-        <name>LightningComponentBundle</name>
-    </types> -->
-    <version>65.0</version>
+
+    <version>60.0</version>
 </Package>

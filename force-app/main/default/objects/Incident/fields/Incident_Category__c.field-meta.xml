@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Incident_Category__c</fullName>
+    <label>Incident Category</label>
+    <required>true</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Misdirected Information</fullName>
+                <default>false</default>
+                <label>Misdirected Information</label>
+            </value>
+            <value>
+                <fullName>Lost/Stolen Device</fullName>
+                <default>false</default>
+                <label>Lost/Stolen Device</label>
+            </value>
+            <value>
+                <fullName>Misuse of Access</fullName>
+                <default>false</default>
+                <label>Misuse of Access</label>
+            </value>
+            <value>
+                <fullName>Compromised Credential</fullName>
+                <default>false</default>
+                <label>Compromised Credential</label>
+            </value>
+            <value>
+                <fullName>Electronic</fullName>
+                <default>false</default>
+                <label>Electronic</label>
+            </value>
+            <value>
+                <fullName>Check</fullName>
+                <default>false</default>
+                <label>Check</label>
+            </value>
+            <value>
+                <fullName>Social Engineering</fullName>
+                <default>false</default>
+                <label>Social Engineering</label>
+            </value>
+            <value>
+                <fullName>Identify Theft</fullName>
+                <default>false</default>
+                <label>Identify Theft</label>
+            </value>
+            <value>
+                <fullName>Online Account Takeover</fullName>
+                <default>false</default>
+                <label>Online Account Takeover</label>
+            </value>
+            <value>
+                <fullName>Elder Abuse</fullName>
+                <default>false</default>
+                <label>Elder Abuse</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

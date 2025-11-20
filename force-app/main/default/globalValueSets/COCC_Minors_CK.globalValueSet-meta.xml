@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>CK21</fullName>
+        <default>false</default>
+        <label>Main Street IOLTA Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK25</fullName>
+        <default>false</default>
+        <label>Internal Accounts</label>
+    </customValue>
+    <customValue>
+        <fullName>CK04</fullName>
+        <default>false</default>
+        <label>Main Street Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK20</fullName>
+        <default>false</default>
+        <label>Main Street Interest Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK72</fullName>
+        <default>false</default>
+        <label>DESA Master Account</label>
+    </customValue>
+    <customValue>
+        <fullName>CK73</fullName>
+        <default>false</default>
+        <label>Main Street Business Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK74</fullName>
+        <default>false</default>
+        <label>Main Street Bus Prem Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK75</fullName>
+        <default>false</default>
+        <label>Homegrown Payroll Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK77</fullName>
+        <default>false</default>
+        <label>Homegrown Premium Int Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK81</fullName>
+        <default>false</default>
+        <label>Seedling Business Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK78</fullName>
+        <default>false</default>
+        <label>Main Street Corporate Analysis</label>
+    </customValue>
+    <customValue>
+        <fullName>CK92</fullName>
+        <default>false</default>
+        <label>Homegrown Analysis Account</label>
+    </customValue>
+    <customValue>
+        <fullName>CK76</fullName>
+        <default>false</default>
+        <label>Main Street Bus Int Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK79</fullName>
+        <default>false</default>
+        <label>Grass Roots Premium Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK50</fullName>
+        <default>false</default>
+        <label>Neighborhood Rewards Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK22</fullName>
+        <default>false</default>
+        <label>Main Street NonProfit Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK26</fullName>
+        <default>false</default>
+        <label>ACH Loan Payment</label>
+    </customValue>
+    <customValue>
+        <fullName>CK15</fullName>
+        <default>false</default>
+        <label>BankOn Main Street Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK23</fullName>
+        <default>false</default>
+        <label>Nonprofit Analysis Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK70</fullName>
+        <default>false</default>
+        <label>Business Index Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK71</fullName>
+        <default>false</default>
+        <label>Zescrow Holding</label>
+    </customValue>
+    <customValue>
+        <fullName>CK05</fullName>
+        <default>false</default>
+        <label>Consumer Index Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CK24</fullName>
+        <default>false</default>
+        <label>Main Street Checking Preferred</label>
+    </customValue>
+    <masterLabel>COCC Minors CK</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>

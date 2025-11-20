@@ -1,0 +1,30 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef1"
+            },
+            "FirstName": "August",
+            "LastName": "Zenn"
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef2"
+            },
+            "FirstName": "Scott",
+            "LastName": "Zenn",
+            "PersonEmail": "zenn@mail.com"
+        },
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef3"
+            },
+            "FirstName": "Jonathan",
+            "LastName": "Wick",
+            "PersonEmail": "naren+jwick@zennify.cm"
+        }
+    ]
+}

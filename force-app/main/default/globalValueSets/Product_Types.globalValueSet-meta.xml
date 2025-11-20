@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customValue>
+        <fullName>ACH Origination</fullName>
+        <default>false</default>
+        <label>ACH Origination</label>
+    </customValue>
+    <customValue>
+        <fullName>ATM Card</fullName>
+        <default>false</default>
+        <label>ATM Card</label>
+    </customValue>
+    <customValue>
+        <fullName>Auto Loan</fullName>
+        <default>false</default>
+        <label>Auto Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Bond Financing</fullName>
+        <default>false</default>
+        <label>Bond Financing</label>
+    </customValue>
+    <customValue>
+        <fullName>Business Credit Card</fullName>
+        <default>false</default>
+        <label>Business Credit Card</label>
+    </customValue>
+    <customValue>
+        <fullName>Business Online Banking</fullName>
+        <default>false</default>
+        <label>Business Online Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>CD</fullName>
+        <default>false</default>
+        <label>CD</label>
+    </customValue>
+    <customValue>
+        <fullName>Checking</fullName>
+        <default>false</default>
+        <label>Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CM CD</fullName>
+        <default>false</default>
+        <label>CM CD</label>
+    </customValue>
+    <customValue>
+        <fullName>CM Checking</fullName>
+        <default>false</default>
+        <label>CM Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>CM Escrow</fullName>
+        <default>false</default>
+        <label>CM Escrow</label>
+    </customValue>
+    <customValue>
+        <fullName>CM Index Money Market</fullName>
+        <default>false</default>
+        <label>CM Index Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>CM Money Market</fullName>
+        <default>false</default>
+        <label>CM Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>CM Savings</fullName>
+        <default>false</default>
+        <label>CM Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Construction Loan</fullName>
+        <default>false</default>
+        <label>Construction Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Consumer Online Banking</fullName>
+        <default>false</default>
+        <label>Consumer Online Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Corporate Analysis</fullName>
+        <default>false</default>
+        <label>Corporate Analysis</label>
+    </customValue>
+    <customValue>
+        <fullName>Cyber Security</fullName>
+        <default>false</default>
+        <label>Cyber Security</label>
+    </customValue>
+    <customValue>
+        <fullName>DACA</fullName>
+        <default>false</default>
+        <label>DACA</label>
+    </customValue>
+    <customValue>
+        <fullName>Debit Card</fullName>
+        <default>false</default>
+        <label>Debit Card</label>
+    </customValue>
+    <customValue>
+        <fullName>DESA Account</fullName>
+        <default>false</default>
+        <label>DESA Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Draw-down Wires</fullName>
+        <default>false</default>
+        <label>Draw-down Wires</label>
+    </customValue>
+    <customValue>
+        <fullName>Express Line of Credit</fullName>
+        <default>false</default>
+        <label>Express Line of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Express Overdraft Line of Credit</fullName>
+        <default>false</default>
+        <label>Express Overdraft Line of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Express Term Loan</fullName>
+        <default>false</default>
+        <label>Express Term Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Financial Literacy</fullName>
+        <default>false</default>
+        <label>Financial Literacy</label>
+    </customValue>
+    <customValue>
+        <fullName>First Mortgage</fullName>
+        <default>false</default>
+        <label>First Mortgage</label>
+    </customValue>
+    <customValue>
+        <fullName>HELOC</fullName>
+        <default>false</default>
+        <label>HELOC</label>
+    </customValue>
+    <customValue>
+        <fullName>Home Equity Loan</fullName>
+        <default>false</default>
+        <label>Home Equity Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Index Money Market</fullName>
+        <default>false</default>
+        <label>Index Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>Letter of Credit</fullName>
+        <default>false</default>
+        <label>Letter of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Line of Credit</fullName>
+        <default>false</default>
+        <label>Line of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Line of Credit Sweep</fullName>
+        <default>false</default>
+        <label>Line of Credit Sweep</label>
+    </customValue>
+    <customValue>
+        <fullName>Lockbox</fullName>
+        <default>false</default>
+        <label>Lockbox</label>
+    </customValue>
+    <customValue>
+        <fullName>Mass Housing Home Improvement Loan</fullName>
+        <default>false</default>
+        <label>Mass Housing Home Improvement Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Mass Housing Septic Loan</fullName>
+        <default>false</default>
+        <label>Mass Housing Septic Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Master Line of Credit</fullName>
+        <default>false</default>
+        <label>Master Line of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Merchant Services Partner Referral</fullName>
+        <default>false</default>
+        <label>Merchant Services Partner Referral</label>
+    </customValue>
+    <customValue>
+        <fullName>Money Market</fullName>
+        <default>false</default>
+        <label>Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>Mortgage Loan</fullName>
+        <default>false</default>
+        <label>Mortgage Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>On Balance Sheet Sweep</fullName>
+        <default>false</default>
+        <label>On Balance Sheet Sweep</label>
+    </customValue>
+    <customValue>
+        <fullName>Online Wire Transfers</fullName>
+        <default>false</default>
+        <label>Online Wire Transfers</label>
+    </customValue>
+    <customValue>
+        <fullName>Overdraft Line of Credit</fullName>
+        <default>false</default>
+        <label>Overdraft Line of Credit</label>
+    </customValue>
+    <customValue>
+        <fullName>Personal Credit Card</fullName>
+        <default>false</default>
+        <label>Personal Credit Card</label>
+    </customValue>
+    <customValue>
+        <fullName>Positive Pay - ACH</fullName>
+        <default>false</default>
+        <label>Positive Pay - ACH</label>
+    </customValue>
+    <customValue>
+        <fullName>Positive Pay - Check</fullName>
+        <default>false</default>
+        <label>Positive Pay - Check</label>
+    </customValue>
+    <customValue>
+        <fullName>RB CD</fullName>
+        <default>false</default>
+        <label>RB CD</label>
+    </customValue>
+    <customValue>
+        <fullName>RB Checking</fullName>
+        <default>false</default>
+        <label>RB Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>RB Escrow</fullName>
+        <default>false</default>
+        <label>RB Escrow</label>
+    </customValue>
+    <customValue>
+        <fullName>RB Index Money Market</fullName>
+        <default>false</default>
+        <label>RB Index Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>RB Money Market</fullName>
+        <default>false</default>
+        <label>RB Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>RB Savings</fullName>
+        <default>false</default>
+        <label>RB Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Remote Deposit Capture</fullName>
+        <default>false</default>
+        <label>Remote Deposit Capture</label>
+    </customValue>
+    <customValue>
+        <fullName>Retirement</fullName>
+        <default>false</default>
+        <label>Retirement</label>
+    </customValue>
+    <customValue>
+        <fullName>Safe Deposit Box</fullName>
+        <default>false</default>
+        <label>Safe Deposit Box</label>
+    </customValue>
+    <customValue>
+        <fullName>Savings</fullName>
+        <default>false</default>
+        <label>Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>SBA 504</fullName>
+        <default>false</default>
+        <label>SBA 504</label>
+    </customValue>
+    <customValue>
+        <fullName>SBA 7(a)</fullName>
+        <default>false</default>
+        <label>SBA 7(a)</label>
+    </customValue>
+    <customValue>
+        <fullName>Secured Personal Loan</fullName>
+        <default>false</default>
+        <label>Secured Personal Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>TD CD</fullName>
+        <default>false</default>
+        <label>TD CD</label>
+    </customValue>
+    <customValue>
+        <fullName>TD Checking</fullName>
+        <default>false</default>
+        <label>TD Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>TD Index Money Market</fullName>
+        <default>false</default>
+        <label>TD Index Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>TD Money Market</fullName>
+        <default>false</default>
+        <label>TD Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>TD Savings</fullName>
+        <default>false</default>
+        <label>TD Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Telephone Banking</fullName>
+        <default>false</default>
+        <label>Telephone Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Term Loan</fullName>
+        <default>false</default>
+        <label>Term Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Time Note</fullName>
+        <default>false</default>
+        <label>Time Note</label>
+    </customValue>
+    <customValue>
+        <fullName>Unsecured Personal Loan</fullName>
+        <default>false</default>
+        <label>Unsecured Personal Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Workplace Banking</fullName>
+        <default>false</default>
+        <label>Workplace Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Zelle</fullName>
+        <default>false</default>
+        <label>Zelle</label>
+    </customValue>
+    <customValue>
+        <fullName>Zero-Balance Account</fullName>
+        <default>false</default>
+        <label>Zero-Balance Account</label>
+    </customValue>
+    <customValue>
+        <fullName>Zescrow</fullName>
+        <default>false</default>
+        <label>Zescrow</label>
+    </customValue>
+    <customValue>
+        <fullName>Financial Planning</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Financial Planning</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Dep Money Market</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Dep Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>Commercial Deposit Account</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Commercial Deposit Account</label>
+    </customValue>
+    <customValue>
+        <fullName>LifeGreen Checking</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>LifeGreen Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>Online Banking</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Online Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Retirement Planning</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Retirement Planning</label>
+    </customValue>
+    <customValue>
+        <fullName>Mass Save HEAT Loan</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Mass Save HEAT Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Cash Management</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Cash Management</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Deposit Escrow</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Deposit Escrow</label>
+    </customValue>
+    <customValue>
+        <fullName>Prestige Visa Signature</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Prestige Visa Signature</label>
+    </customValue>
+    <customValue>
+        <fullName>Cash Rewards Visa Signature</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cash Rewards Visa Signature</label>
+    </customValue>
+    <customValue>
+        <fullName>VA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>VA</label>
+    </customValue>
+    <customValue>
+        <fullName>FHA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>FHA</label>
+    </customValue>
+    <customValue>
+        <fullName>Conventional</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Conventional</label>
+    </customValue>
+    <customValue>
+        <fullName>Secured Loan</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Secured Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>Personal Loan</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Personal Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>CD 12 Months</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>CD 12 Months</label>
+    </customValue>
+    <customValue>
+        <fullName>CD 6 Months</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>CD 6 Months</label>
+    </customValue>
+    <customValue>
+        <fullName>Advantage Savings</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Advantage Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Platinum Savings</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Platinum Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Deposit Index Money Market</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Deposit Index Money Market</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Cml Deposit</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Cml Deposit</label>
+    </customValue>
+    <customValue>
+        <fullName>Other Rel Banking</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Other Rel Banking</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Dep CD</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Dep CD</label>
+    </customValue>
+    <customValue>
+        <fullName>LifeGreen Preferred Checking</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>LifeGreen Preferred Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Dep Savings</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Dep Savings</label>
+    </customValue>
+    <customValue>
+        <fullName>Cml Dep Checking</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Cml Dep Checking</label>
+    </customValue>
+    <customValue>
+        <fullName>Wealth Management Partner Referral</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Wealth Management Partner Referral</label>
+    </customValue>
+    <customValue>
+        <fullName>Commercial Loan</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>Commercial Loan</label>
+    </customValue>
+    <customValue>
+        <fullName>IRA</fullName>
+        <default>false</default>
+        <isActive>false</isActive>
+        <label>IRA</label>
+    </customValue>
+    <masterLabel>Product Types</masterLabel>
+    <sorted>false</sorted>
+</GlobalValueSet>
