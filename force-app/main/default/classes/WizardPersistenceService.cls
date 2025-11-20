@@ -1445,10 +1445,20 @@ public with sharing class WizardPersistenceService {
                 
                 String contentDocIdStr = (String) docMap.get('contentDocumentId');
                 if (String.isNotBlank(contentDocIdStr)) {
-                    Id contentDocId = Id.valueOf(contentDocIdStr);
-                    contentDocumentIds.add(contentDocId);
-                    documentMetadata.put(contentDocId, docMap);
-                    System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
+                    // Validate that it's a real Salesforce ID (15 or 18 chars starting with valid prefix)
+                    // Skip temporary IDs from LWC (like "1", "123456789", etc.)
+                    if (contentDocIdStr.length() >= 15 && contentDocIdStr.length() <= 18) {
+                        try {
+                            Id contentDocId = Id.valueOf(contentDocIdStr);
+                            contentDocumentIds.add(contentDocId);
+                            documentMetadata.put(contentDocId, docMap);
+                            System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
+                        } catch (Exception e) {
+                            System.debug('Skipping invalid ContentDocument ID: ' + contentDocIdStr + ' | Error: ' + e.getMessage());
+                        }
+                    } else {
+                        System.debug('Skipping temporary/invalid ContentDocument ID: ' + contentDocIdStr + ' (not a valid Salesforce ID)');
+                    }
                 }
             }
             
