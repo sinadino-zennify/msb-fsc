@@ -310,8 +310,7 @@ private class WizardDataServiceTest {
             Business_City__c = 'San Francisco',
             Business_State__c = 'California',
             Business_Postal_Code__c = '94105',
-            Business_Country__c = 'USA',
-            Primary_Contact_Type__c = 'new'
+            Business_Country__c = 'USA'
         );
         insert businessApplicant;
 

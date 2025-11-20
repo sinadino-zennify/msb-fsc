@@ -672,7 +672,7 @@ public with sharing class WizardDataService {
                        Annual_Revenue__c, Number_of_Employees__c,
                        Business_Street_Line_1__c, Business_Street_Line_2__c,
                        Business_City__c, Business_State__c, Business_Postal_Code__c, Business_Country__c,
-                       Primary_Contact_Type__c, Selected_Contact_Id__c,
+                       Primary_Contact_PersonAccount__c,
                        Primary_Contact_Name__c, Primary_Contact_Title__c
                 FROM Applicant
                 WHERE ApplicationFormId = :applicationFormId
@@ -726,16 +726,27 @@ public with sharing class WizardDataService {
             
             // Query Product Selection data
             List<ApplicationFormProduct> products = [
-                SELECT Id, ProductId, Product2.ProductCode, FundingAmount__c
+                SELECT Id, ProductId, FundingAmount__c
                 FROM ApplicationFormProduct
                 WHERE ApplicationFormId = :applicationFormId
                 WITH USER_MODE
             ];
             
-            if (!products.isEmpty()) {
-                dto.productSelection = new ProductSelectionDTO();
-                dto.productSelection.productCode = products[0].Product2.ProductCode;
-                System.debug('📋 Found Product: ' + dto.productSelection.productCode);
+            if (!products.isEmpty() && products[0].ProductId != null) {
+                // Query Product2 separately to get ProductCode
+                List<Product2> productDetails = [
+                    SELECT Id, ProductCode
+                    FROM Product2
+                    WHERE Id = :products[0].ProductId
+                    WITH USER_MODE
+                    LIMIT 1
+                ];
+                
+                if (!productDetails.isEmpty()) {
+                    dto.productSelection = new ProductSelectionDTO();
+                    dto.productSelection.productCode = productDetails[0].ProductCode;
+                    System.debug('📋 Found Product: ' + dto.productSelection.productCode);
+                }
             }
             
             // Query Documents (ContentDocumentLinks)
@@ -855,11 +866,26 @@ public with sharing class WizardDataService {
         info.businessPostalCode = businessApplicant.Business_Postal_Code__c;
         info.businessCountry = businessApplicant.Business_Country__c;
         
-        // Primary Contact
-        info.primaryContactType = businessApplicant.Primary_Contact_Type__c != null ? businessApplicant.Primary_Contact_Type__c : 'new';
-        info.selectedContactId = businessApplicant.Selected_Contact_Id__c;
-        info.primaryContactName = businessApplicant.Primary_Contact_Name__c;
-        info.primaryContactTitle = businessApplicant.Primary_Contact_Title__c;
+        // Primary Contact - either lookup to PersonAccount OR text fields, never both
+        if (businessApplicant.Primary_Contact_PersonAccount__c != null) {
+            // Existing PersonAccount selected
+            info.primaryContactType = 'existing';
+            info.selectedContactId = businessApplicant.Primary_Contact_PersonAccount__c;
+            info.primaryContactName = null;  // Not used when existing contact selected
+            info.primaryContactTitle = null; // Not used when existing contact selected
+        } else if (String.isNotBlank(businessApplicant.Primary_Contact_Name__c)) {
+            // New contact with name/title stored as text
+            info.primaryContactType = 'new';
+            info.selectedContactId = null;
+            info.primaryContactName = businessApplicant.Primary_Contact_Name__c;
+            info.primaryContactTitle = businessApplicant.Primary_Contact_Title__c;
+        } else {
+            // No primary contact
+            info.primaryContactType = 'new';
+            info.selectedContactId = null;
+            info.primaryContactName = null;
+            info.primaryContactTitle = null;
+        }
         
         return info;
     }
