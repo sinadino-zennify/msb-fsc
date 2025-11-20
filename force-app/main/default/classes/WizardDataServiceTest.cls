@@ -272,5 +272,282 @@ private class WizardDataServiceTest {
 
         System.assertEquals('No context record provided.', result.message);
     }
+
+    /**
+     * Test ApplicationForm resume functionality with Business Applicant
+     */
+    @isTest
+    private static void testApplicationFormResumeWithBusinessApplicant() {
+        // Create ApplicationForm
+        ApplicationForm appForm = new ApplicationForm(
+            UsageType = 'Onboarding',
+            Stage = 'Initiated',
+            SubmissionDate = System.today(),
+            StepKey__c = 'DAO_Business_InBranch_Business'
+        );
+        insert appForm;
+
+        // Create Business Applicant
+        Applicant businessApplicant = new Applicant(
+            ApplicationFormId = appForm.Id,
+            Type = 'Business',
+            Business_Name__c = 'Tech Innovations LLC',
+            DBA_Name__c = 'Tech Innovations',
+            Business_Type__c = 'LLC',
+            Business_Tax_ID__c = '12-3456789',
+            Date_Established__c = Date.newInstance(2015, 6, 15),
+            State_Of_Incorporation__c = 'California',
+            NAICS_Code__c = '541511',
+            NAICS_Description__c = 'Custom Computer Programming Services',
+            Industry_Type__c = 'Technology',
+            Business_Description__c = 'Software development and consulting',
+            Business_Phone__c = '555-123-4567',
+            Business_Email__c = 'info@techinnovations.com',
+            Business_Mobile_Phone__c = '555-987-6543',
+            Business_Website__c = 'https://www.techinnovations.com',
+            Annual_Revenue__c = 2500000,
+            Number_Of_Employees__c = '51-100',
+            Business_Street_Line_1__c = '100 Innovation Drive',
+            Business_Street_Line_2__c = 'Suite 200',
+            Business_City__c = 'San Francisco',
+            Business_State__c = 'California',
+            Business_Postal_Code__c = '94105',
+            Business_Country__c = 'USA',
+            Primary_Contact_Type__c = 'new'
+        );
+        insert businessApplicant;
+
+        Test.startTest();
+        WizardDataService.WizardDataDTO result = WizardDataService.getWizardData(appForm.Id, 'DAO_Business_InBranch');
+        Test.stopTest();
+
+        // Verify entry point and resume step
+        System.assertEquals('ApplicationForm', result.entryPointType, 'Entry point should be ApplicationForm');
+        System.assertEquals('DAO_Business_InBranch_Business', result.resumeAtStep, 'Should resume at Business step');
+
+        // Verify Business Info populated
+        System.assertNotEquals(null, result.businessInfo, 'Business info should be populated');
+        System.assertEquals('Tech Innovations LLC', result.businessInfo.businessName);
+        System.assertEquals('Tech Innovations', result.businessInfo.dbaName);
+        System.assertEquals('LLC', result.businessInfo.businessType);
+        System.assertEquals('12-3456789', result.businessInfo.taxId);
+        System.assertEquals('2015-06-15', result.businessInfo.dateEstablished);
+        System.assertEquals('California', result.businessInfo.stateOfIncorporation);
+        System.assertEquals('541511', result.businessInfo.naicsCode);
+        System.assertEquals('Technology', result.businessInfo.industryType);
+        System.assertEquals('555-123-4567', result.businessInfo.businessPhone);
+        System.assertEquals('info@techinnovations.com', result.businessInfo.businessEmail);
+        System.assertEquals(2500000, result.businessInfo.annualRevenue);
+        System.assertEquals('51-100', result.businessInfo.numberOfEmployees);
+        System.assertEquals('100 Innovation Drive', result.businessInfo.businessStreetLine1);
+        System.assertEquals('Suite 200', result.businessInfo.businessStreetLine2);
+        System.assertEquals('San Francisco', result.businessInfo.businessCity);
+        System.assertEquals('California', result.businessInfo.businessState);
+        System.assertEquals('94105', result.businessInfo.businessPostalCode);
+        System.assertEquals('USA', result.businessInfo.businessCountry);
+    }
+
+    /**
+     * Test ApplicationForm resume functionality with Primary Applicant
+     */
+    @isTest
+    private static void testApplicationFormResumeWithPrimaryApplicant() {
+        // Create ApplicationForm
+        ApplicationForm appForm = new ApplicationForm(
+            UsageType = 'Onboarding',
+            Stage = 'Initiated',
+            SubmissionDate = System.today(),
+            StepKey__c = 'DAO_Business_InBranch_Applicant'
+        );
+        insert appForm;
+
+        // Create Primary Applicant
+        Applicant primaryApplicant = new Applicant(
+            ApplicationFormId = appForm.Id,
+            Type = 'Individual',
+            Role__c = 'Primary Applicant',
+            Salutation = 'Mr.',
+            FirstName = 'John',
+            LastName = 'Smith',
+            BirthDate = Date.newInstance(1985, 3, 15),
+            Tax_ID__c = '123-45-6789',
+            Tax_ID_Type__c = 'SSN',
+            Is_US_Citizen__c = true,
+            Is_US_Resident__c = true,
+            Email = 'john.smith@example.com',
+            Mobile_Phone__c = '555-111-2222',
+            Home_Phone__c = '555-333-4444',
+            Mailing_Street_Line_1__c = '456 Main Street',
+            Mailing_Street_Line_2__c = 'Apt 5B',
+            Mailing_City__c = 'Sacramento',
+            Mailing_State__c = 'California',
+            Mailing_Postal_Code__c = '95814',
+            Mailing_Country__c = 'USA',
+            Government_ID_Type__c = 'Driver License',
+            Government_ID_Number__c = 'D1234567',
+            ID_Issuing_State__c = 'California',
+            ID_Issue_Date__c = Date.newInstance(2020, 1, 1),
+            ID_Expiration_Date__c = Date.newInstance(2025, 1, 1)
+        );
+        insert primaryApplicant;
+
+        Test.startTest();
+        WizardDataService.WizardDataDTO result = WizardDataService.getWizardData(appForm.Id, 'DAO_Business_InBranch');
+        Test.stopTest();
+
+        // Verify entry point and resume step
+        System.assertEquals('ApplicationForm', result.entryPointType);
+        System.assertEquals('DAO_Business_InBranch_Applicant', result.resumeAtStep);
+
+        // Verify Primary Applicant Info populated
+        System.assertNotEquals(null, result.applicantInfo, 'Applicant info should be populated');
+        System.assertEquals('Mr.', result.applicantInfo.salutation);
+        System.assertEquals('John', result.applicantInfo.firstName);
+        System.assertEquals('Smith', result.applicantInfo.lastName);
+        System.assertEquals('1985-03-15', result.applicantInfo.birthDate);
+        System.assertEquals('SSN', result.applicantInfo.taxIdType);
+        System.assertEquals('123-45-6789', result.applicantInfo.taxId);
+        System.assertEquals('john.smith@example.com', result.applicantInfo.email);
+        System.assertEquals('555-111-2222', result.applicantInfo.mobilePhone);
+        System.assertEquals('555-333-4444', result.applicantInfo.homePhone);
+        System.assertEquals('456 Main Street', result.applicantInfo.mailingStreetLine1);
+        System.assertEquals('Apt 5B', result.applicantInfo.mailingStreetLine2);
+        System.assertEquals('Sacramento', result.applicantInfo.mailingCity);
+        System.assertEquals('California', result.applicantInfo.mailingState);
+        System.assertEquals('95814', result.applicantInfo.mailingPostalCode);
+        System.assertEquals('USA', result.applicantInfo.mailingCountry);
+        System.assertEquals('Driver License', result.applicantInfo.governmentIdType);
+        System.assertEquals('D1234567', result.applicantInfo.governmentIdNumber);
+    }
+
+    /**
+     * Test ApplicationForm resume with Additional Applicants
+     */
+    @isTest
+    private static void testApplicationFormResumeWithAdditionalApplicants() {
+        // Create ApplicationForm
+        ApplicationForm appForm = new ApplicationForm(
+            UsageType = 'Onboarding',
+            Stage = 'Initiated',
+            SubmissionDate = System.today(),
+            StepKey__c = 'DAO_Business_InBranch_Additional'
+        );
+        insert appForm;
+
+        // Create Primary Applicant
+        Applicant primaryApplicant = new Applicant(
+            ApplicationFormId = appForm.Id,
+            Type = 'Individual',
+            Role__c = 'Primary Applicant',
+            FirstName = 'Jane',
+            LastName = 'Doe',
+            Email = 'jane.doe@example.com'
+        );
+        insert primaryApplicant;
+
+        // Create Additional Applicants
+        List<Applicant> additionalApplicants = new List<Applicant>{
+            new Applicant(
+                ApplicationFormId = appForm.Id,
+                Type = 'Individual',
+                Role__c = 'Co-Applicant',
+                FirstName = 'Robert',
+                LastName = 'Johnson',
+                Email = 'robert.johnson@example.com',
+                Mobile_Phone__c = '555-222-3333'
+            ),
+            new Applicant(
+                ApplicationFormId = appForm.Id,
+                Type = 'Individual',
+                Role__c = 'Authorized Signer',
+                FirstName = 'Sarah',
+                LastName = 'Williams',
+                Email = 'sarah.williams@example.com',
+                Mobile_Phone__c = '555-444-5555'
+            )
+        };
+        insert additionalApplicants;
+
+        Test.startTest();
+        WizardDataService.WizardDataDTO result = WizardDataService.getWizardData(appForm.Id, 'DAO_Business_InBranch');
+        Test.stopTest();
+
+        // Verify entry point and resume step
+        System.assertEquals('ApplicationForm', result.entryPointType);
+        System.assertEquals('DAO_Business_InBranch_Additional', result.resumeAtStep);
+
+        // Verify Primary Applicant
+        System.assertNotEquals(null, result.applicantInfo);
+        System.assertEquals('Jane', result.applicantInfo.firstName);
+
+        // Verify Additional Applicants
+        System.assertNotEquals(null, result.additionalApplicants, 'Additional applicants should be populated');
+        System.assertEquals(2, result.additionalApplicants.size(), 'Should have 2 additional applicants');
+        System.assertEquals('Robert', result.additionalApplicants[0].firstName);
+        System.assertEquals('Johnson', result.additionalApplicants[0].lastName);
+        System.assertEquals('Sarah', result.additionalApplicants[1].firstName);
+        System.assertEquals('Williams', result.additionalApplicants[1].lastName);
+    }
+
+    /**
+     * Test ApplicationForm resume with full workflow data
+     */
+    @isTest
+    private static void testApplicationFormResumeWithCompleteData() {
+        // Create ApplicationForm
+        ApplicationForm appForm = new ApplicationForm(
+            UsageType = 'Onboarding',
+            Stage = 'Initiated',
+            SubmissionDate = System.today(),
+            StepKey__c = 'DAO_Business_InBranch_Review'
+        );
+        insert appForm;
+
+        // Create Business Applicant
+        Applicant businessApplicant = new Applicant(
+            ApplicationFormId = appForm.Id,
+            Type = 'Business',
+            Business_Name__c = 'Complete Solutions Inc'
+        );
+        insert businessApplicant;
+
+        // Create Primary Applicant
+        Applicant primaryApplicant = new Applicant(
+            ApplicationFormId = appForm.Id,
+            Type = 'Individual',
+            Role__c = 'Primary Applicant',
+            FirstName = 'Michael',
+            LastName = 'Brown',
+            Email = 'michael.brown@example.com'
+        );
+        insert primaryApplicant;
+
+        // Create Product
+        Product2 product = new Product2(
+            Name = 'Business Checking',
+            ProductCode = 'BIZ_CHECKING',
+            IsActive = true
+        );
+        insert product;
+
+        ApplicationFormProduct afp = new ApplicationFormProduct(
+            ApplicationFormId = appForm.Id,
+            ProductId = product.Id,
+            FundingAmount__c = 50000
+        );
+        insert afp;
+
+        Test.startTest();
+        WizardDataService.WizardDataDTO result = WizardDataService.getWizardData(appForm.Id, 'DAO_Business_InBranch');
+        Test.stopTest();
+
+        // Verify all data loaded
+        System.assertEquals('ApplicationForm', result.entryPointType);
+        System.assertEquals('DAO_Business_InBranch_Review', result.resumeAtStep);
+        System.assertNotEquals(null, result.businessInfo, 'Business info should be loaded');
+        System.assertNotEquals(null, result.applicantInfo, 'Applicant info should be loaded');
+        System.assertNotEquals(null, result.productSelection, 'Product selection should be loaded');
+        System.assertEquals('BIZ_CHECKING', result.productSelection.productCode);
+    }
 }
 

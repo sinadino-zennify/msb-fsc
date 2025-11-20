@@ -19,8 +19,7 @@ public with sharing class WizardDataService {
             } else if (objectApiName == 'Account') {
                 handleAccount(recordId, dto);
             } else if (objectApiName == 'ApplicationForm') {
-                dto.message = 'ApplicationForm entry point detected. Data preload is not implemented for this context.';
-                dto.accountType = 'Unknown';
+                handleApplicationForm(recordId, dto);
             } else {
                 dto.message = 'Unsupported entry point type: ' + objectApiName;
                 dto.accountType = 'Unknown';
@@ -426,6 +425,12 @@ public with sharing class WizardDataService {
         @AuraEnabled public Id contextAccountId;
         @AuraEnabled public BusinessInfoDTO businessInfo;
         @AuraEnabled public ApplicantInfoDTO applicantInfo;
+        @AuraEnabled public List<ApplicantInfoDTO> additionalApplicants;
+        @AuraEnabled public ProductSelectionDTO productSelection;
+        @AuraEnabled public DocumentsDTO documents;
+        @AuraEnabled public ServicesDTO services;
+        @AuraEnabled public RelationshipDTO relationship;
+        @AuraEnabled public String resumeAtStep; // StepKey__c from ApplicationForm
     }
 
     public class BusinessInfoDTO {
@@ -586,6 +591,315 @@ public with sharing class WizardDataService {
         }
 
         return trimmed;
+    }
+
+    public class ProductSelectionDTO {
+        @AuraEnabled public String productCode;
+    }
+
+    public class DocumentsDTO {
+        @AuraEnabled public List<DocumentDTO> documents;
+    }
+
+    public class DocumentDTO {
+        @AuraEnabled public String id;
+        @AuraEnabled public String name;
+        @AuraEnabled public String type;
+        @AuraEnabled public String description;
+        @AuraEnabled public String fileName;
+        @AuraEnabled public String contentVersionId;
+    }
+
+    public class ServicesDTO {
+        @AuraEnabled public List<String> selectedServices;
+    }
+
+    public class RelationshipDTO {
+        @AuraEnabled public List<RoleAssignmentDTO> assignments;
+    }
+
+    public class RoleAssignmentDTO {
+        @AuraEnabled public Id productId;
+        @AuraEnabled public Id applicantId;
+        @AuraEnabled public List<String> roles;
+    }
+
+    /**
+     * Handle ApplicationForm entry point - Resume existing application
+     * Query all data from Applicants, Products, Documents, Services, and Relationships
+     * to pre-populate all wizard steps for resume functionality
+     */
+    private static void handleApplicationForm(Id applicationFormId, WizardDataDTO dto) {
+        System.debug('🔄 handleApplicationForm START - ApplicationFormId: ' + applicationFormId);
+        
+        try {
+            // Query ApplicationForm to get StepKey__c and AccountId
+            ApplicationForm appForm = [
+                SELECT Id, StepKey__c, AccountId, OpportunityId
+                FROM ApplicationForm
+                WHERE Id = :applicationFormId
+                WITH USER_MODE
+                LIMIT 1
+            ];
+            
+            dto.resumeAtStep = appForm.StepKey__c;
+            dto.contextAccountId = appForm.AccountId;
+            System.debug('📍 Resume at step: ' + dto.resumeAtStep);
+            System.debug('📍 Context AccountId: ' + dto.contextAccountId);
+            
+            // Query all Applicants for this ApplicationForm
+            List<Applicant> applicants = [
+                SELECT Id, ApplicationFormId, Type, Role__c,
+                       Salutation, FirstName, MiddleName, LastName, Suffix, Nickname__c,
+                       BirthDate, Mothers_Maiden_Name__c,
+                       Tax_ID__c, Tax_ID_Type__c,
+                       Is_US_Citizen__c, Is_US_Resident__c, Country_Of_Residence__c,
+                       Employer__c, Occupation__c,
+                       Organization_Role__c, Is_Control_Person__c, Ownership_Percentage__c,
+                       Email, Mobile_Phone__c, Home_Phone__c, Work_Phone__c,
+                       Mailing_Street_Line_1__c, Mailing_Street_Line_2__c,
+                       Mailing_City__c, Mailing_State__c, Mailing_Postal_Code__c, Mailing_Country__c,
+                       Government_ID_Type__c, Government_ID_Number__c,
+                       ID_Issuing_Country__c, ID_Issuing_State__c,
+                       ID_Issue_Date__c, ID_Expiration_Date__c,
+                       BusinessEntityName, AccountId,
+                       Business_Name__c, DBA_Name__c, Business_Type__c, Business_Tax_ID__c,
+                       Date_Established__c, State_Of_Incorporation__c,
+                       NAICS_Code_ID__c, NAICS_Code__c, NAICS_Description__c,
+                       Industry_Type__c, Business_Description__c,
+                       Business_Phone__c, Business_Email__c, Business_Home_Phone__c,
+                       Business_Mobile_Phone__c, Business_Website__c,
+                       Annual_Revenue__c, Number_Of_Employees__c,
+                       Business_Street_Line_1__c, Business_Street_Line_2__c,
+                       Business_City__c, Business_State__c, Business_Postal_Code__c, Business_Country__c,
+                       Primary_Contact_Type__c, Selected_Contact_Id__c,
+                       Primary_Contact_Name__c, Primary_Contact_Title__c
+                FROM Applicant
+                WHERE ApplicationFormId = :applicationFormId
+                WITH USER_MODE
+            ];
+            
+            System.debug('📊 Found ' + applicants.size() + ' Applicant(s)');
+            
+            // Separate applicants by type
+            Applicant businessApplicant = null;
+            Applicant primaryApplicant = null;
+            List<Applicant> additionalApplicantsList = new List<Applicant>();
+            
+            for (Applicant app : applicants) {
+                if (app.Type == 'Business') {
+                    businessApplicant = app;
+                    System.debug('✅ Found Business Applicant: ' + app.Id);
+                } else if (app.Type == 'Individual' && app.Role__c == 'Primary Applicant') {
+                    primaryApplicant = app;
+                    System.debug('✅ Found Primary Applicant: ' + app.Id);
+                } else {
+                    additionalApplicantsList.add(app);
+                    System.debug('✅ Found Additional Applicant: ' + app.Id);
+                }
+            }
+            
+            // Build Business Info from Business Applicant
+            if (businessApplicant != null) {
+                dto.businessInfo = buildBusinessInfoFromApplicant(businessApplicant);
+                dto.hasBusinessInfo = true;
+                dto.accountType = 'Business';
+                System.debug('📋 Built BusinessInfoDTO from Business Applicant');
+            }
+            
+            // Build Primary Applicant Info
+            if (primaryApplicant != null) {
+                dto.applicantInfo = buildApplicantInfoFromApplicant(primaryApplicant);
+                dto.hasApplicantInfo = true;
+                dto.hasPrimaryContact = true;
+                System.debug('📋 Built ApplicantInfoDTO from Primary Applicant');
+            }
+            
+            // Build Additional Applicants list
+            if (!additionalApplicantsList.isEmpty()) {
+                dto.additionalApplicants = new List<ApplicantInfoDTO>();
+                for (Applicant addApp : additionalApplicantsList) {
+                    dto.additionalApplicants.add(buildApplicantInfoFromApplicant(addApp));
+                }
+                System.debug('📋 Built ' + dto.additionalApplicants.size() + ' Additional Applicant DTOs');
+            }
+            
+            // Query Product Selection data
+            List<ApplicationFormProduct> products = [
+                SELECT Id, ProductId, Product2.ProductCode, FundingAmount__c
+                FROM ApplicationFormProduct
+                WHERE ApplicationFormId = :applicationFormId
+                WITH USER_MODE
+            ];
+            
+            if (!products.isEmpty()) {
+                dto.productSelection = new ProductSelectionDTO();
+                dto.productSelection.productCode = products[0].Product2.ProductCode;
+                System.debug('📋 Found Product: ' + dto.productSelection.productCode);
+            }
+            
+            // Query Documents (ContentDocumentLinks)
+            List<ContentDocumentLink> docLinks = [
+                SELECT Id, ContentDocumentId, ContentDocument.Title, ContentDocument.FileType,
+                       ContentDocument.LatestPublishedVersionId
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId = :applicationFormId
+                WITH USER_MODE
+            ];
+            
+            if (!docLinks.isEmpty()) {
+                dto.documents = new DocumentsDTO();
+                dto.documents.documents = new List<DocumentDTO>();
+                for (ContentDocumentLink link : docLinks) {
+                    DocumentDTO doc = new DocumentDTO();
+                    doc.id = link.ContentDocumentId;
+                    doc.name = link.ContentDocument.Title;
+                    doc.fileName = link.ContentDocument.Title;
+                    doc.contentVersionId = link.ContentDocument.LatestPublishedVersionId;
+                    dto.documents.documents.add(doc);
+                }
+                System.debug('📋 Found ' + dto.documents.documents.size() + ' Document(s)');
+            }
+            
+            // Query Services (stored in ApplicationForm custom fields or related objects)
+            // For now, services are not persisted to Salesforce, so we skip this
+            // TODO: Implement services persistence and retrieval if needed
+            
+            // Query Relationship data (ApplicationProductPartyRole)
+            List<ApplicationProductPartyRole__c> roles = [
+                SELECT Id, ApplicationFormProduct__c, Applicant__c, Role__c
+                FROM ApplicationProductPartyRole__c
+                WHERE ApplicationForm__c = :applicationFormId
+                WITH USER_MODE
+            ];
+            
+            if (!roles.isEmpty()) {
+                dto.relationship = new RelationshipDTO();
+                dto.relationship.assignments = new List<RoleAssignmentDTO>();
+                
+                // Group roles by product and applicant
+                Map<String, RoleAssignmentDTO> assignmentMap = new Map<String, RoleAssignmentDTO>();
+                for (ApplicationProductPartyRole__c role : roles) {
+                    String key = String.valueOf(role.ApplicationFormProduct__c) + '_' + String.valueOf(role.Applicant__c);
+                    if (!assignmentMap.containsKey(key)) {
+                        RoleAssignmentDTO assignment = new RoleAssignmentDTO();
+                        assignment.productId = role.ApplicationFormProduct__c;
+                        assignment.applicantId = role.Applicant__c;
+                        assignment.roles = new List<String>();
+                        assignmentMap.put(key, assignment);
+                    }
+                    // Parse semicolon-separated roles
+                    if (String.isNotBlank(role.Role__c)) {
+                        assignmentMap.get(key).roles.addAll(role.Role__c.split(';'));
+                    }
+                }
+                dto.relationship.assignments.addAll(assignmentMap.values());
+                System.debug('📋 Found ' + dto.relationship.assignments.size() + ' Role Assignment(s)');
+            }
+            
+            dto.message = 'Resuming application from step: ' + (dto.resumeAtStep != null ? dto.resumeAtStep : 'Start');
+            System.debug('✅ handleApplicationForm END - Successfully loaded all data');
+            
+        } catch (Exception e) {
+            System.debug('❌ ERROR in handleApplicationForm: ' + e.getMessage());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            dto.message = 'Failed to load application data: ' + e.getMessage();
+            dto.accountType = 'Unknown';
+        }
+    }
+
+    /**
+     * Build BusinessInfoDTO from Business Applicant record
+     */
+    private static BusinessInfoDTO buildBusinessInfoFromApplicant(Applicant businessApplicant) {
+        BusinessInfoDTO info = new BusinessInfoDTO();
+        
+        // Account selection
+        info.businessAccountType = businessApplicant.AccountId != null ? 'existing' : 'new';
+        info.selectedAccountId = businessApplicant.AccountId;
+        
+        // Business details
+        info.businessName = businessApplicant.Business_Name__c;
+        info.dbaName = businessApplicant.DBA_Name__c;
+        info.businessType = businessApplicant.Business_Type__c;
+        info.taxId = businessApplicant.Business_Tax_ID__c;
+        info.dateEstablished = formatDate(businessApplicant.Date_Established__c);
+        info.stateOfIncorporation = businessApplicant.State_Of_Incorporation__c;
+        
+        // NAICS
+        info.naicsCodeId = businessApplicant.NAICS_Code_ID__c;
+        info.naicsCode = businessApplicant.NAICS_Code__c;
+        info.naicsDescription = businessApplicant.NAICS_Description__c;
+        info.industryType = businessApplicant.Industry_Type__c;
+        info.businessDescription = businessApplicant.Business_Description__c;
+        
+        // Contact info
+        info.businessPhone = businessApplicant.Business_Phone__c;
+        info.businessEmail = businessApplicant.Business_Email__c;
+        info.businessHomePhone = businessApplicant.Business_Home_Phone__c;
+        info.businessMobilePhone = businessApplicant.Business_Mobile_Phone__c;
+        info.businessWebsite = businessApplicant.Business_Website__c;
+        
+        // Financial info
+        info.annualRevenue = businessApplicant.Annual_Revenue__c;
+        info.numberOfEmployees = businessApplicant.Number_Of_Employees__c;
+        
+        // Address
+        info.businessStreetLine1 = businessApplicant.Business_Street_Line_1__c;
+        info.businessStreetLine2 = businessApplicant.Business_Street_Line_2__c;
+        info.businessCity = businessApplicant.Business_City__c;
+        info.businessState = businessApplicant.Business_State__c;
+        info.businessPostalCode = businessApplicant.Business_Postal_Code__c;
+        info.businessCountry = businessApplicant.Business_Country__c;
+        
+        // Primary Contact
+        info.primaryContactType = businessApplicant.Primary_Contact_Type__c != null ? businessApplicant.Primary_Contact_Type__c : 'new';
+        info.selectedContactId = businessApplicant.Selected_Contact_Id__c;
+        info.primaryContactName = businessApplicant.Primary_Contact_Name__c;
+        info.primaryContactTitle = businessApplicant.Primary_Contact_Title__c;
+        
+        return info;
+    }
+
+    /**
+     * Build ApplicantInfoDTO from Individual Applicant record
+     */
+    private static ApplicantInfoDTO buildApplicantInfoFromApplicant(Applicant applicant) {
+        ApplicantInfoDTO info = new ApplicantInfoDTO();
+        
+        // Personal Identity
+        info.salutation = applicant.Salutation;
+        info.firstName = applicant.FirstName;
+        info.lastName = applicant.LastName;
+        info.birthDate = formatDate(applicant.BirthDate);
+        
+        // Tax ID
+        info.taxIdType = applicant.Tax_ID_Type__c;
+        info.taxId = applicant.Tax_ID__c;
+        
+        // Contact info
+        info.email = applicant.Email;
+        info.mobilePhone = applicant.Mobile_Phone__c;
+        info.homePhone = applicant.Home_Phone__c;
+        info.workPhone = applicant.Work_Phone__c;
+        
+        // Address
+        info.mailingStreetLine1 = applicant.Mailing_Street_Line_1__c;
+        info.mailingStreetLine2 = applicant.Mailing_Street_Line_2__c;
+        info.mailingCity = applicant.Mailing_City__c;
+        info.mailingState = applicant.Mailing_State__c;
+        info.mailingPostalCode = applicant.Mailing_Postal_Code__c;
+        info.mailingCountry = applicant.Mailing_Country__c;
+        
+        // Government ID
+        info.governmentIdType = applicant.Government_ID_Type__c;
+        info.governmentIdNumber = applicant.Government_ID_Number__c;
+        info.idIssuingCountry = applicant.ID_Issuing_Country__c;
+        info.idIssuingState = applicant.ID_Issuing_State__c;
+        info.idIssueDate = formatDate(applicant.ID_Issue_Date__c);
+        info.idExpirationDate = formatDate(applicant.ID_Expiration_Date__c);
+        
+        return info;
     }
 }
 
