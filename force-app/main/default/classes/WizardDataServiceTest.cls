@@ -287,18 +287,16 @@ private class WizardDataServiceTest {
         );
         insert appForm;
 
-        // Create Business Applicant
+        // Create Business Applicant using FSC standard fields that persistence writes to
         Applicant businessApplicant = new Applicant(
             ApplicationFormId = appForm.Id,
             Type = 'Business',
-            Business_Name__c = 'Tech Innovations LLC',
-            DBA_Name__c = 'Tech Innovations',
-            Business_Type__c = 'LLC',
+            BusinessEntityName = 'Tech Innovations LLC',  // FSC standard field
+            Doing_Business_As__c = 'Tech Innovations',    // FSC standard field
+            BusinessEntityType = 'LLC',                   // FSC standard field
             Business_Tax_ID__c = '12-3456789',
             Date_Established__c = Date.newInstance(2015, 6, 15),
-            State_Of_Incorporation__c = 'California',
-            NAICS_Code__c = '541511',
-            NAICS_Description__c = 'Custom Computer Programming Services',
+            Business_Registration_State__c = 'California',
             Industry_Type__c = 'Technology',
             Business_Description__c = 'Software development and consulting',
             Business_Phone__c = '555-123-4567',
@@ -306,7 +304,7 @@ private class WizardDataServiceTest {
             Business_Mobile_Phone__c = '555-987-6543',
             Business_Website__c = 'https://www.techinnovations.com',
             Annual_Revenue__c = 2500000,
-            Number_Of_Employees__c = '51-100',
+            Number_of_Employees__c = '51-100',
             Business_Street_Line_1__c = '100 Innovation Drive',
             Business_Street_Line_2__c = 'Suite 200',
             Business_City__c = 'San Francisco',
@@ -325,7 +323,7 @@ private class WizardDataServiceTest {
         System.assertEquals('ApplicationForm', result.entryPointType, 'Entry point should be ApplicationForm');
         System.assertEquals('DAO_Business_InBranch_Business', result.resumeAtStep, 'Should resume at Business step');
 
-        // Verify Business Info populated
+        // Verify Business Info populated from FSC standard fields
         System.assertNotEquals(null, result.businessInfo, 'Business info should be populated');
         System.assertEquals('Tech Innovations LLC', result.businessInfo.businessName);
         System.assertEquals('Tech Innovations', result.businessInfo.dbaName);
@@ -333,7 +331,6 @@ private class WizardDataServiceTest {
         System.assertEquals('12-3456789', result.businessInfo.taxId);
         System.assertEquals('2015-06-15', result.businessInfo.dateEstablished);
         System.assertEquals('California', result.businessInfo.stateOfIncorporation);
-        System.assertEquals('541511', result.businessInfo.naicsCode);
         System.assertEquals('Technology', result.businessInfo.industryType);
         System.assertEquals('555-123-4567', result.businessInfo.businessPhone);
         System.assertEquals('info@techinnovations.com', result.businessInfo.businessEmail);
@@ -503,11 +500,11 @@ private class WizardDataServiceTest {
         );
         insert appForm;
 
-        // Create Business Applicant
+        // Create Business Applicant using FSC standard fields
         Applicant businessApplicant = new Applicant(
             ApplicationFormId = appForm.Id,
             Type = 'Business',
-            Business_Name__c = 'Complete Solutions Inc'
+            BusinessEntityName = 'Complete Solutions Inc'
         );
         insert businessApplicant;
 

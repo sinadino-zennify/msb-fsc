@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>ID_Issuing_Country__c</fullName>
-    <label>ID Issuing Country</label>
+    <fullName>Product_Type__c</fullName>
+    <label>Product Type</label>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
@@ -11,24 +10,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>USA</fullName>
-                <default>true</default>
-                <label>USA</label>
+                <fullName>Deposit Account</fullName>
+                <default>false</default>
+                <label>Deposit Account</label>
             </value>
             <value>
-                <fullName>Canada</fullName>
+                <fullName>Loan Account</fullName>
                 <default>false</default>
-                <label>Canada</label>
+                <label>Loan Account</label>
             </value>
             <value>
-                <fullName>Mexico</fullName>
+                <fullName>Service</fullName>
                 <default>false</default>
-                <label>Mexico</label>
-            </value>
-            <value>
-                <fullName>Other</fullName>
-                <default>false</default>
-                <label>Other</label>
+                <label>Service</label>
             </value>
         </valueSetDefinition>
     </valueSet>

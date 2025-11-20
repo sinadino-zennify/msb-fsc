@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Government_ID_Type__c</fullName>
-    <externalId>false</externalId>
     <label>Government ID Type</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
@@ -12,9 +11,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Driver's License</fullName>
+                <fullName>Driver&apos;s License</fullName>
                 <default>false</default>
-                <label>Driver's License</label>
+                <label>Driver&apos;s License</label>
             </value>
             <value>
                 <fullName>Passport</fullName>
@@ -34,4 +33,3 @@
         </valueSetDefinition>
     </valueSet>
 </CustomField>
-

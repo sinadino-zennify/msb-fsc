@@ -648,6 +648,7 @@ public with sharing class WizardDataService {
             System.debug('📍 Context AccountId: ' + dto.contextAccountId);
             
             // Query all Applicants for this ApplicationForm
+            // Query fields that WizardPersistenceService actually writes to
             List<Applicant> applicants = [
                 SELECT Id, ApplicationFormId, Type, Role__c,
                        Salutation, FirstName, MiddleName, LastName, Suffix, Nickname__c,
@@ -662,14 +663,13 @@ public with sharing class WizardDataService {
                        Government_ID_Type__c, Government_ID_Number__c,
                        ID_Issuing_Country__c, ID_Issuing_State__c,
                        ID_Issue_Date__c, ID_Expiration_Date__c,
-                       BusinessEntityName, AccountId,
-                       Business_Name__c, DBA_Name__c, Business_Type__c, Business_Tax_ID__c,
-                       Date_Established__c, State_Of_Incorporation__c,
-                       NAICS_Code_ID__c, NAICS_Code__c, NAICS_Description__c,
-                       Industry_Type__c, Business_Description__c,
+                       BusinessEntityName, BusinessEntityType, Doing_Business_As__c,
+                       AccountId, Business_Tax_ID__c,
+                       Date_Established__c, Business_Registration_State__c,
+                       NAICS_Code__c, Industry_Type__c, Business_Description__c,
                        Business_Phone__c, Business_Email__c, Business_Home_Phone__c,
                        Business_Mobile_Phone__c, Business_Website__c,
-                       Annual_Revenue__c, Number_Of_Employees__c,
+                       Annual_Revenue__c, Number_of_Employees__c,
                        Business_Street_Line_1__c, Business_Street_Line_2__c,
                        Business_City__c, Business_State__c, Business_Postal_Code__c, Business_Country__c,
                        Primary_Contact_Type__c, Selected_Contact_Id__c,
@@ -810,6 +810,8 @@ public with sharing class WizardDataService {
 
     /**
      * Build BusinessInfoDTO from Business Applicant record
+     * Maps from the SAME fields that WizardPersistenceService writes to
+     * This ensures resume functionality works correctly
      */
     private static BusinessInfoDTO buildBusinessInfoFromApplicant(Applicant businessApplicant) {
         BusinessInfoDTO info = new BusinessInfoDTO();
@@ -818,18 +820,19 @@ public with sharing class WizardDataService {
         info.businessAccountType = businessApplicant.AccountId != null ? 'existing' : 'new';
         info.selectedAccountId = businessApplicant.AccountId;
         
-        // Business details
-        info.businessName = businessApplicant.Business_Name__c;
-        info.dbaName = businessApplicant.DBA_Name__c;
-        info.businessType = businessApplicant.Business_Type__c;
+        // Business details - Read from FSC standard fields that persistence writes to
+        info.businessName = businessApplicant.BusinessEntityName;  // FSC standard field
+        info.dbaName = businessApplicant.Doing_Business_As__c;     // FSC standard field
+        info.businessType = businessApplicant.BusinessEntityType;  // FSC standard field (picklist)
         info.taxId = businessApplicant.Business_Tax_ID__c;
         info.dateEstablished = formatDate(businessApplicant.Date_Established__c);
-        info.stateOfIncorporation = businessApplicant.State_Of_Incorporation__c;
+        info.stateOfIncorporation = businessApplicant.Business_Registration_State__c;  // Matches persistence
         
-        // NAICS
-        info.naicsCodeId = businessApplicant.NAICS_Code_ID__c;
-        info.naicsCode = businessApplicant.NAICS_Code__c;
-        info.naicsDescription = businessApplicant.NAICS_Description__c;
+        // NAICS - Read from the field that persistence actually writes to
+        // Note: Persistence writes naicsCodeId to NAICS_Code__c (lookup field)
+        info.naicsCodeId = businessApplicant.NAICS_Code__c;  // This is the lookup ID field
+        info.naicsCode = null;  // Not persisted separately
+        info.naicsDescription = null;  // Not persisted separately
         info.industryType = businessApplicant.Industry_Type__c;
         info.businessDescription = businessApplicant.Business_Description__c;
         
@@ -842,7 +845,7 @@ public with sharing class WizardDataService {
         
         // Financial info
         info.annualRevenue = businessApplicant.Annual_Revenue__c;
-        info.numberOfEmployees = businessApplicant.Number_Of_Employees__c;
+        info.numberOfEmployees = businessApplicant.Number_of_Employees__c;  // Match persistence case
         
         // Address
         info.businessStreetLine1 = businessApplicant.Business_Street_Line_1__c;

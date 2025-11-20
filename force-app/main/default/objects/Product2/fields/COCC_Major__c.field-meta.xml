@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>ID_Issuing_State__c</fullName>
-    <description>State that issued the government ID. Conditional on Country=USA</description>
-    <label>ID Issuing State</label>
+    <fullName>COCC_Major__c</fullName>
+    <label>COCC Major</label>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <type>Picklist</type>
     <valueSet>
         <restricted>true</restricted>
-        <valueSetName>US_States</valueSetName>
+        <valueSetName>COCC_Majors</valueSetName>
     </valueSet>
 </CustomField>

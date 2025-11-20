@@ -21,6 +21,7 @@ public with sharing class WizardPersistenceService {
         'DAO_Business_InBranch_Business' => new BusinessStepHandler(),
         'DAO_Business_InBranch_Product' => new ProductStepHandler(),
         'DAO_Business_InBranch_Additional' => new AdditionalStepHandler(),
+        'DAO_Business_InBranch_Relationship' => new RelationshipStepHandler(),
         'DAO_Business_InBranch_Services' => new ServicesStepHandler(),
         'DAO_Business_InBranch_Documents' => new DocumentsStepHandler(),
         'DAO_Business_InBranch_Review' => new ReviewStepHandler()
@@ -46,6 +47,11 @@ public with sharing class WizardPersistenceService {
     private class AdditionalStepHandler implements IStepHandler {
         public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
             return upsertAdditionalStep(applicationId, payload, response);
+        }
+    }
+    private class RelationshipStepHandler implements IStepHandler {
+        public PersistenceResponse handle(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+            return upsertRelationshipStep(applicationId, payload, response);
         }
     }
     private class ServicesStepHandler implements IStepHandler {
@@ -129,8 +135,19 @@ public with sharing class WizardPersistenceService {
             return response;
         }
         
+        // Allow empty payloads for optional steps like Additional Applicants
         if (payload == null || payload.isEmpty()) {
-            System.debug('ERROR: Payload is null or empty');
+            System.debug('WARNING: Payload is null or empty for step: ' + stepDeveloperName);
+            
+            // Additional Applicants step is optional - allow empty payload
+            if (stepDeveloperName == 'DAO_Business_InBranch_Additional') {
+                System.debug('Additional Applicants step with empty payload - this is allowed');
+                response.savedIds.put('applicationForm', applicationId);
+                System.debug('=== WizardPersistenceService.upsertStep END (Success - Empty Additional) ===');
+                return response;
+            }
+            
+            // For other steps, payload is required
             response.success = false;
             response.messages.add(new ErrorMessage('MISSING_PAYLOAD', 'Payload is required', null));
             System.debug('=== WizardPersistenceService.upsertStep END (Error) ===');
@@ -679,15 +696,104 @@ public with sharing class WizardPersistenceService {
         System.debug('Payload: ' + JSON.serializePretty(payload));
         
         try {
-            // Simulate successful persistence for product step
+            // Extract products array from payload
+            List<Object> productsObj = (List<Object>) payload.get('products');
+            
+            if (productsObj == null || productsObj.isEmpty()) {
+                System.debug('No products in payload, skipping save');
+                response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            // Get existing ApplicationFormProducts
+            Map<Id, ApplicationFormProduct> existingMap = new Map<Id, ApplicationFormProduct>();
+            for (ApplicationFormProduct afp : [
+                SELECT Id, ProductId, FundingAmount__c
+                FROM ApplicationFormProduct
+                WHERE ApplicationFormId = :applicationId
+            ]) {
+                existingMap.put(afp.ProductId, afp);
+            }
+            
+            List<ApplicationFormProduct> toUpsert = new List<ApplicationFormProduct>();
+            Set<Id> productIdsToKeep = new Set<Id>();
+            
+            // Process each product from payload
+            for (Object prodObj : productsObj) {
+                // Convert Map<ANY,ANY> to Map<String,Object> safely
+                // JSON deserialization sometimes returns Map<ANY,ANY> instead of Map<String,Object>
+                Map<String, Object> prodMap = new Map<String, Object>();
+                Map<Object, Object> rawMap = (Map<Object, Object>) prodObj;
+                for (Object key : rawMap.keySet()) {
+                    prodMap.put(String.valueOf(key), rawMap.get(key));
+                }
+                
+                Id productId = (Id) prodMap.get('productId');
+                Object fundingAmountObj = prodMap.get('fundingAmount');
+                String recordIdStr = (String) prodMap.get('id');
+                
+                if (productId == null) continue;
+                
+                productIdsToKeep.add(productId);
+                
+                ApplicationFormProduct afp;
+                if (String.isNotBlank(recordIdStr)) {
+                    // Update existing by record ID
+                    afp = new ApplicationFormProduct(Id = (Id) recordIdStr);
+                } else if (existingMap.containsKey(productId)) {
+                    // Update by Product2Id match
+                    afp = existingMap.get(productId);
+                } else {
+                    // Create new
+                    afp = new ApplicationFormProduct();
+                    afp.ApplicationFormId = applicationId;
+                    afp.ProductId = productId;
+                }
+                
+                // Handle fundingAmount - convert empty strings to null
+                Decimal fundingAmount = null;
+                if (fundingAmountObj != null) {
+                    if (fundingAmountObj instanceof String) {
+                        String fundingStr = (String) fundingAmountObj;
+                        if (String.isNotBlank(fundingStr)) {
+                            fundingAmount = Decimal.valueOf(fundingStr);
+                        }
+                    } else if (fundingAmountObj instanceof Decimal) {
+                        fundingAmount = (Decimal) fundingAmountObj;
+                    } else if (fundingAmountObj instanceof Integer) {
+                        fundingAmount = Decimal.valueOf((Integer) fundingAmountObj);
+                    } else if (fundingAmountObj instanceof Long) {
+                        fundingAmount = Decimal.valueOf((Long) fundingAmountObj);
+                    }
+                }
+                
+                afp.FundingAmount__c = fundingAmount;
+                toUpsert.add(afp);
+            }
+            
+            // Upsert products
+            if (!toUpsert.isEmpty()) {
+                upsert toUpsert;
+                System.debug('Upserted ' + toUpsert.size() + ' ApplicationFormProduct records');
+            }
+            
+            // Delete removed products
+            List<ApplicationFormProduct> toDelete = new List<ApplicationFormProduct>();
+            for (ApplicationFormProduct afp : existingMap.values()) {
+                if (!productIdsToKeep.contains(afp.ProductId)) {
+                    toDelete.add(afp);
+                }
+            }
+            
+            if (!toDelete.isEmpty()) {
+                delete toDelete;
+                System.debug('Deleted ' + toDelete.size() + ' ApplicationFormProduct records');
+            }
+            
             response.savedIds.put('applicationForm', applicationId);
-            System.debug('Response savedIds: ' + response.savedIds);
-            
-            // Log the payload for debugging
-            System.debug('Product step payload: ' + JSON.serialize(payload));
-            
             System.debug('--- upsertProductStep END (Success) ---');
             return response;
+            
         } catch (Exception e) {
             System.debug('ERROR in upsertProductStep: ' + e.getMessage());
             System.debug('Exception Type: ' + e.getTypeName());
@@ -755,7 +861,13 @@ public with sharing class WizardPersistenceService {
             // Business Identity fields
             applicant.BusinessEntityName = (String) payload.get('businessName');
             applicant.Doing_Business_As__c = (String) payload.get('dbaName');
-            applicant.BusinessEntityType = (String) payload.get('businessType');
+            
+            // Only set BusinessEntityType if not blank (restricted picklist)
+            String businessType = (String) payload.get('businessType');
+            if (String.isNotBlank(businessType)) {
+                applicant.BusinessEntityType = businessType;
+            }
+            
             applicant.Business_Tax_ID__c = (String) payload.get('taxId');
             
             // Parse date string to Date
@@ -767,7 +879,11 @@ public with sharing class WizardPersistenceService {
             applicant.Business_Registration_State__c = (String) payload.get('stateOfIncorporation');
             
             // Industry & Classification fields
-            applicant.NAICS_Code__c = (String) payload.get('naicsCodeId'); // Lookup ID
+            // NAICS_Code__c is a lookup field - store the ID from naicsCodeId
+            String naicsCodeId = (String) payload.get('naicsCodeId');
+            if (String.isNotBlank(naicsCodeId)) {
+                applicant.NAICS_Code__c = naicsCodeId; // This is a lookup field (Id)
+            }
             applicant.Industry_Type__c = (String) payload.get('industryType');
             applicant.Business_Description__c = (String) payload.get('businessDescription');
             
@@ -935,7 +1051,8 @@ public with sharing class WizardPersistenceService {
                 } else {
                     applicant = new Applicant();
                     applicant.ApplicationFormId = applicationId;
-                    // NOTE: We do NOT set Type or Role__c here - let the user control these
+                    applicant.Type = 'Individual'; // Set Type so they appear in relationship assignment
+                    applicant.Role__c = 'Additional Applicant'; // Set role for additional applicants
                     System.debug('Creating new Applicant for email: ' + email);
                 }
                 
@@ -1017,7 +1134,12 @@ public with sharing class WizardPersistenceService {
                 if (ownershipObj != null) {
                     Decimal ownershipPercentage;
                     if (ownershipObj instanceof String) {
-                        ownershipPercentage = Decimal.valueOf((String) ownershipObj);
+                        String ownershipStr = (String) ownershipObj;
+                        if (String.isNotBlank(ownershipStr)) {
+                            ownershipPercentage = Decimal.valueOf(ownershipStr);
+                        } else {
+                            ownershipPercentage = null;
+                        }
                     } else if (ownershipObj instanceof Integer) {
                         ownershipPercentage = Decimal.valueOf((Integer) ownershipObj);
                     } else if (ownershipObj instanceof Long) {
@@ -1108,7 +1230,20 @@ public with sharing class WizardPersistenceService {
             
             // Now process Identity Documents for each applicant
             for (Integer i = 0; i < applicantsPayload.size(); i++) {
-                Map<String, Object> applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                // Safely convert Map<ANY,ANY> to Map<String, Object>
+                Map<String, Object> applicantPayload;
+                try {
+                    // Try direct cast first
+                    applicantPayload = (Map<String, Object>) applicantsPayload[i];
+                } catch (TypeException e) {
+                    // If direct cast fails, manually convert
+                    applicantPayload = new Map<String, Object>();
+                    Map<Object, Object> rawMap = (Map<Object, Object>) applicantsPayload[i];
+                    for (Object key : rawMap.keySet()) {
+                        applicantPayload.put(String.valueOf(key), rawMap.get(key));
+                    }
+                }
+                
                 Applicant applicant = applicantsToUpsert[i];
                 
                 List<Object> identityDocumentsPayload = (List<Object>) applicantPayload.get('identityDocuments');
@@ -1255,11 +1390,145 @@ public with sharing class WizardPersistenceService {
     }
     
     private static PersistenceResponse upsertDocumentsStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
-        // Simulate successful persistence for documents step
-        response.savedIds.put('applicationForm', applicationId);
+        System.debug('╔════════════════════════════════════════════════════════════════════════════════');
+        System.debug('║ upsertDocumentsStep START');
+        System.debug('╠════════════════════════════════════════════════════════════════════════════════');
+        System.debug('║ ApplicationForm ID: ' + applicationId);
+        System.debug('║ ApplicationForm ID Type: ' + (applicationId != null ? String.valueOf(applicationId).length() + ' chars' : 'null'));
+        System.debug('║ Payload: ' + JSON.serializePretty(payload));
+        System.debug('╚════════════════════════════════════════════════════════════════════════════════');
         
-        // Log the payload for debugging
-        System.debug('Documents step payload: ' + JSON.serialize(payload));
+        // Validate applicationId
+        if (applicationId == null) {
+            System.debug('ERROR: ApplicationForm ID is null. Cannot link documents without an ApplicationForm.');
+            response.success = false;
+            response.messages.add(new ErrorMessage('DOCUMENTS_ERROR', 'ApplicationForm must be created before uploading documents.', null));
+            return response;
+        }
+        
+        // Additional validation: Check if it's a valid Salesforce ID
+        String appIdStr = String.valueOf(applicationId);
+        if (appIdStr.length() != 15 && appIdStr.length() != 18) {
+            System.debug('ERROR: Invalid ApplicationForm ID format: ' + appIdStr);
+            response.success = false;
+            response.messages.add(new ErrorMessage('DOCUMENTS_ERROR', 'Invalid ApplicationForm ID: ' + appIdStr + '. Please ensure the application is saved before uploading documents.', null));
+            return response;
+        }
+        
+        try {
+            // Extract documents array from payload
+            List<Object> documentsPayload = (List<Object>) payload.get('documents');
+            
+            if (documentsPayload == null || documentsPayload.isEmpty()) {
+                System.debug('No documents in payload. Skipping document processing.');
+                response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            System.debug('Processing ' + documentsPayload.size() + ' documents');
+            
+            // Collect ContentDocumentIds to link
+            Set<Id> contentDocumentIds = new Set<Id>();
+            Map<Id, Map<String, Object>> documentMetadata = new Map<Id, Map<String, Object>>();
+            
+            for (Object docObj : documentsPayload) {
+                Map<String, Object> docMap;
+                
+                if (docObj instanceof Map<Object, Object>) {
+                    docMap = new Map<String, Object>();
+                    for (Object key : ((Map<Object, Object>) docObj).keySet()) {
+                        docMap.put(String.valueOf(key), ((Map<Object, Object>) docObj).get(key));
+                    }
+                } else {
+                    docMap = (Map<String, Object>) docObj;
+                }
+                
+                String contentDocIdStr = (String) docMap.get('contentDocumentId');
+                if (String.isNotBlank(contentDocIdStr)) {
+                    Id contentDocId = Id.valueOf(contentDocIdStr);
+                    contentDocumentIds.add(contentDocId);
+                    documentMetadata.put(contentDocId, docMap);
+                    System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
+                }
+            }
+            
+            if (contentDocumentIds.isEmpty()) {
+                System.debug('No ContentDocumentIds found in payload. Documents may not have been uploaded yet.');
+                response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            System.debug('Found ' + contentDocumentIds.size() + ' ContentDocuments to link');
+            
+            // Query existing ContentDocumentLinks to avoid duplicates
+            List<ContentDocumentLink> existingLinks = [
+                SELECT Id, ContentDocumentId, LinkedEntityId
+                FROM ContentDocumentLink
+                WHERE ContentDocumentId IN :contentDocumentIds
+                  AND LinkedEntityId = :applicationId
+                WITH USER_MODE
+            ];
+            
+            Set<Id> alreadyLinkedDocIds = new Set<Id>();
+            for (ContentDocumentLink link : existingLinks) {
+                alreadyLinkedDocIds.add(link.ContentDocumentId);
+            }
+            
+            System.debug('Already linked documents: ' + alreadyLinkedDocIds.size());
+            
+            // Create ContentDocumentLinks for documents not yet linked to ApplicationForm
+            List<ContentDocumentLink> linksToInsert = new List<ContentDocumentLink>();
+            
+            for (Id contentDocId : contentDocumentIds) {
+                if (!alreadyLinkedDocIds.contains(contentDocId)) {
+                    ContentDocumentLink cdl = new ContentDocumentLink();
+                    cdl.ContentDocumentId = contentDocId;
+                    cdl.LinkedEntityId = applicationId;
+                    cdl.ShareType = 'V'; // Viewer permission
+                    cdl.Visibility = 'AllUsers'; // Visible to all users with access to the record
+                    linksToInsert.add(cdl);
+                    
+                    Map<String, Object> metadata = documentMetadata.get(contentDocId);
+                    System.debug('Creating link for: ' + contentDocId + ' | Name: ' + metadata.get('name') + ' | Type: ' + metadata.get('type'));
+                }
+            }
+            
+            if (!linksToInsert.isEmpty()) {
+                System.debug('Inserting ' + linksToInsert.size() + ' ContentDocumentLinks');
+                insert as user linksToInsert;
+                System.debug('✅ SUCCESS: Inserted ' + linksToInsert.size() + ' ContentDocumentLinks');
+                
+                // Add linked document IDs to response
+                List<String> linkedDocIds = new List<String>();
+                for (ContentDocumentLink link : linksToInsert) {
+                    linkedDocIds.add(link.ContentDocumentId);
+                }
+                response.savedIds.put('linkedDocuments', String.join(linkedDocIds, ','));
+            } else {
+                System.debug('All documents already linked to ApplicationForm');
+            }
+            
+            response.savedIds.put('applicationForm', applicationId);
+            response.savedIds.put('documentCount', String.valueOf(contentDocumentIds.size()));
+            
+            System.debug('╔════════════════════════════════════════════════════════════════════════════════');
+            System.debug('║ ✅ upsertDocumentsStep END (Success)');
+            System.debug('║ Linked ' + linksToInsert.size() + ' documents to ApplicationForm');
+            System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+            
+        } catch (Exception e) {
+            System.debug('╔════════════════════════════════════════════════════════════════════════════════');
+            System.debug('║ ❌ ERROR in upsertDocumentsStep');
+            System.debug('╠════════════════════════════════════════════════════════════════════════════════');
+            System.debug('║ Exception Type: ' + e.getTypeName());
+            System.debug('║ Message: ' + e.getMessage());
+            System.debug('║ Line: ' + e.getLineNumber());
+            System.debug('║ Stack Trace: ' + e.getStackTraceString());
+            System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+            
+            response.success = false;
+            response.messages.add(new ErrorMessage('DOCUMENTS_ERROR', 'Failed to link documents: ' + e.getMessage(), null));
+        }
         
         return response;
     }
@@ -1443,6 +1712,116 @@ public with sharing class WizardPersistenceService {
         }
         
         return normalized; // Return as-is if no mapping found
+    }
+    
+    private static PersistenceResponse upsertRelationshipStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
+        System.debug('--- upsertRelationshipStep START ---');
+        System.debug('ApplicationId: ' + applicationId);
+        System.debug('Payload: ' + JSON.serializePretty(payload));
+        
+        try {
+            // Extract assignments array from payload
+            List<Object> assignmentsObj = (List<Object>) payload.get('assignments');
+            
+            if (assignmentsObj == null || assignmentsObj.isEmpty()) {
+                System.debug('No role assignments in payload, skipping save');
+                response.savedIds.put('applicationForm', applicationId);
+                return response;
+            }
+            
+            // Get existing role assignments
+            Map<String, ApplicationProductPartyRole__c> existingMap = new Map<String, ApplicationProductPartyRole__c>();
+            for (ApplicationProductPartyRole__c role : [
+                SELECT Id, ApplicationFormProduct__c, Applicant__c, Role__c
+                FROM ApplicationProductPartyRole__c
+                WHERE ApplicationForm__c = :applicationId
+            ]) {
+                String key = String.valueOf(role.ApplicationFormProduct__c) + '_' + String.valueOf(role.Applicant__c);
+                existingMap.put(key, role);
+            }
+            
+            List<ApplicationProductPartyRole__c> toUpsert = new List<ApplicationProductPartyRole__c>();
+            Set<String> keysToKeep = new Set<String>();
+            
+            // Process each assignment from payload
+            for (Object assignmentObj : assignmentsObj) {
+                // Convert Map<ANY,ANY> to Map<String,Object> safely
+                Map<String, Object> assignmentMap = new Map<String, Object>();
+                Map<Object, Object> rawMap = (Map<Object, Object>) assignmentObj;
+                for (Object key : rawMap.keySet()) {
+                    assignmentMap.put(String.valueOf(key), rawMap.get(key));
+                }
+                
+                Id productId = (Id) assignmentMap.get('productId');
+                Id applicantId = (Id) assignmentMap.get('applicantId');
+                List<Object> rolesObj = (List<Object>) assignmentMap.get('roles');
+                
+                if (productId == null || applicantId == null || rolesObj == null || rolesObj.isEmpty()) {
+                    continue;
+                }
+                
+                // Convert roles list to semicolon-separated string
+                List<String> rolesList = new List<String>();
+                for (Object roleObj : rolesObj) {
+                    rolesList.add(String.valueOf(roleObj));
+                }
+                String rolesStr = String.join(rolesList, ';');
+                
+                String key = String.valueOf(productId) + '_' + String.valueOf(applicantId);
+                keysToKeep.add(key);
+                
+                ApplicationProductPartyRole__c role;
+                String recordIdStr = (String) assignmentMap.get('id');
+                if (String.isNotBlank(recordIdStr)) {
+                    // Update existing by record ID
+                    role = new ApplicationProductPartyRole__c(Id = (Id) recordIdStr);
+                } else if (existingMap.containsKey(key)) {
+                    // Update by product+applicant match
+                    role = existingMap.get(key);
+                } else {
+                    // Create new
+                    role = new ApplicationProductPartyRole__c();
+                    role.ApplicationForm__c = applicationId;
+                    role.ApplicationFormProduct__c = productId;
+                    role.Applicant__c = applicantId;
+                }
+                
+                role.Role__c = rolesStr;
+                toUpsert.add(role);
+            }
+            
+            // Upsert assignments
+            if (!toUpsert.isEmpty()) {
+                upsert toUpsert;
+                System.debug('Upserted ' + toUpsert.size() + ' ApplicationProductPartyRole records');
+            }
+            
+            // Delete removed assignments
+            List<ApplicationProductPartyRole__c> toDelete = new List<ApplicationProductPartyRole__c>();
+            for (String key : existingMap.keySet()) {
+                if (!keysToKeep.contains(key)) {
+                    toDelete.add(existingMap.get(key));
+                }
+            }
+            
+            if (!toDelete.isEmpty()) {
+                delete toDelete;
+                System.debug('Deleted ' + toDelete.size() + ' ApplicationProductPartyRole records');
+            }
+            
+            response.savedIds.put('applicationForm', applicationId);
+            System.debug('--- upsertRelationshipStep END (Success) ---');
+            return response;
+            
+        } catch (Exception e) {
+            System.debug('ERROR in upsertRelationshipStep: ' + e.getMessage());
+            System.debug('Exception Type: ' + e.getTypeName());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            response.success = false;
+            response.messages.add(new ErrorMessage('RELATIONSHIP_STEP_ERROR', 'Failed to save relationship assignments: ' + e.getMessage(), null));
+            System.debug('--- upsertRelationshipStep END (Error) ---');
+            return response;
+        }
     }
     
 }
