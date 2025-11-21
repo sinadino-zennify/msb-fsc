@@ -73,12 +73,12 @@ public with sharing class WizardPersistenceService {
     public class PersistenceResponse {
         @AuraEnabled public Boolean success { get; set; }
         @AuraEnabled public List<ErrorMessage> messages { get; set; }
-        @AuraEnabled public Map<String, Id> savedIds { get; set; }
+        @AuraEnabled public Map<String, String> savedIds { get; set; }
         
         public PersistenceResponse() {
             this.success = true;
             this.messages = new List<ErrorMessage>();
-            this.savedIds = new Map<String, Id>();
+            this.savedIds = new Map<String, String>();
         }
     }
     
@@ -1552,19 +1552,22 @@ public with sharing class WizardPersistenceService {
                 
                 String contentDocIdStr = (String) docMap.get('contentDocumentId');
                 if (String.isNotBlank(contentDocIdStr)) {
-                    // Validate that it's a real Salesforce ID (exactly 15 or 18 chars)
                     // Skip temporary IDs from LWC (like "1", "123456789", etc.)
-                    if ((contentDocIdStr.length() == 15 || contentDocIdStr.length() == 18) && isValidSalesforceId(contentDocIdStr)) {
-                        try {
-                            Id contentDocId = Id.valueOf(contentDocIdStr);
-                            contentDocumentIds.add(contentDocId);
-                            documentMetadata.put(contentDocId, docMap);
-                            System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
-                        } catch (Exception e) {
-                            System.debug('WARNING: Skipping invalid ContentDocument ID: ' + contentDocIdStr + ' | Error: ' + e.getMessage());
-                        }
-                    } else {
-                        System.debug('INFO: Skipping temporary/invalid ContentDocument ID: ' + contentDocIdStr + ' (not a valid Salesforce ID format)');
+                    // Only process IDs that are exactly 15 or 18 characters (Salesforce ID format)
+                    if (contentDocIdStr.length() != 15 && contentDocIdStr.length() != 18) {
+                        System.debug('INFO: Skipping temporary ContentDocument ID: ' + contentDocIdStr + ' (length: ' + contentDocIdStr.length() + ')');
+                        continue;
+                    }
+                    
+                    // Try to convert to Salesforce ID - if it fails, skip it
+                    try {
+                        Id contentDocId = Id.valueOf(contentDocIdStr);
+                        contentDocumentIds.add(contentDocId);
+                        documentMetadata.put(contentDocId, docMap);
+                        System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
+                    } catch (Exception e) {
+                        System.debug('WARNING: Skipping invalid ContentDocument ID: ' + contentDocIdStr + ' | Error: ' + e.getMessage());
+                        // Don't throw - just skip this document and continue
                     }
                 }
             }

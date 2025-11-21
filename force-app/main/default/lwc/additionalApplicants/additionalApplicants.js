@@ -16,6 +16,9 @@ export default class AdditionalApplicants extends LightningElement {
     // Picklist values from Salesforce
     rolePicklistValues = [];
     rolesPicklistValues = [];
+    
+    // Primary applicant from applicantDetails step
+    @track primaryApplicant = null;
 
     @api
     get value() {
@@ -24,12 +27,25 @@ export default class AdditionalApplicants extends LightningElement {
 
     set value(val) {
         this._value = val;
-        if (val && val.applicants && !this.hasAppliedInitialValue) {
-            this.applicants = val.applicants.map((app, index) => ({
-                ...app,
-                id: app.id || `applicant-${Date.now()}-${index}`
-            }));
-            this.hasAppliedInitialValue = true;
+        if (val) {
+            // Always load primary applicant if provided (for display purposes)
+            if (val.primaryApplicant) {
+                this.primaryApplicant = {
+                    ...val.primaryApplicant,
+                    isPrimaryApplicant: true,
+                    id: val.primaryApplicant.id || 'primary-applicant'
+                };
+            }
+            
+            // Load additional applicants - only if not already loaded or if coming from resume
+            if (val.applicants && val.applicants.length > 0 && !this.hasAppliedInitialValue) {
+                this.applicants = val.applicants.map((app, index) => ({
+                    ...app,
+                    isPrimaryApplicant: false,
+                    id: app.id || `applicant-${Date.now()}-${index}`
+                }));
+                this.hasAppliedInitialValue = true;
+            }
         }
     }
 
@@ -42,6 +58,10 @@ export default class AdditionalApplicants extends LightningElement {
     @track showDocumentModal = false;
     @track currentDocument = {};
     @track editingDocumentId = null;
+
+    // Validation error messages
+    @track dateOfBirthError = '';
+    @track ownershipPercentageError = '';
 
     // Address Lookup Configuration
     showAddressLookup = true;
@@ -93,14 +113,30 @@ export default class AdditionalApplicants extends LightningElement {
     handleAddApplicant() {
         this.currentApplicant = this.getEmptyApplicant();
         this.editingIndex = -1;
+        this.dateOfBirthError = '';
+        this.ownershipPercentageError = '';
         this.showModal = true;
     }
 
     handleEditApplicant(event) {
         const index = parseInt(event.currentTarget.dataset.index, 10);
+        
+        // Adjust index if primary applicant is present
+        let actualIndex = index;
+        if (this.primaryApplicant) {
+            actualIndex = index - 1; // Subtract 1 because primary is at index 0
+        }
+        
+        // Don't allow editing the primary applicant
+        if (actualIndex < 0) {
+            return;
+        }
+        
         // Deep clone to avoid mutating the original
-        this.currentApplicant = JSON.parse(JSON.stringify(this.applicants[index]));
-        this.editingIndex = index;
+        this.currentApplicant = JSON.parse(JSON.stringify(this.applicants[actualIndex]));
+        this.editingIndex = actualIndex;
+        this.dateOfBirthError = '';
+        this.ownershipPercentageError = '';
         this.showModal = true;
     }
 
@@ -108,6 +144,8 @@ export default class AdditionalApplicants extends LightningElement {
         this.showModal = false;
         this.currentApplicant = {};
         this.editingIndex = -1;
+        this.dateOfBirthError = '';
+        this.ownershipPercentageError = '';
     }
 
     handleSaveApplicant() {
@@ -165,7 +203,19 @@ export default class AdditionalApplicants extends LightningElement {
 
     handleDeleteApplicant(event) {
         const index = parseInt(event.currentTarget.dataset.index, 10);
-        this.applicants.splice(index, 1);
+        
+        // Adjust index if primary applicant is present
+        let actualIndex = index;
+        if (this.primaryApplicant) {
+            actualIndex = index - 1; // Subtract 1 because primary is at index 0
+        }
+        
+        // Don't allow deleting the primary applicant
+        if (actualIndex < 0) {
+            return;
+        }
+        
+        this.applicants.splice(actualIndex, 1);
         this.applicants = [...this.applicants]; // Trigger reactivity
         this.emitPayloadChange();
     }
@@ -334,6 +384,39 @@ export default class AdditionalApplicants extends LightningElement {
 
     handleOwnershipPercentageChange(event) {
         this.currentApplicant.ownershipPercentage = event.target.value;
+        
+        // Validate total ownership percentage in real-time
+        this.validateOwnershipPercentageRealtime();
+    }
+    
+    validateOwnershipPercentageRealtime() {
+        let totalOwnership = 0;
+        
+        // Include primary applicant if they have ownership
+        if (this.primaryApplicant && this.primaryApplicant.ownershipPercentage) {
+            totalOwnership += parseFloat(this.primaryApplicant.ownershipPercentage) || 0;
+        }
+        
+        // Include current applicant being edited
+        if (this.currentApplicant.ownershipPercentage) {
+            totalOwnership += parseFloat(this.currentApplicant.ownershipPercentage) || 0;
+        }
+        
+        // Include all other additional applicants (excluding the one being edited)
+        if (this.applicants && this.applicants.length > 0) {
+            this.applicants.forEach((applicant, index) => {
+                // Skip the applicant being edited
+                if (index !== this.editingIndex && applicant.ownershipPercentage) {
+                    totalOwnership += parseFloat(applicant.ownershipPercentage) || 0;
+                }
+            });
+        }
+        
+        if (totalOwnership > 100) {
+            this.ownershipPercentageError = `Total ownership percentage (${totalOwnership.toFixed(2)}%) exceeds 100%. Please adjust.`;
+        } else {
+            this.ownershipPercentageError = '';
+        }
     }
 
     handleControlPersonChange(event) {
@@ -429,6 +512,9 @@ export default class AdditionalApplicants extends LightningElement {
     validateCurrentApplicant() {
         const messages = [];
         
+        // Clear previous validation errors
+        this.dateOfBirthError = '';
+        
         // Personal Identity validation
         if (!this.currentApplicant.firstName) {
             messages.push('First Name is required.');
@@ -439,11 +525,14 @@ export default class AdditionalApplicants extends LightningElement {
         
         // Date of Birth validation (required + not future + 18+ years old)
         if (!this.currentApplicant.dateOfBirth) {
+            this.dateOfBirthError = 'Date of Birth is required.';
             messages.push('Date of Birth is required.');
         } else {
             if (this.validateFutureDate(this.currentApplicant.dateOfBirth)) {
+                this.dateOfBirthError = 'Date of Birth cannot be a future date.';
                 messages.push('Date of Birth cannot be a future date.');
             } else if (!this.validateMinimumAge(this.currentApplicant.dateOfBirth, 18)) {
+                this.dateOfBirthError = 'Applicant must be at least 18 years old.';
                 messages.push('Applicant must be at least 18 years old.');
             }
         }
@@ -635,7 +724,18 @@ export default class AdditionalApplicants extends LightningElement {
     }
 
     get hasApplicants() {
-        return this.applicants && this.applicants.length > 0;
+        return this.allApplicants && this.allApplicants.length > 0;
+    }
+    
+    get allApplicants() {
+        const all = [];
+        if (this.primaryApplicant) {
+            all.push(this.primaryApplicant);
+        }
+        if (this.applicants && this.applicants.length > 0) {
+            all.push(...this.applicants);
+        }
+        return all;
     }
 
     get modalTitle() {
@@ -816,10 +916,43 @@ export default class AdditionalApplicants extends LightningElement {
             });
         }
         
+        // Validate total ownership percentage doesn't exceed 100%
+        const ownershipValidation = this.validateTotalOwnership();
+        if (!ownershipValidation.isValid) {
+            messages.push(ownershipValidation.message);
+        }
+        
         return {
             isValid: messages.length === 0,
             messages: messages
         };
+    }
+    
+    validateTotalOwnership() {
+        let totalOwnership = 0;
+        
+        // Include primary applicant if they have ownership
+        if (this.primaryApplicant && this.primaryApplicant.ownershipPercentage) {
+            totalOwnership += parseFloat(this.primaryApplicant.ownershipPercentage) || 0;
+        }
+        
+        // Include all additional applicants
+        if (this.applicants && this.applicants.length > 0) {
+            this.applicants.forEach(applicant => {
+                if (applicant.ownershipPercentage) {
+                    totalOwnership += parseFloat(applicant.ownershipPercentage) || 0;
+                }
+            });
+        }
+        
+        if (totalOwnership > 100) {
+            return {
+                isValid: false,
+                message: `Total ownership percentage (${totalOwnership.toFixed(2)}%) exceeds 100%. Please adjust ownership percentages.`
+            };
+        }
+        
+        return { isValid: true };
     }
 
     @api reset() {

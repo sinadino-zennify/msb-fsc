@@ -133,9 +133,14 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         if (this.currentStep && this.currentStep.componentBundle === 'reviewAndSubmit') {
             return Object.fromEntries(this.payloadByStep);
         }
-        // For Additional Applicants step, provide all payloads so it can access primary applicant
+        // For Additional Applicants step, ensure it has the latest primary applicant
         if (this.currentStep && this.currentStep.componentBundle === 'additionalApplicants') {
-            return Object.fromEntries(this.payloadByStep);
+            const additionalPayload = this.payloadByStep.get(this.currentStep.developerName) || {};
+            const primaryApplicantPayload = this.payloadByStep.get('DAO_Business_InBranch_Applicant');
+            return {
+                ...additionalPayload,
+                primaryApplicant: primaryApplicantPayload
+            };
         }
         return this.currentStepPayload;
     }
@@ -143,7 +148,17 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     handlePayloadChange(event) {
         const { payload } = event.detail;
         if (this.currentStep) {
-            this.payloadByStep.set(this.currentStep.developerName, payload);
+            // For additional applicants step, always include the latest primary applicant from applicantDetails
+            if (this.currentStep.componentBundle === 'additionalApplicants') {
+                const primaryApplicantPayload = this.payloadByStep.get('DAO_Business_InBranch_Applicant');
+                const updatedPayload = {
+                    ...payload,
+                    primaryApplicant: primaryApplicantPayload
+                };
+                this.payloadByStep.set(this.currentStep.developerName, updatedPayload);
+            } else {
+                this.payloadByStep.set(this.currentStep.developerName, payload);
+            }
         }
     }
 
@@ -488,13 +503,15 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             }
             
             // Populate Additional Applicants step
-            if (result?.additionalApplicants && result.additionalApplicants.length > 0) {
-                // eslint-disable-next-line no-console
-                console.log('🔍 Setting additionalApplicants payload:', JSON.stringify(result.additionalApplicants, null, 2));
-                this.payloadByStep.set('DAO_Business_InBranch_Additional', {
-                    applicants: result.additionalApplicants
-                });
-            }
+            // Always set the payload for additional applicants step, even if empty
+            // Include the primary applicant for display as read-only
+            const additionalPayload = {
+                applicants: result?.additionalApplicants || [],
+                primaryApplicant: result?.applicantInfo || null
+            };
+            // eslint-disable-next-line no-console
+            console.log('🔍 Setting additionalApplicants payload:', JSON.stringify(additionalPayload, null, 2));
+            this.payloadByStep.set('DAO_Business_InBranch_Additional', additionalPayload);
             
             // Populate Product Selection step
             if (result?.productSelection) {

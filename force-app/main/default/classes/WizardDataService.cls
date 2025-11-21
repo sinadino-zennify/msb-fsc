@@ -474,12 +474,26 @@ public with sharing class WizardDataService {
     }
 
     public class ApplicantInfoDTO {
+        @AuraEnabled public Id id; // Applicant record ID for updates
         @AuraEnabled public String salutation;
         @AuraEnabled public String firstName;
+        @AuraEnabled public String middleName;
         @AuraEnabled public String lastName;
+        @AuraEnabled public String suffix;
+        @AuraEnabled public String nickname;
         @AuraEnabled public String birthDate;
+        @AuraEnabled public String mothersMaidenName;
         @AuraEnabled public String taxIdType;
         @AuraEnabled public String taxId;
+        @AuraEnabled public String isUSCitizen;
+        @AuraEnabled public String isUSResident;
+        @AuraEnabled public String countryOfResidence;
+        @AuraEnabled public String employer;
+        @AuraEnabled public String occupation;
+        @AuraEnabled public String organizationRole; // Organization_Role__c
+        @AuraEnabled public String ownershipPercentage; // Ownership_Percentage__c
+        @AuraEnabled public String isControlPerson; // Is_Control_Person__c
+        @AuraEnabled public List<String> roles; // Roles__c (multi-select)
         @AuraEnabled public String email;
         @AuraEnabled public String mobilePhone;
         @AuraEnabled public String homePhone;
@@ -496,6 +510,19 @@ public with sharing class WizardDataService {
         @AuraEnabled public String idIssuingState;
         @AuraEnabled public String idIssueDate;
         @AuraEnabled public String idExpirationDate;
+        @AuraEnabled public List<IdentityDocumentDTO> identityDocuments;
+        @AuraEnabled public Boolean isPrimaryApplicant; // Flag to indicate if this is the primary applicant
+    }
+
+    public class IdentityDocumentDTO {
+        @AuraEnabled public String uniqueId;
+        @AuraEnabled public String idType;
+        @AuraEnabled public String idNumber;
+        @AuraEnabled public String maskedIdNumber;
+        @AuraEnabled public String issuingCountry;
+        @AuraEnabled public String issuingState;
+        @AuraEnabled public String issueDate;
+        @AuraEnabled public String expirationDate;
     }
 
     /**
@@ -657,7 +684,7 @@ public with sharing class WizardDataService {
                        Tax_ID__c, Tax_ID_Type__c,
                        Is_US_Citizen__c, Is_US_Resident__c, Country_Of_Residence__c,
                        Employer__c, Occupation__c,
-                       Organization_Role__c, Is_Control_Person__c, Ownership_Percentage__c,
+                       Organization_Role__c, Is_Control_Person__c, Ownership_Percentage__c, Roles__c,
                        Email, Mobile_Phone__c, Home_Phone__c, Work_Phone__c,
                        Mailing_Street_Line_1__c, Mailing_Street_Line_2__c,
                        Mailing_City__c, Mailing_State__c, Mailing_Postal_Code__c, Mailing_Country__c,
@@ -897,15 +924,44 @@ public with sharing class WizardDataService {
     private static ApplicantInfoDTO buildApplicantInfoFromApplicant(Applicant applicant) {
         ApplicantInfoDTO info = new ApplicantInfoDTO();
         
+        // Record ID for updates
+        info.id = applicant.Id;
+        
         // Personal Identity
         info.salutation = applicant.Salutation;
         info.firstName = applicant.FirstName;
+        info.middleName = applicant.MiddleName;
         info.lastName = applicant.LastName;
+        info.suffix = applicant.Suffix;
+        info.nickname = applicant.Nickname__c;
         info.birthDate = formatDate(applicant.BirthDate);
+        info.mothersMaidenName = applicant.Mothers_Maiden_Name__c;
         
         // Tax ID
         info.taxIdType = applicant.Tax_ID_Type__c;
         info.taxId = applicant.Tax_ID__c;
+        
+        // Citizenship
+        info.isUSCitizen = applicant.Is_US_Citizen__c != null ? (applicant.Is_US_Citizen__c ? 'Yes' : 'No') : null;
+        info.isUSResident = applicant.Is_US_Resident__c != null ? (applicant.Is_US_Resident__c ? 'Yes' : 'No') : null;
+        info.countryOfResidence = applicant.Country_Of_Residence__c;
+        
+        // Employment
+        info.employer = applicant.Employer__c;
+        info.occupation = applicant.Occupation__c;
+        
+        // Organization Roles
+        info.organizationRole = applicant.Organization_Role__c;
+        // Convert ownership percentage from decimal (0.50) to whole number (50) for display
+        if (applicant.Ownership_Percentage__c != null) {
+            info.ownershipPercentage = String.valueOf(applicant.Ownership_Percentage__c * 100);
+        }
+        info.isControlPerson = applicant.Is_Control_Person__c;
+        
+        // Roles (multi-select picklist - semicolon-separated)
+        if (String.isNotBlank(applicant.Roles__c)) {
+            info.roles = applicant.Roles__c.split(';');
+        }
         
         // Contact info
         info.email = applicant.Email;
@@ -928,6 +984,9 @@ public with sharing class WizardDataService {
         info.idIssuingState = applicant.ID_Issuing_State__c;
         info.idIssueDate = formatDate(applicant.ID_Issue_Date__c);
         info.idExpirationDate = formatDate(applicant.ID_Expiration_Date__c);
+        
+        // Flag if this is the primary applicant
+        info.isPrimaryApplicant = (applicant.Role__c == 'Primary Applicant');
         
         return info;
     }
