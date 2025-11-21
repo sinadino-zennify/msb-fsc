@@ -391,7 +391,7 @@ public with sharing class WizardPersistenceService {
             applicant.Employer__c = (String) payload.get('employer');
             
             // Organization Roles
-            applicant.Organization_Role__c = (String) payload.get('organizationRole');
+            applicant.Role__c = (String) payload.get('organizationRole');
             
             // Is Control Person: Convert "Yes"/"No" strings to Boolean for Checkbox field
             // Handle both String ("Yes"/"No") and Boolean types from JSON payload
@@ -1159,7 +1159,7 @@ public with sharing class WizardPersistenceService {
                     applicant = new Applicant();
                     applicant.ApplicationFormId = applicationId;
                     applicant.Type = 'Individual'; // Set Type so they appear in relationship assignment
-                    applicant.Role__c = 'Additional Applicant'; // Set role for additional applicants
+                    applicant.Role__c = 'Co-Applicant'; // Set role for additional applicants
                     System.debug('Creating new Applicant for email: ' + email);
                 }
                 
@@ -1231,7 +1231,7 @@ public with sharing class WizardPersistenceService {
                 applicant.Occupation__c = (String) applicantPayload.get('occupation');
                 
                 // Organization Roles
-                applicant.Organization_Role__c = (String) applicantPayload.get('organizationRole');
+                applicant.Role__c = (String) applicantPayload.get('organizationRole');
                 
                 // Is Control Person: Picklist value (Yes/No)
                 applicant.Is_Control_Person__c = (String) applicantPayload.get('isControlPerson');
