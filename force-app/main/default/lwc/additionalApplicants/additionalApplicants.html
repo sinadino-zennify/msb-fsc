@@ -340,17 +340,19 @@
                                         </lightning-combobox>
                                     </lightning-layout-item>
                                     
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                <lightning-input 
-                                    type="number"
-                                    label="Ownership Percentage" 
-                                    value={currentApplicant.ownershipPercentage}
-                                    onchange={handleOwnershipPercentageChange}
-                                    min="0"
-                                    max="100"
-                                            step="0.01">
-                                </lightning-input>
-                            </lightning-layout-item>
+                                    <template if:true={showOwnershipPercentage}>
+                                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                            <lightning-input 
+                                                type="number"
+                                                label="Ownership Percentage" 
+                                                value={currentApplicant.ownershipPercentage}
+                                                onchange={handleOwnershipPercentageChange}
+                                                min="0"
+                                                max="100"
+                                                step="0.01">
+                                            </lightning-input>
+                                        </lightning-layout-item>
+                                    </template>
                             
                                     <!-- Row 2: Is Control Person -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
@@ -366,7 +368,6 @@
                                     <!-- Row 3: Roles (Multi-select) -->
                                     <lightning-layout-item size="12" padding="horizontal-small">
                                         <lightning-dual-listbox
-                                            label="Roles"
                                             source-label="Available Roles"
                                             selected-label="Selected Roles"
                                             options={rolesOptions}

@@ -1,4 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import APPLICANT_OBJECT from '@salesforce/schema/Applicant';
+import ROLES_FIELD from '@salesforce/schema/Applicant.Roles__c';
 
 export default class AdditionalApplicants extends LightningElement {
     @api recordId;
@@ -7,6 +11,9 @@ export default class AdditionalApplicants extends LightningElement {
 
     _value;
     hasAppliedInitialValue = false;
+    
+    // Picklist values from Salesforce
+    rolesPicklistValues = [];
 
     @api
     get value() {
@@ -36,6 +43,27 @@ export default class AdditionalApplicants extends LightningElement {
 
     // Address Lookup Configuration
     showAddressLookup = true;
+
+    // Wire adapters for picklist values
+    @wire(getObjectInfo, { objectApiName: APPLICANT_OBJECT })
+    applicantObjectInfo;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$applicantObjectInfo.data.defaultRecordTypeId',
+        fieldApiName: ROLES_FIELD
+    })
+    wiredRolesPicklist({ error, data }) {
+        if (data) {
+            this.rolesPicklistValues = data.values.map(item => ({
+                label: item.label,
+                value: item.value
+            }));
+        } else if (error) {
+            console.error('Error loading Roles picklist:', error);
+            // Fallback to hardcoded values if wire fails
+            this.rolesPicklistValues = this.getDefaultRolesOptions();
+        }
+    }
 
     // Lifecycle Hooks
     connectedCallback() {
@@ -676,6 +704,7 @@ export default class AdditionalApplicants extends LightningElement {
 
     get organizationRoleOptions() {
         return [
+            { label: 'Business Owner', value: 'Business Owner' },
             { label: 'Partner', value: 'Partner' },
             { label: 'Officer', value: 'Officer' },
             { label: 'Director', value: 'Director' },
@@ -684,7 +713,18 @@ export default class AdditionalApplicants extends LightningElement {
         ];
     }
 
+    // Show ownership percentage only when Organization Role is "Business Owner"
+    get showOwnershipPercentage() {
+        return this.currentApplicant && this.currentApplicant.organizationRole === 'Business Owner';
+    }
+
     get rolesOptions() {
+        // Use picklist values from Salesforce if available, otherwise use fallback
+        return this.rolesPicklistValues.length > 0 ? this.rolesPicklistValues : this.getDefaultRolesOptions();
+    }
+
+    // Fallback roles options if wire adapter fails
+    getDefaultRolesOptions() {
         return [
             { label: 'Co-Applicant', value: 'Co-Applicant' },
             { label: 'Authorized Signer', value: 'Authorized Signer' },
