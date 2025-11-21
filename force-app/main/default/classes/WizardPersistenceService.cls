@@ -883,9 +883,12 @@ public with sharing class WizardPersistenceService {
             if (String.isBlank(businessType)) {
                 response.success = false;
                 response.messages.add(new ErrorMessage('BUSINESS_TYPE_REQUIRED', 'Business Type is required.', 'businessType'));
-                System.debug('--- upsertBusinessStep END (Validation Error: Business Type Required) ---');
+                System.debug('║ ❌ Validation Error: Business Type is required');
+                System.debug('╚════════════════════════════════════════════════════════════════════════════════');
                 return response;
             }
+            // Note: BusinessEntityType is a restricted picklist. Ensure the value exists in the picklist.
+            // If invalid value is provided, Salesforce will throw INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST error.
             applicant.BusinessEntityType = businessType;
             
             applicant.Business_Tax_ID__c = (String) payload.get('taxId');
@@ -915,17 +918,54 @@ public with sharing class WizardPersistenceService {
             applicant.Business_Website__c = (String) payload.get('businessWebsite');
             
             // Primary Contact fields - store name/title for NEW contact OR reference to EXISTING PersonAccount
+            // Validate: Either existing PersonAccount OR new contact name/title must be provided
             if (primaryContactType == 'new') {
+                // For new contact, validate that name and title are provided
+                String primaryContactName = (String) payload.get('primaryContactName');
+                String primaryContactTitle = (String) payload.get('primaryContactTitle');
+                
+                if (String.isBlank(primaryContactName)) {
+                    response.success = false;
+                    response.messages.add(new ErrorMessage('PRIMARY_CONTACT_NAME_REQUIRED', 'Primary Contact Name is required when creating a new contact.', 'primaryContactName'));
+                    System.debug('║ ❌ Validation Error: Primary Contact Name is required');
+                    System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+                    return response;
+                }
+                
+                if (String.isBlank(primaryContactTitle)) {
+                    response.success = false;
+                    response.messages.add(new ErrorMessage('PRIMARY_CONTACT_TITLE_REQUIRED', 'Primary Contact Title is required when creating a new contact.', 'primaryContactTitle'));
+                    System.debug('║ ❌ Validation Error: Primary Contact Title is required');
+                    System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+                    return response;
+                }
+                
                 // Store name and title for later PersonAccount creation
-                applicant.Primary_Contact_Name__c = (String) payload.get('primaryContactName');
-                applicant.Primary_Contact_Title__c = (String) payload.get('primaryContactTitle');
+                applicant.Primary_Contact_Name__c = primaryContactName;
+                applicant.Primary_Contact_Title__c = primaryContactTitle;
                 applicant.Primary_Contact_PersonAccount__c = null; // Clear any existing reference
-            } else if (primaryContactType == 'existing' && String.isNotBlank(selectedContactId)) {
+            } else if (primaryContactType == 'existing') {
+                // For existing contact, validate that a PersonAccount was selected
+                if (String.isBlank(selectedContactId)) {
+                    response.success = false;
+                    response.messages.add(new ErrorMessage('PRIMARY_CONTACT_SELECTION_REQUIRED', 'Please select an existing contact or create a new one.', 'selectedContactId'));
+                    System.debug('║ ❌ Validation Error: Existing contact must be selected');
+                    System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+                    return response;
+                }
+                
                 // Store reference to existing PersonAccount
                 applicant.Primary_Contact_PersonAccount__c = selectedContactId;
                 // Clear name/title fields since we're using an existing contact
                 applicant.Primary_Contact_Name__c = null;
                 applicant.Primary_Contact_Title__c = null;
+            } else {
+                // Invalid primaryContactType
+                response.success = false;
+                response.messages.add(new ErrorMessage('PRIMARY_CONTACT_TYPE_INVALID', 'Primary Contact Type must be either "new" or "existing".', 'primaryContactType'));
+                System.debug('║ ❌ Validation Error: Invalid Primary Contact Type: ' + primaryContactType);
+                System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+                return response;
             }
             
             // Business Address fields
