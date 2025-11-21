@@ -1,4 +1,8 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import APPLICANT_OBJECT from '@salesforce/schema/Applicant';
+import ROLE_FIELD from '@salesforce/schema/Applicant.Role__c';
 
 export default class ApplicantDetails extends LightningElement {
     @api recordId;
@@ -7,6 +11,9 @@ export default class ApplicantDetails extends LightningElement {
 
     _value;
     hasAppliedInitialValue = false;
+    
+    // Picklist values from Salesforce
+    rolePicklistValues = [];
 
     @api
     get value() {
@@ -76,6 +83,27 @@ export default class ApplicantDetails extends LightningElement {
     showIdentityDocumentModal = false;
     currentDocument = {};
     editingDocumentId = null;
+
+    // Wire adapters for picklist values
+    @wire(getObjectInfo, { objectApiName: APPLICANT_OBJECT })
+    applicantObjectInfo;
+
+    @wire(getPicklistValues, {
+        recordTypeId: '$applicantObjectInfo.data.defaultRecordTypeId',
+        fieldApiName: ROLE_FIELD
+    })
+    wiredRolePicklist({ error, data }) {
+        if (data) {
+            this.rolePicklistValues = data.values.map(item => ({
+                label: item.label,
+                value: item.value
+            }));
+        } else if (error) {
+            console.error('Error loading Role picklist:', error);
+            // Fallback to hardcoded values if wire fails
+            this.rolePicklistValues = this.getDefaultRoleOptions();
+        }
+    }
 
     // Event Handlers - Personal Identity
     handleSalutationChange(event) {
@@ -436,8 +464,20 @@ export default class ApplicantDetails extends LightningElement {
     }
 
     get organizationRoleOptions() {
+        // Use picklist values from Salesforce if available, otherwise use fallback
+        return this.rolePicklistValues.length > 0 ? this.rolePicklistValues : this.getDefaultRoleOptions();
+    }
+
+    // Show ownership percentage only when Role is "Beneficial Owner"
+    get showOwnershipPercentage() {
+        return this.organizationRole === 'Beneficial Owner';
+    }
+
+    // Fallback role options if wire adapter fails
+    getDefaultRoleOptions() {
         return [
-            { label: 'Business Owner', value: 'Business Owner' },
+            { label: 'Beneficial Owner', value: 'Beneficial Owner' },
+            { label: 'Co-Applicant', value: 'Co-Applicant' },
             { label: 'Partner', value: 'Partner' },
             { label: 'Officer', value: 'Officer' },
             { label: 'Director', value: 'Director' },

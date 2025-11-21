@@ -223,18 +223,20 @@
                         </lightning-combobox>
                     </lightning-layout-item>
                     
-                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                        <lightning-input 
-                            type="number"
-                            label="Ownership Percentage (%)" 
-                            value={ownershipPercentage}
-                            onchange={handleOwnershipPercentageChange}
-                            min="0"
-                            max="100"
-                            step="0.01"
-                            placeholder="0.00">
-                        </lightning-input>
-                    </lightning-layout-item>
+                    <template if:true={showOwnershipPercentage}>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                            <lightning-input 
+                                type="number"
+                                label="Ownership Percentage (%)" 
+                                value={ownershipPercentage}
+                                onchange={handleOwnershipPercentageChange}
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                placeholder="0.00">
+                            </lightning-input>
+                        </lightning-layout-item>
+                    </template>
                     
                     <!-- Row 2: Is Control Person -->
                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
