@@ -219,7 +219,8 @@ public with sharing class WizardDataService {
 
         info.businessName = acc.Name;
         info.dbaName = String.isNotBlank(acc.SW_Doing_Business_As__c) ? acc.SW_Doing_Business_As__c : null;
-        info.businessType = String.isNotBlank(acc.Business_Type__c) ? acc.Business_Type__c : acc.Type;
+        // Use Business_Type__c only - do NOT fall back to Account.Type as it has different values
+        info.businessType = acc.Business_Type__c;
         info.taxId = acc.Business_Tax_ID__c; // Use custom field, FinServ__TaxID__c not available
 
         Date derivedEstablishedDate = acc.SW_Date_Business_Established__c != null

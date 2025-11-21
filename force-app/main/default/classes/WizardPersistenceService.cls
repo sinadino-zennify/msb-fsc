@@ -110,6 +110,30 @@ public with sharing class WizardPersistenceService {
         return idPattern.matcher(idStr).matches();
     }
     
+    /**
+     * Validate that a value is valid for a restricted picklist field
+     * @param value The value to validate
+     * @param fieldDescribe The DescribeFieldResult for the picklist field
+     * @return true if the value is valid for the picklist, false otherwise
+     */
+    private static Boolean isValidPicklistValue(String value, Schema.DescribeFieldResult fieldDescribe) {
+        if (String.isBlank(value)) {
+            return false;
+        }
+        
+        // Get all picklist values
+        List<Schema.PicklistEntry> picklistValues = fieldDescribe.getPicklistValues();
+        
+        // Check if the value exists in the picklist
+        for (Schema.PicklistEntry entry : picklistValues) {
+            if (entry.getValue() == value && entry.isActive()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     @AuraEnabled(cacheable=false)
     public static PersistenceResponse upsertStep(Id applicationId, String stepDeveloperName, Map<String, Object> payload, Id contextRecordId) {
         System.debug('=== WizardPersistenceService.upsertStep START ===');
@@ -880,6 +904,7 @@ public with sharing class WizardPersistenceService {
             
             // Validate and set BusinessEntityType (required field, restricted picklist)
             String businessType = (String) payload.get('businessType');
+            System.debug('║ 📋  businessType: ' + businessType);
             if (String.isBlank(businessType)) {
                 response.success = false;
                 response.messages.add(new ErrorMessage('BUSINESS_TYPE_REQUIRED', 'Business Type is required.', 'businessType'));
@@ -887,8 +912,30 @@ public with sharing class WizardPersistenceService {
                 System.debug('╚════════════════════════════════════════════════════════════════════════════════');
                 return response;
             }
-            // Note: BusinessEntityType is a restricted picklist. Ensure the value exists in the picklist.
-            // If invalid value is provided, Salesforce will throw INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST error.
+            
+            // Validate that the value is valid for the BusinessEntityType picklist
+            Schema.DescribeFieldResult businessTypeField = Schema.SObjectType.Applicant.fields.getMap().get('BusinessEntityType').getDescribe();
+            if (!isValidPicklistValue(businessType, businessTypeField)) {
+                response.success = false;
+                // Get valid values for error message
+                List<String> validValues = new List<String>();
+                for (Schema.PicklistEntry entry : businessTypeField.getPicklistValues()) {
+                    if (entry.isActive()) {
+                        validValues.add(entry.getValue());
+                    }
+                }
+                String validValuesStr = String.join(validValues, ', ');
+                response.messages.add(new ErrorMessage(
+                    'BUSINESS_TYPE_INVALID', 
+                    'Invalid Business Type "' + businessType + '". Valid values are: ' + validValuesStr, 
+                    'businessType'
+                ));
+                System.debug('║ ❌ Validation Error: Invalid Business Type: ' + businessType);
+                System.debug('║ Valid values: ' + validValuesStr);
+                System.debug('╚════════════════════════════════════════════════════════════════════════════════');
+                return response;
+            }
+            
             applicant.BusinessEntityType = businessType;
             
             applicant.Business_Tax_ID__c = (String) payload.get('taxId');
