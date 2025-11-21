@@ -94,6 +94,22 @@ public with sharing class WizardPersistenceService {
         }
     }
     
+    // Helper method to validate Salesforce ID format
+    private static Boolean isValidSalesforceId(String idStr) {
+        if (String.isBlank(idStr)) {
+            return false;
+        }
+        
+        // Check length (must be exactly 15 or 18 characters)
+        if (idStr.length() != 15 && idStr.length() != 18) {
+            return false;
+        }
+        
+        // Check if it contains only alphanumeric characters (Salesforce IDs are base62)
+        Pattern idPattern = Pattern.compile('^[a-zA-Z0-9]{15}$|^[a-zA-Z0-9]{18}$');
+        return idPattern.matcher(idStr).matches();
+    }
+    
     @AuraEnabled(cacheable=false)
     public static PersistenceResponse upsertStep(Id applicationId, String stepDeveloperName, Map<String, Object> payload, Id contextRecordId) {
         System.debug('=== WizardPersistenceService.upsertStep START ===');
@@ -862,11 +878,15 @@ public with sharing class WizardPersistenceService {
             applicant.BusinessEntityName = (String) payload.get('businessName');
             applicant.Doing_Business_As__c = (String) payload.get('dbaName');
             
-            // Only set BusinessEntityType if not blank (restricted picklist)
+            // Validate and set BusinessEntityType (required field, restricted picklist)
             String businessType = (String) payload.get('businessType');
-            if (String.isNotBlank(businessType)) {
-                applicant.BusinessEntityType = businessType;
+            if (String.isBlank(businessType)) {
+                response.success = false;
+                response.messages.add(new ErrorMessage('BUSINESS_TYPE_REQUIRED', 'Business Type is required.', 'businessType'));
+                System.debug('--- upsertBusinessStep END (Validation Error: Business Type Required) ---');
+                return response;
             }
+            applicant.BusinessEntityType = businessType;
             
             applicant.Business_Tax_ID__c = (String) payload.get('taxId');
             
@@ -1445,19 +1465,19 @@ public with sharing class WizardPersistenceService {
                 
                 String contentDocIdStr = (String) docMap.get('contentDocumentId');
                 if (String.isNotBlank(contentDocIdStr)) {
-                    // Validate that it's a real Salesforce ID (15 or 18 chars starting with valid prefix)
+                    // Validate that it's a real Salesforce ID (exactly 15 or 18 chars)
                     // Skip temporary IDs from LWC (like "1", "123456789", etc.)
-                    if (contentDocIdStr.length() >= 15 && contentDocIdStr.length() <= 18) {
+                    if ((contentDocIdStr.length() == 15 || contentDocIdStr.length() == 18) && isValidSalesforceId(contentDocIdStr)) {
                         try {
                             Id contentDocId = Id.valueOf(contentDocIdStr);
                             contentDocumentIds.add(contentDocId);
                             documentMetadata.put(contentDocId, docMap);
                             System.debug('Found ContentDocument: ' + contentDocId + ' | Name: ' + docMap.get('name'));
                         } catch (Exception e) {
-                            System.debug('Skipping invalid ContentDocument ID: ' + contentDocIdStr + ' | Error: ' + e.getMessage());
+                            System.debug('WARNING: Skipping invalid ContentDocument ID: ' + contentDocIdStr + ' | Error: ' + e.getMessage());
                         }
                     } else {
-                        System.debug('Skipping temporary/invalid ContentDocument ID: ' + contentDocIdStr + ' (not a valid Salesforce ID)');
+                        System.debug('INFO: Skipping temporary/invalid ContentDocument ID: ' + contentDocIdStr + ' (not a valid Salesforce ID format)');
                     }
                 }
             }

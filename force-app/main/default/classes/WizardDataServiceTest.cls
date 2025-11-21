@@ -84,7 +84,7 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Opportunity', result.entryPointType, 'Entry point should be Opportunity');
         System.assertEquals('Business', result.accountType, 'Account type should be Business');
-        System.assertFalse(result.hideBusinessStep, 'Business step should remain visible');
+        Assert.isFalse(result.hideBusinessStep, 'Business step should remain visible');
 
         System.assertNotEquals(null, result.businessInfo, 'Business information should be populated');
         System.assertEquals('existing', result.businessInfo.businessAccountType, 'Business account type should be existing');
@@ -144,7 +144,7 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Opportunity', result.entryPointType);
         System.assertEquals('Person', result.accountType);
-        System.assertFalse(result.hideBusinessStep, 'Business step should remain visible for Person Account entry');
+        Assert.isFalse(result.hideBusinessStep, 'Business step should remain visible for Person Account entry');
         System.assertNotEquals(null, result.businessInfo, 'Business info DTO should be initialized');
         System.assertEquals('new', result.businessInfo.businessAccountType, 'Business account type should default to new');
         System.assertEquals('new', result.businessInfo.primaryContactType, 'Primary contact type should default to new');
@@ -219,7 +219,7 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Account', result.entryPointType);
         System.assertEquals('Business', result.accountType);
-        System.assertFalse(result.hideBusinessStep);
+        Assert.isFalse(result.hideBusinessStep);
         System.assertNotEquals(null, result.businessInfo);
         System.assertEquals('River City Builders', result.businessInfo.businessName);
         System.assertEquals('River City Builders LLC', result.businessInfo.dbaName);
@@ -256,7 +256,7 @@ private class WizardDataServiceTest {
 
         System.assertEquals('Account', result.entryPointType);
         System.assertEquals('Person', result.accountType);
-        System.assertFalse(result.hideBusinessStep);
+        Assert.isFalse(result.hideBusinessStep);
         System.assertNotEquals(null, result.businessInfo);
         System.assertEquals('new', result.businessInfo.businessAccountType);
         System.assertEquals('new', result.businessInfo.primaryContactType);
