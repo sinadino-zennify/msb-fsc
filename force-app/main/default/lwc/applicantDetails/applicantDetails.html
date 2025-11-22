@@ -6,7 +6,7 @@
 
 <template>
     <div class="applicant-details">
-        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Local Personal Information</h2>
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Personal Information</h2>
         
         <template if:true={stepConfig.helpText}>
             <div class="slds-m-bottom_medium">
@@ -537,7 +537,7 @@
                                 </lightning-layout>
                             </div>
                             <footer class="slds-modal__footer">
-                                <lightning-button label="Cancel" onclick={handleCloseModal}></lightning-button>
+                                <lightning-button label="Cancel" class="slds-m-right_x-small" onclick={handleCloseModal}></lightning-button>
                                 <lightning-button variant="brand" label="Save" onclick={handleSaveDocument}></lightning-button>
                             </footer>
                         </div>

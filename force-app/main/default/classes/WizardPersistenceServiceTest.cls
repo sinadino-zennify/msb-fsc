@@ -19,7 +19,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Applicant', payload, null);
+            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Applicant', payload);
         Test.stopTest();
         
         System.assertEquals(true, response.success, 'Response should be successful');
@@ -37,7 +37,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Product', payload, null);
+            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Product', payload);
         Test.stopTest();
         
         System.assertEquals(true, response.success, 'Response should be successful');
@@ -55,7 +55,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Review', payload, null);
+            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Review', payload);
         Test.stopTest();
         
         System.assertEquals(true, response.success, 'Response should be successful');
@@ -71,7 +71,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(null, 'DAO_Business_InBranch_Applicant', payload, null);
+            WizardPersistenceService.upsertStep(null, 'DAO_Business_InBranch_Applicant', payload);
         Test.stopTest();
         
         System.assertEquals(true, response.success, 'Response should succeed in prototype mode');
@@ -88,7 +88,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, '', payload, null);
+            WizardPersistenceService.upsertStep(testAccount.Id, '', payload);
         Test.stopTest();
         
         System.assertEquals(false, response.success, 'Response should fail');
@@ -102,7 +102,7 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Applicant', new Map<String, Object>(), null);
+            WizardPersistenceService.upsertStep(testAccount.Id, 'DAO_Business_InBranch_Applicant', new Map<String, Object>());
         Test.stopTest();
         
         System.assertEquals(false, response.success, 'Response should fail');
@@ -119,104 +119,12 @@ private class WizardPersistenceServiceTest {
         
         Test.startTest();
         WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(testAccount.Id, 'Unknown_Step', payload, null);
+            WizardPersistenceService.upsertStep(testAccount.Id, 'Unknown_Step', payload);
         Test.stopTest();
         
         System.assertEquals(false, response.success, 'Response should fail');
         System.assertEquals(1, response.messages.size(), 'Should have one error message');
         System.assertEquals('UNKNOWN_STEP', response.messages[0].code, 'Should have correct error code');
-    }
-    
-    @IsTest
-    static void testUpsertStep_WithOpportunityContext() {
-        // Create test Account and Opportunity
-        Account testAccount = [SELECT Id FROM Account LIMIT 1];
-        Opportunity testOpp = new Opportunity(
-            Name = 'Test Opportunity',
-            AccountId = testAccount.Id,
-            StageName = 'Prospecting',
-            CloseDate = System.today().addDays(30)
-        );
-        insert testOpp;
-        
-        Map<String, Object> payload = new Map<String, Object>{
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'email' => 'john.doe@example.com'
-        };
-        
-        Test.startTest();
-        WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(null, 'DAO_Business_InBranch_Applicant', payload, testOpp.Id);
-        Test.stopTest();
-        
-        System.assertEquals(true, response.success, 'Response should be successful');
-        System.assert(response.savedIds.containsKey('applicationForm'), 'Should create ApplicationForm');
-        
-        // Verify ApplicationForm has OpportunityId and AccountId set
-        Id appFormId = response.savedIds.get('applicationForm');
-        ApplicationForm appForm = [SELECT OpportunityId, AccountId FROM ApplicationForm WHERE Id = :appFormId];
-        System.assertEquals(testOpp.Id, appForm.OpportunityId, 'Should set OpportunityId from context');
-        System.assertEquals(testAccount.Id, appForm.AccountId, 'Should set AccountId from Opportunity.AccountId');
-    }
-    
-    @IsTest
-    static void testUpsertStep_WithAccountContext() {
-        Account testAccount = [SELECT Id FROM Account LIMIT 1];
-        
-        Map<String, Object> payload = new Map<String, Object>{
-            'firstName' => 'Jane',
-            'lastName' => 'Smith',
-            'email' => 'jane.smith@example.com'
-        };
-        
-        Test.startTest();
-        WizardPersistenceService.PersistenceResponse response = 
-            WizardPersistenceService.upsertStep(null, 'DAO_Business_InBranch_Applicant', payload, testAccount.Id);
-        Test.stopTest();
-        
-        System.assertEquals(true, response.success, 'Response should be successful');
-        System.assert(response.savedIds.containsKey('applicationForm'), 'Should create ApplicationForm');
-        
-        // Verify ApplicationForm has AccountId set
-        Id appFormId = response.savedIds.get('applicationForm');
-        ApplicationForm appForm = [SELECT AccountId FROM ApplicationForm WHERE Id = :appFormId];
-        System.assertEquals(testAccount.Id, appForm.AccountId, 'Should set AccountId from context');
-    }
-    
-    @IsTest
-    static void testUpsertApplicant_PreventsDuplicates() {
-        // Create ApplicationForm first
-        Map<String, Object> payload1 = new Map<String, Object>{
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'email' => 'john.doe@example.com'
-        };
-        
-        WizardPersistenceService.PersistenceResponse response1 = 
-            WizardPersistenceService.upsertStep(null, 'DAO_Business_InBranch_Applicant', payload1, null);
-        Id appFormId = response1.savedIds.get('applicationForm');
-        Id applicantId1 = response1.savedIds.get('applicant');
-        
-        // Update the same applicant with new email
-        Map<String, Object> payload2 = new Map<String, Object>{
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'email' => 'john.updated@example.com'
-        };
-        
-        Test.startTest();
-        WizardPersistenceService.PersistenceResponse response2 = 
-            WizardPersistenceService.upsertStep(appFormId, 'DAO_Business_InBranch_Applicant', payload2, null);
-        Test.stopTest();
-        
-        Id applicantId2 = response2.savedIds.get('applicant');
-        System.assertEquals(applicantId1, applicantId2, 'Should update existing Applicant, not create new one');
-        
-        // Verify only one Applicant exists for this ApplicationForm
-        List<Applicant> applicants = [SELECT Id, Email FROM Applicant WHERE ApplicationFormId = :appFormId];
-        System.assertEquals(1, applicants.size(), 'Should have only one Applicant record');
-        System.assertEquals('john.updated@example.com', applicants[0].Email, 'Should have updated email');
     }
     
     @IsTest

@@ -1,34 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!-- Apex Classes -->
+    <types>
+        <members>ProductSelectionController</members>
+        <members>RelationshipAssignmentController</members>
+        <members>WizardConfigService</members>
+        <members>WizardDataService</members>
+        <members>WizardPersistenceService</members>
+        <members>WizardConfigServiceTest</members>
+        <members>WizardDataServiceTest</members>
+        <members>WizardPersistenceServiceTest</members>
+        <members>DAOApplicationService</members>
+        <members>DAOProductService</members>
+        <members>DAOValidationService</members>
+        <members>DAOWorkflowService</members>
+        <name>ApexClass</name>
+    </types>
+    
+    <!-- Lightning Web Components -->
+    <!-- <types>
+        <members>additionalApplicants</members>
+        <members>additionalServices</members>
+        <members>applicantDetails</members>
+        <members>applicationStatus</members>
+        <members>businessDetails</members>
+        <members>collateralEntry</members>
+        <members>daoWizardContainer</members>
+        <members>daoWizardStepRouter</members>
+        <members>documentUpload</members>
+        <members>fundingAmountModal</members>
+        <members>openDaoWizardAction</members>
+        <members>productCart</members>
+        <members>productSelection</members>
+        <members>relationshipAssignment</members>
+        <members>reviewAndSubmit</members>
+        <name>LightningComponentBundle</name>
+    </types> -->
+    
+    <!-- Custom Objects -->
     <types>
         <members>ApplicationForm</members>
         <members>ApplicationFormProduct</members>
-        <members>Product2</members>
+        <members>ApplicationProductPartyRole__c</members>
+        <members>Applicant</members>
+        <members>IdentityDocument</members>
+        <members>NAICS__c</members>
         <name>CustomObject</name>
     </types>
-    <!-- <types>
+    
+    <!-- Custom Metadata Types -->
+    <types>
+        <members>Wizard_Step__mdt</members>
+        <name>CustomObject</name>
+    </types>
+    
+    <!-- Custom Metadata Records (using wildcard to get all records) -->
+    <types>
         <members>Wizard_Step__mdt.*</members>
         <name>CustomMetadata</name>
     </types>
+    
+    <!-- Standard Objects -->
     <types>
-        <members>WizardConfigService</members>
-        <members>WizardConfigServiceTest</members>
-        <members>WizardPersistenceService</members>
-        <members>WizardPersistenceServiceTest</members>
-        <name>ApexClass</name>
+        <members>Product2</members>
+        <name>CustomObject</name>
     </types>
+    
+    <!-- Global Value Sets (if any) -->
     <types>
-        <members>daoWizardContainer</members>
-        <members>daoWizardStepRouter</members>
-        <members>applicantDetails</members>
-        <members>businessDetails</members>
-        <members>additionalApplicants</members>
-        <members>productSelection</members>
-        <members>additionalServices</members>
-        <members>documentUpload</members>
-        <members>reviewAndSubmit</members>
-        <members>openDaoWizardAction</members>
-        <name>LightningComponentBundle</name>
-    </types> -->
+        <members>US_States</members>
+        <name>GlobalValueSet</name>
+    </types>
+    
     <version>65.0</version>
 </Package>

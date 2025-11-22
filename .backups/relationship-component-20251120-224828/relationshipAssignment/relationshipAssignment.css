@@ -1,0 +1,109 @@
+.relationship-assignment {
+    width: 100%;
+}
+
+.relationship-grid {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.grid-header,
+.grid-row {
+    display: grid;
+    grid-template-columns: 250px repeat(auto-fit, minmax(180px, 1fr));
+    border-bottom: 1px solid #dddbda;
+}
+
+.grid-header {
+    background-color: #f3f2f2;
+    font-weight: bold;
+}
+
+.grid-row:last-child {
+    border-bottom: none;
+}
+
+.grid-row:hover {
+    background-color: #fafaf9;
+}
+
+.header-cell,
+.cell {
+    padding: 8px 12px;
+    border-right: 1px solid #dddbda;
+    min-height: 60px;
+}
+
+.header-cell:last-child,
+.cell:last-child {
+    border-right: none;
+}
+
+.product-column {
+    display: flex;
+    align-items: center;
+}
+
+.applicant-column {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.applicant-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.product-code {
+    font-size: 0.875rem;
+    color: #706e6b;
+    margin-bottom: 4px;
+}
+
+.funding-amount {
+    font-size: 0.875rem;
+    color: #080707;
+    font-weight: 500;
+}
+
+.role-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.role-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .grid-header,
+    .grid-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-cell,
+    .cell {
+        border-right: none;
+        border-bottom: 1px solid #dddbda;
+    }
+}

@@ -391,7 +391,7 @@ public with sharing class WizardPersistenceService {
             applicant.Employer__c = (String) payload.get('employer');
             
             // Organization Roles
-            applicant.Role__c = (String) payload.get('organizationRole');
+            applicant.Organization_Role__c = (String) payload.get('organizationRole');
             
             // Is Control Person: Convert "Yes"/"No" strings to Boolean for Checkbox field
             // Handle both String ("Yes"/"No") and Boolean types from JSON payload
@@ -1231,7 +1231,7 @@ public with sharing class WizardPersistenceService {
                 applicant.Occupation__c = (String) applicantPayload.get('occupation');
                 
                 // Organization Roles
-                applicant.Role__c = (String) applicantPayload.get('organizationRole');
+                applicant.Organization_Role__c = (String) applicantPayload.get('organizationRole');
                 
                 // Is Control Person: Picklist value (Yes/No)
                 applicant.Is_Control_Person__c = (String) applicantPayload.get('isControlPerson');
@@ -1654,11 +1654,41 @@ public with sharing class WizardPersistenceService {
     }
     
     private static PersistenceResponse upsertReviewStep(Id applicationId, Map<String, Object> payload, PersistenceResponse response) {
-        // Simulate successful persistence for review step
-        response.savedIds.put('applicationForm', applicationId);
+        System.debug('--- upsertReviewStep START ---');
+        System.debug('ApplicationId: ' + applicationId);
+        System.debug('Payload: ' + JSON.serializePretty(payload));
         
-        // Log the payload for debugging
-        System.debug('Review step payload: ' + JSON.serialize(payload));
+        try {
+            // Get the ApplicationForm record
+            ApplicationForm appForm = [
+                SELECT Id, Stage
+                FROM ApplicationForm
+                WHERE Id = :applicationId
+                LIMIT 1
+            ];
+            
+            // Update stage to Submitted if provided in payload
+            String stage = (String) payload.get('stage');
+            if (String.isNotBlank(stage)) {
+                appForm.Stage = stage;
+                System.debug('Setting ApplicationForm Stage to: ' + stage);
+            }
+            
+            // Update the record
+            update appForm;
+            System.debug('✅ ApplicationForm updated successfully');
+            
+            response.savedIds.put('applicationForm', applicationId);
+            System.debug('--- upsertReviewStep END (Success) ---');
+            
+        } catch (Exception e) {
+            System.debug('ERROR in upsertReviewStep: ' + e.getMessage());
+            System.debug('Exception Type: ' + e.getTypeName());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            response.success = false;
+            response.messages.add(new ErrorMessage('REVIEW_STEP_ERROR', 'Failed to submit application: ' + e.getMessage(), null));
+            System.debug('--- upsertReviewStep END (Error) ---');
+        }
         
         return response;
     }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Records</fullName>
+    <columns>MasterLabel</columns>
+    <columns>Order__c</columns>
+    <columns>WizardApiName__c</columns>
+    <columns>DeveloperName</columns>
+    <columns>NamespacePrefix</columns>
+    <columns>StepLabel__c</columns>
+    <columns>Skippable__c</columns>
+    <columns>ValidatorClasses__c</columns>
+    <columns>ComponentBundle__c</columns>
+    <columns>HelpText__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Records</label>
+    <language>en_US</language>
+</ListView>

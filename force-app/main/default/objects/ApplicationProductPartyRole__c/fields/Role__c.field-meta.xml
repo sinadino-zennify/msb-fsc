@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Role__c</fullName>
-    <description>Applicant&apos;s role in the application</description>
-    <label>Organization Role</label>
+    <description>Defines the role the Applicant plays in the product</description>
+    <label>Role</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
-    <type>Picklist</type>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
     <valueSet>
-        <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Primary Applicant</fullName>
+                <fullName>Primary</fullName>
                 <default>false</default>
-                <label>Primary Applicant</label>
+                <label>Primary</label>
             </value>
             <value>
-                <fullName>Co-Applicant</fullName>
+                <fullName>Joint</fullName>
                 <default>false</default>
-                <label>Co-Applicant</label>
+                <label>Joint</label>
             </value>
             <value>
                 <fullName>Authorized Signer</fullName>
@@ -26,15 +26,11 @@
                 <label>Authorized Signer</label>
             </value>
             <value>
-                <fullName>Beneficial Owner</fullName>
+                <fullName>Beneficiary</fullName>
                 <default>false</default>
-                <label>Beneficial Owner</label>
-            </value>
-            <value>
-                <fullName>Guarantor</fullName>
-                <default>false</default>
-                <label>Guarantor</label>
+                <label>Beneficiary</label>
             </value>
         </valueSetDefinition>
     </valueSet>
+    <visibleLines>5</visibleLines>
 </CustomField>

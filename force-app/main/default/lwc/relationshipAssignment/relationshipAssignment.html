@@ -1,0 +1,116 @@
+<template>
+    <div class="relationship-assignment">
+        <lightning-card title="Relationship Assignment" icon-name="standard:account">
+            <div class="slds-card__body slds-card__body_inner">
+                
+                <!-- Instructions -->
+                <div class="slds-m-bottom_medium">
+                    <p class="slds-text-body_regular">
+                        Assign roles for each applicant on the selected products. At least one applicant must be assigned as Primary for each product.
+                    </p>
+                </div>
+
+                <!-- Loading State -->
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </template>
+
+                <!-- Error State -->
+                <template if:true={error}>
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>{error}</h2>
+                    </div>
+                </template>
+
+                <!-- No Products Message -->
+                <template if:true={showNoProductsMessage}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <h2>No products have been selected yet. Please go back and select products first.</h2>
+                    </div>
+                </template>
+
+                <!-- Relationship Grid -->
+                <template if:true={showGrid}>
+                    <div class="relationship-grid">
+                        <!-- Header Row -->
+                        <div class="grid-header">
+                            <div class="product-column header-cell">
+                                <strong>Product</strong>
+                            </div>
+                            <template for:each={applicants} for:item="applicant">
+                                <div key={applicant.id} class="applicant-column header-cell">
+                                    <div class="applicant-header">
+                                        <strong>{applicant.displayName}</strong>
+                                        <template if:true={applicant.isPrimary}>
+                                            <lightning-badge label="Primary" class="slds-m-left_xx-small"></lightning-badge>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <!-- Product Rows -->
+                        <template for:each={gridData} for:item="row">
+                            <div key={row.productId} class="grid-row">
+                                <div class="product-column cell">
+                                    <div class="product-info">
+                                        <div class="product-name">{row.productName}</div>
+                                        <div class="product-code">{row.productCode}</div>
+                                        <template if:true={row.fundingAmount}>
+                                            <div class="funding-amount">
+                                                <lightning-formatted-number 
+                                                    value={row.fundingAmount} 
+                                                    format-style="currency"
+                                                    currency-code="USD">
+                                                </lightning-formatted-number>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                
+                                <!-- Applicant Role Columns -->
+                                <template for:each={row.applicantRoles} for:item="applicantRole">
+                                    <div key={applicantRole.applicantId} class="applicant-column cell">
+                                        <div class="role-selector">
+                                            <template for:each={applicantRole.roleCheckboxes} for:item="role">
+                                                <div key={role.value} class="role-checkbox">
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        label={role.label}
+                                                        name={role.value}
+                                                        checked={role.checked}
+                                                        onchange={handleRoleChange}
+                                                        data-product-id={row.productId}
+                                                        data-applicant-id={applicantRole.applicantId}
+                                                        data-role-value={role.value}>
+                                                    </lightning-input>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Bulk Actions -->
+                    <div class="slds-m-top_medium">
+                        <lightning-button
+                            label="Set Primary as Owner on All Products"
+                            onclick={handleSetPrimaryAsOwner}
+                            variant="neutral"
+                            class="slds-m-right_small">
+                        </lightning-button>
+                        <lightning-button
+                            label="Clear All Assignments"
+                            onclick={handleClearAll}
+                            variant="destructive-text">
+                        </lightning-button>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
+    </div>
+</template>
