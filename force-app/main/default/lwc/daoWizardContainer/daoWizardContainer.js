@@ -33,10 +33,17 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
     initialDataRequested = false;
     
     connectedCallback() {
-        // Log initial recordId passed by the host record page (Opportunity or ApplicationForm)
+        // Log initial recordId passed by the host record page (Opportunity, Account, or ApplicationForm)
         // Useful to verify the container receives the context record id
         // eslint-disable-next-line no-console
         console.log('daoWizardContainer connected. Initial recordId:', this.recordId);
+        
+        // If recordId is an ApplicationForm, set it as applicationFormId immediately
+        if (this.recordId && this.recordId.startsWith('0Qp')) { // ApplicationForm ID prefix
+            this.applicationFormId = this.recordId;
+            // eslint-disable-next-line no-console
+            console.log('✅ Detected ApplicationForm entry point. Set applicationFormId:', this.applicationFormId);
+        }
     }
 
     @wire(CurrentPageReference)
@@ -103,7 +110,8 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             ...step,
             isActive: index === this.currentIndex,
             isCompleted: index < this.currentIndex,
-            stepNumber: index + 1
+            stepNumber: index + 1,
+            buttonVariant: index === this.currentIndex ? 'brand' : (index < this.currentIndex ? 'success' : 'neutral')
         }));
     }
 
@@ -125,13 +133,32 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         if (this.currentStep && this.currentStep.componentBundle === 'reviewAndSubmit') {
             return Object.fromEntries(this.payloadByStep);
         }
+        // For Additional Applicants step, ensure it has the latest primary applicant
+        if (this.currentStep && this.currentStep.componentBundle === 'additionalApplicants') {
+            const additionalPayload = this.payloadByStep.get(this.currentStep.developerName) || {};
+            const primaryApplicantPayload = this.payloadByStep.get('DAO_Business_InBranch_Applicant');
+            return {
+                ...additionalPayload,
+                primaryApplicant: primaryApplicantPayload
+            };
+        }
         return this.currentStepPayload;
     }
 
     handlePayloadChange(event) {
         const { payload } = event.detail;
         if (this.currentStep) {
-            this.payloadByStep.set(this.currentStep.developerName, payload);
+            // For additional applicants step, always include the latest primary applicant from applicantDetails
+            if (this.currentStep.componentBundle === 'additionalApplicants') {
+                const primaryApplicantPayload = this.payloadByStep.get('DAO_Business_InBranch_Applicant');
+                const updatedPayload = {
+                    ...payload,
+                    primaryApplicant: primaryApplicantPayload
+                };
+                this.payloadByStep.set(this.currentStep.developerName, updatedPayload);
+            } else {
+                this.payloadByStep.set(this.currentStep.developerName, payload);
+            }
         }
     }
 
@@ -157,10 +184,14 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             if (this.devMode && (!payload || Object.keys(payload).length === 0)) {
                 payload = { __devBypass: true };
             }
+            
+            // Debug logging for applicationFormId
+            console.log('🔍 Before upsertStep - applicationFormId:', this.applicationFormId, 'Type:', typeof this.applicationFormId);
+            
             let persistenceResult = { success: true, messages: [], savedIds: null };
             try {
                 persistenceResult = await upsertStep({
-                    applicationId: this.applicationFormId, // Don't use recordId - it's the Opportunity, not ApplicationForm
+                    applicationId: this.applicationFormId || null, // Ensure we pass null instead of undefined
                     stepDeveloperName: this.currentStep.developerName,
                     payload: payload,
                     contextRecordId: this.recordId // Pass the context record (Opportunity/Account) for ApplicationForm creation
@@ -179,8 +210,16 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
 
             // Capture ApplicationForm ID if this is the first step
             if (persistenceResult.savedIds && persistenceResult.savedIds.applicationForm) {
-                this.applicationFormId = persistenceResult.savedIds.applicationForm;
-                console.log('ApplicationForm created with ID:', this.applicationFormId);
+                const newAppId = persistenceResult.savedIds.applicationForm;
+                console.log('📝 ApplicationForm ID from response:', newAppId, 'Type:', typeof newAppId);
+                
+                // Validate it's a proper Salesforce ID
+                if (typeof newAppId === 'string' && (newAppId.length === 15 || newAppId.length === 18)) {
+                    this.applicationFormId = newAppId;
+                    console.log('✅ ApplicationForm ID set successfully:', this.applicationFormId);
+                } else {
+                    console.error('❌ Invalid ApplicationForm ID received:', newAppId);
+                }
             }
 
             // Navigate to next step or complete
@@ -222,6 +261,17 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
         }
         if (!this.isFirst) {
             this.currentIndex--;
+        }
+    }
+
+    handleJumpToStep(event) {
+        if (!this.devMode) {
+            return;
+        }
+        const stepIndex = parseInt(event.currentTarget.dataset.stepIndex, 10);
+        if (stepIndex >= 0 && stepIndex < this.steps.length) {
+            this.currentIndex = stepIndex;
+            this.showToast('Dev Mode', `Jumped to step: ${this.steps[stepIndex].stepLabel}`, 'info');
         }
     }
 
@@ -437,16 +487,72 @@ export default class DaoWizardContainer extends NavigationMixin(LightningElement
             // eslint-disable-next-line no-console
             console.log('🔍 getWizardData RESULT:', JSON.stringify(result, null, 2));
             this.prefillData = result;
-            if (result?.applicantInfo) {
-                // eslint-disable-next-line no-console
-                console.log('🔍 Setting applicantInfo payload:', JSON.stringify(result.applicantInfo, null, 2));
-                this.payloadByStep.set('DAO_Business_InBranch_Applicant', result.applicantInfo);
-            }
+            
+            // Populate Business Information step
             if (result?.businessInfo) {
                 // eslint-disable-next-line no-console
                 console.log('🔍 Setting businessInfo payload:', JSON.stringify(result.businessInfo, null, 2));
                 this.payloadByStep.set('DAO_Business_InBranch_Business', result.businessInfo);
             }
+            
+            // Populate Primary Applicant step
+            if (result?.applicantInfo) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting applicantInfo payload:', JSON.stringify(result.applicantInfo, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Applicant', result.applicantInfo);
+            }
+            
+            // Populate Additional Applicants step
+            // Always set the payload for additional applicants step, even if empty
+            // Include the primary applicant for display as read-only
+            const additionalPayload = {
+                applicants: result?.additionalApplicants || [],
+                primaryApplicant: result?.applicantInfo || null
+            };
+            // eslint-disable-next-line no-console
+            console.log('🔍 Setting additionalApplicants payload:', JSON.stringify(additionalPayload, null, 2));
+            this.payloadByStep.set('DAO_Business_InBranch_Additional', additionalPayload);
+            
+            // Populate Product Selection step
+            if (result?.productSelection) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting productSelection payload:', JSON.stringify(result.productSelection, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Product', result.productSelection);
+            }
+            
+            // Populate Documents step
+            if (result?.documents) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting documents payload:', JSON.stringify(result.documents, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Documents', result.documents);
+            }
+            
+            // Populate Services step
+            if (result?.services) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting services payload:', JSON.stringify(result.services, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Services', result.services);
+            }
+            
+            // Populate Relationship step
+            if (result?.relationship) {
+                // eslint-disable-next-line no-console
+                console.log('🔍 Setting relationship payload:', JSON.stringify(result.relationship, null, 2));
+                this.payloadByStep.set('DAO_Business_InBranch_Relationship', result.relationship);
+            }
+            
+            // Handle resume navigation - jump to the step indicated by StepKey__c
+            if (result?.resumeAtStep && result.entryPointType === 'ApplicationForm') {
+                // eslint-disable-next-line no-console
+                console.log('🔄 Resuming application at step:', result.resumeAtStep);
+                const resumeStepIndex = this.rawSteps.findIndex(step => step.developerName === result.resumeAtStep);
+                if (resumeStepIndex >= 0) {
+                    this.currentIndex = resumeStepIndex;
+                    // eslint-disable-next-line no-console
+                    console.log('✅ Set currentIndex to', this.currentIndex, 'for step:', result.resumeAtStep);
+                }
+            }
+            
             this.hasInitializedPrefill = true;
             // eslint-disable-next-line no-console
             console.log('🔍 payloadByStep after init:', Object.fromEntries(this.payloadByStep));

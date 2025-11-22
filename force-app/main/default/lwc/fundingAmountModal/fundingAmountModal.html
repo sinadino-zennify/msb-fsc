@@ -1,0 +1,47 @@
+<template>
+    <lightning-modal-header label={modalTitle}></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-p-around_medium">
+            <div class="slds-m-bottom_medium">
+                <p class="slds-text-body_regular slds-text-color_weak">
+                    {productDescription}
+                </p>
+            </div>
+            
+            <lightning-input
+                type="number"
+                label="Initial Funding Amount"
+                value={fundingAmount}
+                onchange={handleAmountChange}
+                formatter="currency"
+                step="0.01"
+                min="0"
+                required
+                message-when-value-missing="Please enter an initial funding amount">
+            </lightning-input>
+            
+            <template if:true={showMinimumWarning}>
+                <div class="slds-m-top_small">
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <lightning-icon icon-name="utility:warning" alternative-text="Warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                        <h2>Minimum balance requirements may apply for this product.</h2>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button
+            label="Cancel"
+            onclick={handleCancel}
+            class="slds-m-right_x-small">
+        </lightning-button>
+        <lightning-button
+            variant="brand"
+            label="Add to Cart"
+            onclick={handleAddToCart}
+            disabled={isAddDisabled}>
+        </lightning-button>
+    </lightning-modal-footer>
+</template>

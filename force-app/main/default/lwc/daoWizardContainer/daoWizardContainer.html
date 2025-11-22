@@ -1,6 +1,40 @@
 <template>
     <lightning-card>
         <div class="slds-p-horizontal_medium">
+            <!-- Dev Mode Banner -->
+            <template if:true={devMode}>
+                <div class="slds-m-bottom_small">
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <h2>🚀 DEV MODE ACTIVE - Validation bypassed, quick navigation enabled</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Dev Mode Step Navigator -->
+            <template if:true={devMode}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-card title="Quick Step Navigation" icon-name="utility:jump_to_top">
+                        <div class="slds-p-around_small">
+                            <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                <template for:each={progressSteps} for:item="step" for:index="index">
+                                    <div key={step.developerName} class="slds-col slds-size_1-of-4 slds-m-bottom_x-small">
+                                        <lightning-button
+                                            label={step.stepLabel}
+                                            title={step.developerName}
+                                            data-step-index={index}
+                                            onclick={handleJumpToStep}
+                                            variant={step.buttonVariant}
+                                            class="slds-size_1-of-1">
+                                        </lightning-button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </lightning-card>
+                </div>
+            </template>
+
             <!-- Progress Indicator -->
             <template if:true={steps}>
                 <div class="slds-m-bottom_medium">
@@ -37,6 +71,7 @@
                     <c-dao-wizard-step-router 
                         lwc:ref="stepRouter"
                         record-id={recordId}
+                        application-form-id={applicationFormId}
                         wizard-api-name={wizardApiName}
                         step-config={currentStep}
                         value={currentStepValue}

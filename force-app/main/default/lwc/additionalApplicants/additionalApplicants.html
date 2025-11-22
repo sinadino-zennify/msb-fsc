@@ -17,9 +17,9 @@
         <!-- Applicants List -->
         <template if:true={hasApplicants}>
             <div class="applicants-grid slds-grid slds-wrap slds-gutters_small">
-                <template for:each={applicants} for:item="applicant" for:index="index">
+                <template for:each={allApplicants} for:item="applicant" for:index="index">
                     <div key={applicant.id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                        <article class="slds-card applicant-card">
+                        <article class="slds-card applicant-card" data-is-primary={applicant.isPrimaryApplicant}>
                             <div class="slds-card__header slds-grid">
                                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
                                     <div class="slds-media__figure">
@@ -37,7 +37,6 @@
                                             </template>
                                             <template if:true={applicant.ownershipPercentage}>
                                                 <span class="slds-badge slds-theme_success slds-m-left_xx-small ownership-badge">
-                                                    <lightning-icon icon-name="utility:percent" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
                                                     {applicant.ownershipPercentage}%
                                                 </span>
                                             </template>
@@ -62,25 +61,35 @@
                                 </div>
                             </div>
                             <footer class="slds-card__footer">
-                                <div class="slds-grid slds-grid_align-spread">
-                                    <lightning-button-icon
-                                        icon-name="utility:edit"
-                                        variant="border-filled"
-                                        alternative-text="Edit"
-                                        title="Edit Applicant"
-                                        data-index={index}
-                                        onclick={handleEditApplicant}
-                                        class="slds-m-right_xx-small">
-                                    </lightning-button-icon>
-                                    <lightning-button-icon
-                                        icon-name="utility:delete"
-                                        variant="border-filled"
-                                        alternative-text="Delete"
-                                        title="Delete Applicant"
-                                        data-index={index}
-                                        onclick={handleDeleteApplicant}>
-                                    </lightning-button-icon>
-                                </div>
+                                <template if:true={applicant.isPrimaryApplicant}>
+                                    <div class="slds-text-align_center">
+                                        <span class="slds-badge slds-badge_lightest">
+                                            <lightning-icon icon-name="utility:lock" size="xx-small" class="slds-m-right_xxx-small"></lightning-icon>
+                                            Primary Applicant (Read Only)
+                                        </span>
+                                    </div>
+                                </template>
+                                <template if:false={applicant.isPrimaryApplicant}>
+                                    <div class="slds-grid slds-grid_align-spread">
+                                        <lightning-button-icon
+                                            icon-name="utility:edit"
+                                            variant="border-filled"
+                                            alternative-text="Edit"
+                                            title="Edit Applicant"
+                                            data-index={index}
+                                            onclick={handleEditApplicant}
+                                            class="slds-m-right_xx-small">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete"
+                                            variant="border-filled"
+                                            alternative-text="Delete"
+                                            title="Delete Applicant"
+                                            data-index={index}
+                                            onclick={handleDeleteApplicant}>
+                                        </lightning-button-icon>
+                                    </div>
+                                </template>
                             </footer>
                         </article>
                     </div>
@@ -189,15 +198,19 @@
                                     
                                     <!-- Row 3: Date of Birth, Mother's Maiden Name -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                        <lightning-input 
+                                        <lightning-input
                                             type="date"
                                             label="Date of Birth" 
                                             value={currentApplicant.dateOfBirth}
                                             onchange={handleDateOfBirthChange}
                                             max={todayDate}
                                             message-when-range-overflow="Date of Birth cannot be a future date"
+                                            message-when-value-missing={dateOfBirthError}
                                             required>
                                         </lightning-input>
+                                        <template if:true={dateOfBirthError}>
+                                            <div class="slds-form-element__help slds-text-color_error">{dateOfBirthError}</div>
+                                        </template>
                                     </lightning-layout-item>
                                     
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
@@ -329,10 +342,10 @@
                             </h3>
                             <div class="slds-section__content slds-p-around_small">
                                 <lightning-layout multiple-rows>
-                                    <!-- Row 1: Organization Role, Ownership Percentage -->
+                                    <!-- Row 1: Role, Ownership Percentage -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
                                         <lightning-combobox
-                                            label="Organization Role"
+                                            label="Role"
                                             value={currentApplicant.organizationRole}
                                             options={organizationRoleOptions}
                                             onchange={handleOrganizationRoleChange}
@@ -340,17 +353,23 @@
                                         </lightning-combobox>
                                     </lightning-layout-item>
                                     
-                                    <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
-                                <lightning-input 
-                                    type="number"
-                                    label="Ownership Percentage" 
-                                    value={currentApplicant.ownershipPercentage}
-                                    onchange={handleOwnershipPercentageChange}
-                                    min="0"
-                                    max="100"
-                                            step="0.01">
-                                </lightning-input>
-                            </lightning-layout-item>
+                                    <template if:true={showOwnershipPercentage}>
+                                        <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
+                                            <lightning-input
+                                                type="number"
+                                                label="Ownership Percentage" 
+                                                value={currentApplicant.ownershipPercentage}
+                                                onchange={handleOwnershipPercentageChange}
+                                                min="0"
+                                                max="100"
+                                                step="0.01"
+                                                class={ownershipPercentageError}>
+                                            </lightning-input>
+                                            <template if:true={ownershipPercentageError}>
+                                                <div class="slds-form-element__help slds-text-color_error">{ownershipPercentageError}</div>
+                                            </template>
+                                        </lightning-layout-item>
+                                    </template>
                             
                                     <!-- Row 2: Is Control Person -->
                                     <lightning-layout-item size="12" medium-device-size="6" padding="horizontal-small">
@@ -366,7 +385,6 @@
                                     <!-- Row 3: Roles (Multi-select) -->
                                     <lightning-layout-item size="12" padding="horizontal-small">
                                         <lightning-dual-listbox
-                                            label="Roles"
                                             source-label="Available Roles"
                                             selected-label="Selected Roles"
                                             options={rolesOptions}

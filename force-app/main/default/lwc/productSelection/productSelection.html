@@ -4,20 +4,108 @@
         
         <template if:true={stepConfig.helpText}>
             <div class="slds-m-bottom_medium">
-                <p class="slds-text-body_regular">{stepConfig.helpText}</p>
+                <p class="slds-text-body_regular slds-text-color_weak">{stepConfig.helpText}</p>
             </div>
         </template>
         
-        <lightning-layout multiple-rows>
-            <lightning-layout-item size="12">
-                <lightning-combobox
-                    label="Product"
-                    value={productCode}
-                    options={productOptions}
-                    onchange={handleProductChange}
-                    placeholder="Select a product">
-                </lightning-combobox>
-            </lightning-layout-item>
-        </lightning-layout>
+        <template if:true={isLoading}>
+            <div class="slds-text-align_center slds-p-vertical_large">
+                <lightning-spinner alternative-text="Loading products" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        
+        <template if:true={error}>
+            <div class="slds-m-bottom_medium">
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                    <h2>{error}</h2>
+                </div>
+            </div>
+        </template>
+        
+        <template if:false={isLoading}>
+            <!-- Category Filter Buttons -->
+            <template if:true={hasCategories}>
+                <div class="category-filters slds-m-bottom_medium slds-text-align_center">
+                    <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">
+                        Filter by Category:
+                    </div>
+                    <lightning-button-group>
+                        <lightning-button
+                            label="All Products"
+                            onclick={handleCategoryFilter}
+                            data-category="all"
+                            variant={allCategoryVariant}>
+                        </lightning-button>
+                        <template for:each={categories} for:item="category">
+                            <lightning-button
+                                key={category.name}
+                                label={category.label}
+                                onclick={handleCategoryFilter}
+                                data-category={category.name}
+                                variant={category.variant}>
+                            </lightning-button>
+                        </template>
+                    </lightning-button-group>
+                </div>
+            </template>
+            
+            <!-- Product Cards -->
+            <template if:true={hasFilteredProducts}>
+                <div class="product-grid">
+                    <template for:each={filteredProducts} for:item="product">
+                        <div key={product.id} 
+                             class="product-card slds-box slds-box_x-small clickable-card"
+                             onclick={handleProductSelect}
+                             data-product-id={product.id}>
+                            <article class="slds-tile">
+                                <div class="slds-grid slds-grid_vertical-align-start">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_x-small">
+                                            <h3 class="slds-text-heading_small slds-truncate" title={product.name}>
+                                                {product.name}
+                                            </h3>
+                                            <lightning-badge label={product.category} class="slds-m-left_x-small"></lightning-badge>
+                                        </div>
+                                        <div class="slds-tile__detail">
+                                            <template if:true={product.description}>
+                                                <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small slds-text-align_center">
+                                                    {product.description}
+                                                </p>
+                                            </template>
+                                            <template if:true={product.productCode}>
+                                                <p class="slds-text-body_small">
+                                                    <strong>Product Code:</strong> {product.productCode}
+                                                </p>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            
+            <template if:false={hasFilteredProducts}>
+                <div class="slds-text-align_center slds-p-vertical_large">
+                    <lightning-icon icon-name="utility:search" size="large" class="slds-icon-text-default"></lightning-icon>
+                    <p class="slds-text-body_regular slds-text-color_weak slds-m-top_small">
+                        No products found for the selected category.
+                    </p>
+                </div>
+            </template>
+            
+            <!-- Cart Component -->
+            <div class="slds-m-top_large">
+                <c-product-cart
+                    cart-items={enrichedCartItems}
+                    onedititem={handleEditCartItem}
+                    onremoveitem={handleRemoveCartItem}
+                    onclearall={handleClearCart}>
+                </c-product-cart>
+            </div>
+        </template>
     </div>
 </template>
